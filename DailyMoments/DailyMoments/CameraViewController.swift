@@ -1,10 +1,5 @@
-
-func takePhoto(sender : UITapGestureRecognizer){
-    print("1")
-}
-
 //
-//  ViewController.swift
+//  CameraViewController.swift
 //  DailyMoments
 //
 //  Created by 남상욱 on 2017. 2. 6..
@@ -15,13 +10,13 @@ import UIKit
 import AVFoundation
 
 
-class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
+class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var cameraShutterButtonImageView: UIImageView!
-
-
+    @IBOutlet weak var changeCameraPositionButtonImageView: UIImageView!
+    
     
     // 참고할 문서.
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
@@ -32,31 +27,24 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         super.viewDidLoad()
         UIApplication.shared.isStatusBarHidden = true // status bar hide
         cameraShutterButtonImageView.isUserInteractionEnabled = true
+        changeCameraPositionButtonImageView.isUserInteractionEnabled = true
+  
+        let photoShootGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(takePhoto))
+        cameraShutterButtonImageView.addGestureRecognizer(photoShootGestureRecognizer)
+        let changeCameraPositionGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(switchCameraPostion))
+        changeCameraPositionButtonImageView.addGestureRecognizer(changeCameraPositionGestureRecognizer)
         
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "switch_position"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(switchCameraPostion))
-        self.navigationItem.rightBarButtonItem?.tintColor = UIColor.gray
-        
-        navigationController?.navigationItem.rightBarButtonItem = navigationItem.rightBarButtonItem
-        captureSession = AVCaptureSession()
     }
-
     
-    // MARK: View Controller Lifecycle
+    
+    // MARK:- View Controller Lifecycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        captureSession = AVCaptureSession()
         
         if let session = captureSession {
-//            session.sessionPreset = AVCaptureSessionPreset1920x1080
-            
-            let photoShootGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(takePhoto))
-            cameraShutterButtonImageView.addGestureRecognizer(photoShootGestureRecognizer)
-            
-            
+            //            session.sessionPreset = AVCaptureSessionPreset1920x1080
             
             /*
              
@@ -90,7 +78,7 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                                     session.addOutput(sessionOutput)
                                     
                                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                                    previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+                                    previewLayer.videoGravity = AVLayerVideoGravityResize
                                     previewLayer.connection.videoOrientation = .portrait
                                     
                                     cameraView.layer.addSublayer(previewLayer)
@@ -124,49 +112,27 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
     
     
-    // MARK: Swipe Gesture & Navigation
+    // MARK:- IBAction
     
-    
-    @IBAction func swipeGestureForNavigation(_ sender: Any) {
-        if let swipeGesture = sender as? UISwipeGestureRecognizer {
-            switch swipeGesture.direction{
-            case UISwipeGestureRecognizerDirection.right:
-               
-                print("right")
-            case UISwipeGestureRecognizerDirection.left:
-                print("left")
-//                guard let diaryTableViewController = storyboard?.instantiateViewController(withIdentifier: "DiaryTableView") as? DiaryTableViewController
-//                    else{
-//                        print("navigate fail")
-//                        return
-//                }
-//                navigationController?.pushViewController(diaryTableViewController, animated: true)
-            default:
-                break
-            }
-        }
+    @IBAction func cancelTakePhoto(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
     
-    // MARK: general function
-    
-    
+    // MARK:- general function
     
     func takePhoto(sender : UITapGestureRecognizer){
         let settingsForMonitoring = AVCapturePhotoSettings()
         settingsForMonitoring.flashMode = .auto
         settingsForMonitoring.isAutoStillImageStabilizationEnabled = true
         settingsForMonitoring.isHighResolutionPhotoEnabled = false
-    
+        
         sessionOutput.capturePhoto(with: settingsForMonitoring, delegate: self)
     }
     
     
     func switchCameraPostion(sender : UITapGestureRecognizer){
-        //        captureSession.beginConfiguration()
-        //        let currentCemeraInput:AVCaptureInput = captureSession.inputs.first as! AVCaptureInput
-        //        captureSession.removeInput(currentCemeraInput)
-        //        usingCamera(AVCaptureDevicePosition.front)
+        
         if let session = captureSession {
             // Indicate that some changes will be made to the session
             session.beginConfiguration()
@@ -181,7 +147,7 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 if(input.device.position == .back){
                     newCamera = cameraWithPosition(position: .front)
                 } else if(input.device.position == .front){
-                        newCamera = cameraWithPosition(position: .back)
+                    newCamera = cameraWithPosition(position: .back)
                 }
             }
             
@@ -195,12 +161,9 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 newVideoInput = nil
             }
             
-            if(newVideoInput == nil || err != nil)
-            {
+            if(newVideoInput == nil || err != nil) {
                 print("Error creating capture device input: \(err!.localizedDescription)")
-            }
-            else
-            {
+            } else {
                 session.addInput(newVideoInput)
             }
             
@@ -218,8 +181,6 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         let deviceSession = AVCaptureDeviceDiscoverySession(deviceTypes: [.builtInDualCamera, .builtInTelephotoCamera, .builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
         
-        
-        
         for device in (deviceSession?.devices)! {
             
             if device.position == position {
@@ -230,7 +191,7 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         return nil
     }
     
-    
+    // AVCapturePhotoCaptureDelegate method for Image Saving
     func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         
         if let photoSampleBuffer = photoSampleBuffer {
@@ -238,9 +199,16 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             let takedPhotoImage = UIImage(data: photoData!)
             
             if let image = takedPhotoImage {
-                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveCompleted), nil)
             }
         }
     }
+    
+    // UIImageWriteToSavedPhotosAlbum 메소드 수행 후에 completionSelector
+    func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
+        dump(image)
+    }
+    
+    
 }
 

@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		3D1952DA1E487467006A05BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952D91E487467006A05BC /* AppDelegate.swift */; };
-		3D1952DC1E487467006A05BC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952DB1E487467006A05BC /* ViewController.swift */; };
+		3D1952DC1E487467006A05BC /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952DB1E487467006A05BC /* CameraViewController.swift */; };
 		3D1952DF1E487467006A05BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1952DD1E487467006A05BC /* Main.storyboard */; };
 		3D1952E11E487467006A05BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D1952E01E487467006A05BC /* Assets.xcassets */; };
 		3D1952E41E487467006A05BC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1952E21E487467006A05BC /* LaunchScreen.storyboard */; };
 		3D1952EF1E487467006A05BC /* DailyMomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952EE1E487467006A05BC /* DailyMomentsTests.swift */; };
+		3DCB99941E49B28900B6EB21 /* HomeTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +29,7 @@
 /* Begin PBXFileReference section */
 		3D1952D61E487467006A05BC /* DailyMoments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMoments.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1952D91E487467006A05BC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3D1952DB1E487467006A05BC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3D1952DB1E487467006A05BC /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		3D1952DE1E487467006A05BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3D1952E01E487467006A05BC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D1952E31E487467006A05BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -36,6 +37,7 @@
 		3D1952EA1E487467006A05BC /* DailyMomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMomentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1952EE1E487467006A05BC /* DailyMomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMomentsTests.swift; sourceTree = "<group>"; };
 		3D1952F01E487467006A05BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,11 +80,12 @@
 			isa = PBXGroup;
 			children = (
 				3D1952D91E487467006A05BC /* AppDelegate.swift */,
-				3D1952DB1E487467006A05BC /* ViewController.swift */,
+				3D1952DB1E487467006A05BC /* CameraViewController.swift */,
 				3D1952DD1E487467006A05BC /* Main.storyboard */,
 				3D1952E01E487467006A05BC /* Assets.xcassets */,
 				3D1952E21E487467006A05BC /* LaunchScreen.storyboard */,
 				3D1952E51E487467006A05BC /* Info.plist */,
+				3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */,
 			);
 			path = DailyMoments;
 			sourceTree = "<group>";
@@ -201,8 +204,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D1952DC1E487467006A05BC /* ViewController.swift in Sources */,
+				3D1952DC1E487467006A05BC /* CameraViewController.swift in Sources */,
 				3D1952DA1E487467006A05BC /* AppDelegate.swift in Sources */,
+				3DCB99941E49B28900B6EB21 /* HomeTabBarController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
