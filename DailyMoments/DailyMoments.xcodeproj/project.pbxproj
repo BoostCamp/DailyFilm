@@ -412,6 +412,7 @@
 				3D1952F51E487467006A05BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D1952F61E487467006A05BC /* Build configuration list for PBXNativeTarget "DailyMomentsTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +421,7 @@
 				3D1952F81E487467006A05BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

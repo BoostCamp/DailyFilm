@@ -1,26 +1,120 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Nzo-WW-zSw">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <scene sceneID="Wxs-Ee-gWj">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8QR-Tj-sM5" customClass="ViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="Jg1-DE-TYN"/>
+                        <viewControllerLayoutGuide type="bottom" id="nnl-AD-M3k"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="IFP-dn-PAV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bBd-4M-KLn">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="533.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="dif-cJ-1c1" appends="YES" id="q0q-uw-8kf"/>
+                                </connections>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Pdk-1b-gYz">
+                                <rect key="frame" x="0.0" y="533.5" width="375" height="133.5"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="92W-Rl-1u7">
+                                        <rect key="frame" x="0.0" y="0.0" width="125" height="133.5"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E9i-Em-eSC">
+                                        <rect key="frame" x="125" y="0.0" width="125" height="133.5"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera_shutter" translatesAutoresizingMaskIntoConstraints="NO" id="75R-HU-gfo" userLabel="CameraShutterButton">
+                                                <rect key="frame" x="32" y="33" width="62" height="66.5"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="75R-HU-gfo" firstAttribute="centerX" secondItem="E9i-Em-eSC" secondAttribute="centerX" id="JzA-7m-FFq"/>
+                                            <constraint firstItem="75R-HU-gfo" firstAttribute="centerY" secondItem="E9i-Em-eSC" secondAttribute="centerY" id="Wrb-hT-UYZ"/>
+                                            <constraint firstItem="75R-HU-gfo" firstAttribute="height" secondItem="E9i-Em-eSC" secondAttribute="height" multiplier="0.5" id="aUc-0q-Hpc"/>
+                                            <constraint firstItem="75R-HU-gfo" firstAttribute="width" secondItem="E9i-Em-eSC" secondAttribute="width" multiplier="0.5" id="jkI-6c-Cnz"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2dJ-6N-wFM">
+                                        <rect key="frame" x="250" y="0.0" width="125" height="133.5"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="top" secondItem="IFP-dn-PAV" secondAttribute="top" id="2yS-p5-iNU"/>
+                            <constraint firstAttribute="trailing" secondItem="Pdk-1b-gYz" secondAttribute="trailing" id="59C-Ch-vwO"/>
+                            <constraint firstAttribute="trailing" secondItem="bBd-4M-KLn" secondAttribute="trailing" id="Ddo-dq-A2T"/>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="LdN-xI-SAx"/>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="height" secondItem="Pdk-1b-gYz" secondAttribute="height" multiplier="4" id="Rzu-Gd-keA"/>
+                            <constraint firstItem="Pdk-1b-gYz" firstAttribute="top" secondItem="bBd-4M-KLn" secondAttribute="bottom" id="Z1u-pE-QaS"/>
+                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="Pdk-1b-gYz" secondAttribute="bottom" id="fFU-Aa-pfe"/>
+                            <constraint firstItem="Pdk-1b-gYz" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="fpu-8f-W4L"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="lXc-Wx-05b" appends="YES" id="nHi-gz-jXd"/>
+                        </connections>
                     </view>
+                    <navigationItem key="navigationItem" id="IG3-Pv-vx8"/>
+                    <connections>
+                        <outlet property="cameraShutterButtonImageView" destination="75R-HU-gfo" id="jMY-Ps-np5"/>
+                        <outlet property="cameraView" destination="bBd-4M-KLn" id="qOP-Nh-qZl"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C4O-ZK-Eug" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="lXc-Wx-05b" userLabel="Right Swipe Gesture Recognizer">
+                    <connections>
+                        <action selector="swipeGestureForNavigation:" destination="8QR-Tj-sM5" id="f1K-zk-h4t"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="dif-cJ-1c1" userLabel="Left Swipe Gesture Recognizer">
+                    <connections>
+                        <action selector="swipeGestureForNavigation:" destination="8QR-Tj-sM5" id="Zb9-ND-lKZ"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
+            <point key="canvasLocation" x="68" y="60.719640179910051"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="PUO-Wa-Aix">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Nzo-WW-zSw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="MwY-o5-MC9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="8QR-Tj-sM5" kind="relationship" relationship="rootViewController" id="8UM-1W-F1B"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RyS-cc-i9R" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-871.20000000000005" y="60.719640179910051"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="camera_shutter" width="128" height="128"/>
+    </resources>
 </document>
