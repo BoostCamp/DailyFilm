@@ -23,12 +23,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     // 참고할 문서.
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
-    var captureSession:AVCaptureSession?
-    var sessionOutput = AVCapturePhotoOutput()
-    var previewLayer = AVCaptureVideoPreviewLayer()
+    
+    // You use an AVCaptureSession object to coordinate the flow of data from AV input devices to outputs.
+    var captureSession: AVCaptureSession? // AV 입력장치에서 출력으로의 데이터 흐름을 조정하는 AVCaptureSession 객체입니다.
+    var sessionOutput: AVCapturePhotoOutput? // 스틸 사진과 관련된 대부분의 캡처 워크 플로에 대한 최신 인터페이스를 제공하는 AVCaptureOutput의 구체적인 하위 클래스입니다.
+    var previewLayer: AVCaptureVideoPreviewLayer? // 입력 장치에서 캡처 한 비디오를 표시하는 데 사용하는 CALayer의 하위 클래스입니다. AVCapureSession과 함께 사용합니다.
+    var settingsForMonitoring: AVCapturePhotoSettings? // 단일 사진 캡처 요청에 필요한 모든 기능과 설정을 설명하는 변경 가능한 객체입니다.
+    
+    var cameraFlashSwitchedStatus: Int = 0 // FlashMode 구분을 위한 저장 프로퍼티
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isStatusBarHidden = true // status bar hide
+        cameraFlashSwitchedStatus = FlashModeConstant.off.rawValue // Init
+        
     }
     
     
@@ -37,7 +45,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         captureSession = AVCaptureSession()
-        
+        sessionOutput = AVCapturePhotoOutput()
+        previewLayer = AVCaptureVideoPreviewLayer()
+
         if let session = captureSession {
             session.sessionPreset = AVCaptureSessionPreset1920x1080
             
@@ -73,23 +83,19 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                                     session.addOutput(sessionOutput)
                                     
                                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                                    previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
                                     
-                                    previewLayer.connection.videoOrientation = .portrait
+                                    if let captureVideoPreviewLayer = previewLayer{
+                                        captureVideoPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+                                        captureVideoPreviewLayer.connection.videoOrientation = .portrait
+                                        
+                                        cameraView.layer.addSublayer(previewLayer!)
+                                        
+                                        captureVideoPreviewLayer.position = CGPoint(x: self.cameraView.frame.width / 2, y: self.cameraView.frame.height / 2)
+                                        captureVideoPreviewLayer.frame = cameraView.bounds
+                                        
+                                        session.startRunning()
+                                    }
                                     
-                                   
-                                    cameraView.layer.addSublayer(previewLayer)
-                                    
-                                    previewLayer.position = CGPoint(x: self.cameraView.frame.width / 2, y: self.cameraView.frame.height / 2)
-                                    previewLayer.frame = cameraView.bounds
-                                    let previewLayerHeight = previewLayer.bounds.height
-                                    let cameraViewLayoutHeight = cameraView.bounds.height
-                                    
-                                    
-                                    print("previewLayerHeight: \(previewLayerHeight)")
-                                    print("cameraViewLayoutHeight: \(cameraViewLayoutHeight)")
-                                    
-                                    session.startRunning()
                                 }
                                 
                             }
@@ -117,20 +123,60 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     // MARK:- IBAction
     
+    
+    @IBAction func switchCameraFlash(_ sender: Any) {
+        // 0: off, 1: on, 2: auto
+        cameraFlashSwitchedStatus += 1
+        cameraFlashSwitchedStatus %= 3
+        
+        switch cameraFlashSwitchedStatus {
+        case FlashModeConstant.off.rawValue:
+            flashOfCameraBarButtonItem.image = UIImage(named: "camera_flash_off")
+        case FlashModeConstant.on.rawValue:
+            flashOfCameraBarButtonItem.image = UIImage(named: "camera_flash_on")
+        case FlashModeConstant.auto.rawValue:
+            flashOfCameraBarButtonItem.image = UIImage(named: "camera_flash_auto")
+        default:
+            break;
+        }
+    }
+    
+    
+    @IBAction func swtichCameraEffect(_ sender: Any) {
+    
+        if let swipeGesture = sender as? UISwipeGestureRecognizer{
+            switch swipeGesture.direction {
+            case UISwipeGestureRecognizerDirection.left:
+                print("Left Swipe")
+            case UISwipeGestureRecognizerDirection.right:
+                print("Right Swipe")
+            default:
+                return
+            }
+        }
+    }
+    
+    
+    // 카메라 모달 뷰 내리기
     @IBAction func cancelTakePhoto(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
-    
+    // 촬영하기
     @IBAction func takePhoto(_ sender: Any) {
-        let settingsForMonitoring = AVCapturePhotoSettings()
-        settingsForMonitoring.flashMode = .auto
-        settingsForMonitoring.isAutoStillImageStabilizationEnabled = true
-        settingsForMonitoring.isHighResolutionPhotoEnabled = false
+        settingsForMonitoring = AVCapturePhotoSettings()
         
-        sessionOutput.capturePhoto(with: settingsForMonitoring, delegate: self)
+        if let photoCaptureSetting = settingsForMonitoring, let capturePhotoOutput = sessionOutput{
+            
+            photoCaptureSetting.flashMode = getCurrentFlashMode(cameraFlashSwitchedStatus)
+            photoCaptureSetting.isAutoStillImageStabilizationEnabled = true
+            photoCaptureSetting.isHighResolutionPhotoEnabled = false
+            
+            capturePhotoOutput.capturePhoto(with: photoCaptureSetting, delegate: self)
+        }
     }
     
+    // 전면/후면 카메라 스위칭
     @IBAction func switchCameraPostion(_ sender: Any) {
         if let session = captureSession {
             // Indicate that some changes will be made to the session
@@ -172,14 +218,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             //Commit all the configuration changes at once
             session.commitConfiguration()
             
-            
         }
-    
     }
 
     
     // MARK:- general function
 
+    
+    
     
     // Find a camera with the specified AVCaptureDevicePosition, returning nil if one is not found
     func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice?
@@ -215,7 +261,32 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
         dump(image)
     }
+}
+
+extension CameraViewController {
     
+    enum FlashModeConstant: Int {
+        case off
+        case on
+        case auto
+    }
+    
+    func getCurrentFlashMode(_ mode : Int) -> AVCaptureFlashMode{
+    
+        var valueOfAVCaptureFlashMode: AVCaptureFlashMode = .off
+        
+        switch mode {
+        case FlashModeConstant.off.rawValue:
+            valueOfAVCaptureFlashMode = .off
+        case FlashModeConstant.auto.rawValue:
+            valueOfAVCaptureFlashMode = .auto
+        case FlashModeConstant.on.rawValue:
+            valueOfAVCaptureFlashMode = .on
+        default:
+            break;
+        }
+        return valueOfAVCaptureFlashMode
+    }
     
 }
 

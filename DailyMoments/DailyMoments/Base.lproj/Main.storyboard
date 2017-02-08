@@ -25,6 +25,10 @@
                                 <rect key="frame" x="0.0" y="44" width="375" height="535"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="MF1-Z0-UUD" appends="YES" id="FPu-QD-o3i"/>
+                                    <outletCollection property="gestureRecognizers" destination="Ll4-yW-2PJ" appends="YES" id="BUC-1S-i2z"/>
+                                </connections>
                             </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y8U-oH-Sr2">
                                 <rect key="frame" x="0.0" y="579" width="375" height="88"/>
@@ -33,7 +37,11 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="3iw-fF-UcN"/>
-                                    <barButtonItem image="camera_flash" id="nCJ-iA-4PT" userLabel="Camera Flash Bar Item"/>
+                                    <barButtonItem image="camera_flash_off" id="nCJ-iA-4PT" userLabel="Camera Flash Bar Item">
+                                        <connections>
+                                            <action selector="switchCameraFlash:" destination="8QR-Tj-sM5" id="hhQ-Bi-RQB"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="99e-Dx-tNh"/>
                                     <barButtonItem image="camera_shutter" id="TVj-xL-fNw" userLabel="Camera Shutter Bar Item">
                                         <connections>
@@ -80,6 +88,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C4O-ZK-Eug" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="left" id="MF1-Z0-UUD" userLabel="Left Swipe Gesture Recognizer">
+                    <connections>
+                        <action selector="swtichCameraEffect:" destination="8QR-Tj-sM5" id="j1B-yj-8Qv"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="Ll4-yW-2PJ" userLabel="Right Swipe Gesture Recognizer">
+                    <connections>
+                        <action selector="swtichCameraEffect:" destination="8QR-Tj-sM5" id="1ez-fK-sFd"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="109.59999999999999" y="304.4977511244378"/>
         </scene>
@@ -116,7 +134,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -183,7 +201,7 @@
     <resources>
         <image name="account" width="24" height="24"/>
         <image name="add_diary" width="24" height="24"/>
-        <image name="camera_flash" width="32" height="32"/>
+        <image name="camera_flash_off" width="32" height="32"/>
         <image name="camera_shutter" width="64" height="64"/>
         <image name="diary_home" width="24" height="24"/>
         <image name="switch_camera_position" width="32" height="32"/>
