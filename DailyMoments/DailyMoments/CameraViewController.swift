@@ -12,7 +12,8 @@ import AVFoundation
 
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
-    
+    let storyboardIdentifierConstantOfEditPhotoViewController: String = "ShowEditPhotoViewController"
+
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var cameraToolbar: UIToolbar! // 플래쉬, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
     @IBOutlet weak var flashOfCameraBarButtonItem: UIBarButtonItem! // 카메라 플래쉬 버튼
@@ -128,7 +129,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         // 0: off, 1: on, 2: auto
         cameraFlashSwitchedStatus += 1
         cameraFlashSwitchedStatus %= 3
-        
+
         switch cameraFlashSwitchedStatus {
         case FlashModeConstant.off.rawValue:
             flashOfCameraBarButtonItem.image = UIImage(named: "camera_flash_off")
@@ -225,8 +226,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // MARK:- general function
 
     
-    
-    
     // Find a camera with the specified AVCaptureDevicePosition, returning nil if one is not found
     func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice?
     {
@@ -260,13 +259,25 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // UIImageWriteToSavedPhotosAlbum 메소드 수행 후에 completionSelector
     func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
         dump(image)
+        
+        let resizedImage = image.resizeImage(targetSize: CGSize(width: 64, height: 64))
+        
+        
+        if let editPhotoViewController = storyboard?.instantiateViewController(withIdentifier: storyboardIdentifierConstantOfEditPhotoViewController) as? EditPhotoViewController {
+            editPhotoViewController.takenPhotoImage = image
+            editPhotoViewController.takenResizedPhotoImage = resizedImage
+            
+            navigationController?.pushViewController(editPhotoViewController, animated: false)
+        }
     }
 }
+
+
 
 extension CameraViewController {
     
     enum FlashModeConstant: Int {
-        case off
+        case off = 0
         case on
         case auto
     }
