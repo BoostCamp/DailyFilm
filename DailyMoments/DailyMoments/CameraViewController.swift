@@ -14,8 +14,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     
     @IBOutlet weak var cameraView: UIView!
-    @IBOutlet weak var cameraShutterButtonImageView: UIImageView!
-    @IBOutlet weak var changeCameraPositionButtonImageView: UIImageView!
+    @IBOutlet weak var cameraToolbar: UIToolbar! // 플래쉬, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
+    @IBOutlet weak var flashOfCameraBarButtonItem: UIBarButtonItem! // 카메라 플래쉬 버튼
+    @IBOutlet weak var shutterOfCameraBarButtonItem: UIBarButtonItem! // 카메라 셔터(촬영) 버튼
+    @IBOutlet weak var switchOfCameraBarButtonItem: UIBarButtonItem! // 전면/후면카메라 스위치 버튼
+    
     
     
     // 참고할 문서.
@@ -26,14 +29,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isStatusBarHidden = true // status bar hide
-        cameraShutterButtonImageView.isUserInteractionEnabled = true
-        changeCameraPositionButtonImageView.isUserInteractionEnabled = true
-  
-        let photoShootGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(takePhoto))
-        cameraShutterButtonImageView.addGestureRecognizer(photoShootGestureRecognizer)
-        let changeCameraPositionGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(switchCameraPostion))
-        changeCameraPositionButtonImageView.addGestureRecognizer(changeCameraPositionGestureRecognizer)
-        
     }
     
     
@@ -44,7 +39,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         captureSession = AVCaptureSession()
         
         if let session = captureSession {
-            //            session.sessionPreset = AVCaptureSessionPreset1920x1080
+            session.sessionPreset = AVCaptureSessionPreset1920x1080
             
             /*
              
@@ -78,13 +73,21 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                                     session.addOutput(sessionOutput)
                                     
                                     previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                                    previewLayer.videoGravity = AVLayerVideoGravityResize
+                                    previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+                                    
                                     previewLayer.connection.videoOrientation = .portrait
                                     
+                                   
                                     cameraView.layer.addSublayer(previewLayer)
                                     
                                     previewLayer.position = CGPoint(x: self.cameraView.frame.width / 2, y: self.cameraView.frame.height / 2)
-                                    previewLayer.bounds = cameraView.frame
+                                    previewLayer.frame = cameraView.bounds
+                                    let previewLayerHeight = previewLayer.bounds.height
+                                    let cameraViewLayoutHeight = cameraView.bounds.height
+                                    
+                                    
+                                    print("previewLayerHeight: \(previewLayerHeight)")
+                                    print("cameraViewLayoutHeight: \(cameraViewLayoutHeight)")
                                     
                                     session.startRunning()
                                 }
@@ -119,9 +122,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
     
     
-    // MARK:- general function
-    
-    func takePhoto(sender : UITapGestureRecognizer){
+    @IBAction func takePhoto(_ sender: Any) {
         let settingsForMonitoring = AVCapturePhotoSettings()
         settingsForMonitoring.flashMode = .auto
         settingsForMonitoring.isAutoStillImageStabilizationEnabled = true
@@ -130,9 +131,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         sessionOutput.capturePhoto(with: settingsForMonitoring, delegate: self)
     }
     
-    
-    func switchCameraPostion(sender : UITapGestureRecognizer){
-        
+    @IBAction func switchCameraPostion(_ sender: Any) {
         if let session = captureSession {
             // Indicate that some changes will be made to the session
             session.beginConfiguration()
@@ -146,8 +145,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             if let input = currentCameraInput as? AVCaptureDeviceInput {
                 if(input.device.position == .back){
                     newCamera = cameraWithPosition(position: .front)
+                    session.sessionPreset = AVCaptureSessionPreset1280x720
+                    
                 } else if(input.device.position == .front){
                     newCamera = cameraWithPosition(position: .back)
+                    session.sessionPreset = AVCaptureSessionPreset1920x1080
                 }
             }
             
@@ -172,7 +174,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             
             
         }
+    
     }
+
+    
+    // MARK:- general function
+
     
     // Find a camera with the specified AVCaptureDevicePosition, returning nil if one is not found
     func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice?

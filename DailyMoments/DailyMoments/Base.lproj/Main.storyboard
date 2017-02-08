@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -23,63 +22,44 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bBd-4M-KLn">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="585"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="535"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <gestureRecognizers/>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Pdk-1b-gYz">
-                                <rect key="frame" x="0.0" y="533" width="375" height="134"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="92W-Rl-1u7">
-                                        <rect key="frame" x="0.0" y="0.0" width="125" height="134"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E9i-Em-eSC">
-                                        <rect key="frame" x="125" y="0.0" width="125" height="134"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera_shutter" translatesAutoresizingMaskIntoConstraints="NO" id="75R-HU-gfo" userLabel="CameraShutterButton">
-                                                <rect key="frame" x="32" y="33" width="62" height="67"/>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="75R-HU-gfo" firstAttribute="centerX" secondItem="E9i-Em-eSC" secondAttribute="centerX" id="JzA-7m-FFq"/>
-                                            <constraint firstItem="75R-HU-gfo" firstAttribute="centerY" secondItem="E9i-Em-eSC" secondAttribute="centerY" id="Wrb-hT-UYZ"/>
-                                            <constraint firstItem="75R-HU-gfo" firstAttribute="height" secondItem="E9i-Em-eSC" secondAttribute="height" multiplier="0.5" id="aUc-0q-Hpc"/>
-                                            <constraint firstItem="75R-HU-gfo" firstAttribute="width" secondItem="E9i-Em-eSC" secondAttribute="width" multiplier="0.5" id="jkI-6c-Cnz"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2dJ-6N-wFM">
-                                        <rect key="frame" x="250" y="0.0" width="125" height="134"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="switch_position" translatesAutoresizingMaskIntoConstraints="NO" id="7WG-0k-4qL">
-                                                <rect key="frame" x="47" y="50" width="31" height="34"/>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="7WG-0k-4qL" firstAttribute="centerX" secondItem="2dJ-6N-wFM" secondAttribute="centerX" id="1xB-dh-mtC"/>
-                                            <constraint firstItem="7WG-0k-4qL" firstAttribute="centerY" secondItem="2dJ-6N-wFM" secondAttribute="centerY" id="2Mo-TB-rBW"/>
-                                            <constraint firstItem="7WG-0k-4qL" firstAttribute="height" secondItem="2dJ-6N-wFM" secondAttribute="height" multiplier="0.25" id="Y08-0r-QNG"/>
-                                            <constraint firstItem="7WG-0k-4qL" firstAttribute="width" secondItem="2dJ-6N-wFM" secondAttribute="width" multiplier="0.25" id="jV5-i1-lfs"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </stackView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y8U-oH-Sr2">
+                                <rect key="frame" x="0.0" y="579" width="375" height="88"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="88" id="uJ3-RZ-52g"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="3iw-fF-UcN"/>
+                                    <barButtonItem image="camera_flash" id="nCJ-iA-4PT" userLabel="Camera Flash Bar Item"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="99e-Dx-tNh"/>
+                                    <barButtonItem image="camera_shutter" id="TVj-xL-fNw" userLabel="Camera Shutter Bar Item">
+                                        <connections>
+                                            <action selector="takePhoto:" destination="8QR-Tj-sM5" id="wvb-bA-Xe7"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0fG-uG-bSg"/>
+                                    <barButtonItem image="switch_camera_position" id="L6X-wW-BX7" userLabel="Camera Switch Bar Item">
+                                        <connections>
+                                            <action selector="switchCameraPostion:" destination="8QR-Tj-sM5" id="kpZ-QG-z7g"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="mMf-Gi-ZfO"/>
+                                </items>
+                            </toolbar>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Pdk-1b-gYz" firstAttribute="top" secondItem="IFP-dn-PAV" secondAttribute="bottom" constant="-134" id="52a-dV-gOA"/>
-                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="bBd-4M-KLn" secondAttribute="bottom" constant="82" id="7bX-sn-22N"/>
-                            <constraint firstItem="bBd-4M-KLn" firstAttribute="top" secondItem="IFP-dn-PAV" secondAttribute="top" id="BMB-5f-gFK"/>
-                            <constraint firstAttribute="trailing" secondItem="bBd-4M-KLn" secondAttribute="trailing" id="Ddo-dq-A2T"/>
-                            <constraint firstItem="Pdk-1b-gYz" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="FyK-F4-wgk"/>
-                            <constraint firstItem="bBd-4M-KLn" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="LdN-xI-SAx"/>
-                            <constraint firstAttribute="trailing" secondItem="Pdk-1b-gYz" secondAttribute="trailing" id="d8S-Bj-DvP"/>
-                            <constraint firstAttribute="bottom" secondItem="Pdk-1b-gYz" secondAttribute="bottom" id="nTL-nV-ehy"/>
-                            <constraint firstAttribute="height" secondItem="Pdk-1b-gYz" secondAttribute="height" multiplier="4" constant="131" id="wBr-cd-OGG"/>
+                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="Y8U-oH-Sr2" secondAttribute="bottom" id="299-Pq-J3a"/>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="Gza-Ti-DO9"/>
+                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="top" secondItem="bBd-4M-KLn" secondAttribute="bottom" id="Xl4-HS-PU9"/>
+                            <constraint firstAttribute="trailing" secondItem="Y8U-oH-Sr2" secondAttribute="trailing" id="bQe-VK-z16"/>
+                            <constraint firstAttribute="trailing" secondItem="bBd-4M-KLn" secondAttribute="trailing" id="kWz-8A-tDC"/>
+                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="wkO-Bw-6uu"/>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="zO1-fq-88h"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="IG3-Pv-vx8">
@@ -89,11 +69,14 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="cameraShutterButtonImageView" destination="75R-HU-gfo" id="jMY-Ps-np5"/>
+                        <outlet property="cameraToolbar" destination="Y8U-oH-Sr2" id="855-C7-rLA"/>
                         <outlet property="cameraView" destination="bBd-4M-KLn" id="qOP-Nh-qZl"/>
-                        <outlet property="changeCameraPositionButtonImageView" destination="7WG-0k-4qL" id="5hm-0w-2eS"/>
+                        <outlet property="flashOfCameraBarButtonItem" destination="nCJ-iA-4PT" id="tmd-rf-SkK"/>
+                        <outlet property="shutterOfCameraBarButtonItem" destination="TVj-xL-fNw" id="iZI-kU-Nl3"/>
+                        <outlet property="switchOfCameraBarButtonItem" destination="L6X-wW-BX7" id="dWX-RL-VW2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C4O-ZK-Eug" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -133,7 +116,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -200,9 +183,10 @@
     <resources>
         <image name="account" width="24" height="24"/>
         <image name="add_diary" width="24" height="24"/>
-        <image name="camera_shutter" width="128" height="128"/>
+        <image name="camera_flash" width="32" height="32"/>
+        <image name="camera_shutter" width="64" height="64"/>
         <image name="diary_home" width="24" height="24"/>
-        <image name="switch_position" width="128" height="128"/>
+        <image name="switch_camera_position" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="u0J-Vl-lx5"/>

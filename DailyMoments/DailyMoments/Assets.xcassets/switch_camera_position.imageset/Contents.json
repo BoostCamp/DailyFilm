@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "switch_position.png",
+      "filename" : "switch_camera_position.png",
       "scale" : "1x"
     },
     {
