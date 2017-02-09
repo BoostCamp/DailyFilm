@@ -230,12 +230,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     
     func disableCameraOptionButton(){
+        
         switchOfCameraBarButtonItem.isEnabled = false
         flashOfCameraBarButtonItem.isEnabled = false
     }
     
     func setUpCamera(){
-        
         
         switchOfCameraBarButtonItem.isEnabled = true
         flashOfCameraBarButtonItem.isEnabled = true
@@ -309,9 +309,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     
     // Find a camera with the specified AVCaptureDevicePosition, returning nil if one is not found
-    func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice?
-    {
-        
+    func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
         
         let deviceSession = AVCaptureDeviceDiscoverySession(deviceTypes: [.builtInDualCamera, .builtInTelephotoCamera, .builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
         
