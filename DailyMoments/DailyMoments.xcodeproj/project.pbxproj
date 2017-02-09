@@ -16,6 +16,8 @@
 		3D38AE771E4AFFE60056CF5E /* EditPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */; };
 		3D7448BD1E4B896B0003F6AB /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */; };
 		3DCB99941E49B28900B6EB21 /* HomeTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */; };
+		3DD1E5461E4C2AA5008FB12F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD1E5451E4C2AA5008FB12F /* Constants.swift */; };
+		3DD1E54C1E4C644A008FB12F /* DiaryHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD1E54B1E4C644A008FB12F /* DiaryHomeViewController.swift */; };
 		3DD7E2411E4B305100AD288F /* CameraFillterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +45,8 @@
 		3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPhotoViewController.swift; sourceTree = "<group>"; };
 		3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTabBarController.swift; sourceTree = "<group>"; };
+		3DD1E5451E4C2AA5008FB12F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		3DD1E54B1E4C644A008FB12F /* DiaryHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiaryHomeViewController.swift; sourceTree = "<group>"; };
 		3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFillterCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +99,8 @@
 				3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */,
 				3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */,
 				3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */,
+				3DD1E5451E4C2AA5008FB12F /* Constants.swift */,
+				3DD1E54B1E4C644A008FB12F /* DiaryHomeViewController.swift */,
 			);
 			path = DailyMoments;
 			sourceTree = "<group>";
@@ -214,9 +220,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D1952DC1E487467006A05BC /* CameraViewController.swift in Sources */,
+				3DD1E54C1E4C644A008FB12F /* DiaryHomeViewController.swift in Sources */,
 				3D7448BD1E4B896B0003F6AB /* ImageExtension.swift in Sources */,
 				3D1952DA1E487467006A05BC /* AppDelegate.swift in Sources */,
 				3DCB99941E49B28900B6EB21 /* HomeTabBarController.swift in Sources */,
+				3DD1E5461E4C2AA5008FB12F /* Constants.swift in Sources */,
 				3D38AE771E4AFFE60056CF5E /* EditPhotoViewController.swift in Sources */,
 				3DD7E2411E4B305100AD288F /* CameraFillterCollectionViewCell.swift in Sources */,
 			);

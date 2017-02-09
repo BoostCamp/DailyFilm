@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class EditPhotoViewController: UIViewController {
    
@@ -17,6 +18,7 @@ class EditPhotoViewController: UIViewController {
         static let titles: [String?] = ["Filter"]
         static let rowTitles: [[String?]?] = [["Normal", "Mono", "Tonal", "Noir", "Fade", "Chrome", "Process", "Transfer", "Instant"]]
 
+        
         static func numberOfRows(of section: Int) -> Int {
             return rowTitles[section]?.count ?? 0
         }
@@ -27,18 +29,29 @@ class EditPhotoViewController: UIViewController {
     
     @IBOutlet weak var imagefilterCollectionView: UICollectionView!
     @IBOutlet weak var photographedImage: UIImageView!
-    var takenPhotoImage: UIImage?
-    var takenResizedPhotoImage: UIImage?
     
+    
+    var takenPhotoImage: UIImage? // 촬영한 원본 Image
+    var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
+        
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set UICollectionViewDelegate * UICollecionViewDatasource
         imagefilterCollectionView.delegate = self
         imagefilterCollectionView.dataSource = self
+        
         photographedImage.image = takenPhotoImage
+        
+        // 이미지에서 Tap Gesture 받을 수 있게 설정 (기본값은 false)
+        photographedImage.isUserInteractionEnabled = true
+        
+        let photographedImageGestureRecogninzer:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggledImage))
+        photographedImage.addGestureRecognizer(photographedImageGestureRecogninzer)
     }
 
     
-    // MARK:- View Controller Lifecyle
+    // MARK: - View Controller Lifecyle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -72,6 +85,12 @@ class EditPhotoViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // MARK: - General functions
+    
+    func toggledImage(sender: UITapGestureRecognizer){
+        print("1")
+    }
    
 }
 
