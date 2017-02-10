@@ -20,6 +20,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var shutterOfCameraBarButtonItem: UIBarButtonItem! // 카메라 셔터(촬영) 버튼
     @IBOutlet weak var switchOfCameraBarButtonItem: UIBarButtonItem! // 전면/후면카메라 스위치 버튼
     
+    var focusBox: UIView!
     
     
     // 참고할 문서.
@@ -391,84 +392,4 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
 }
 
 
-
-extension CameraViewController {
-    
-    enum FlashModeConstant: Int {
-        case off = 0
-        case on
-        case auto
-    }
-    
-    
-    // MARK:- Flash Mode
-    
-    func getCurrentFlashMode(_ mode : Int) -> AVCaptureFlashMode{
-        
-        var valueOfAVCaptureFlashMode: AVCaptureFlashMode = .off
-        
-        switch mode {
-        case FlashModeConstant.off.rawValue:
-            valueOfAVCaptureFlashMode = .off
-        case FlashModeConstant.auto.rawValue:
-            valueOfAVCaptureFlashMode = .auto
-        case FlashModeConstant.on.rawValue:
-            valueOfAVCaptureFlashMode = .on
-        default:
-            break;
-        }
-        return valueOfAVCaptureFlashMode
-    }
-    
-    // MARK:- Change the device’s activeFormat property.
-    
-    // 초점 맞추기
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        if let coordinates = touches.first, let device = captureDevice {
-            
-            // 전면 카메라는 FocusPointOfInterest를 지원하지 않습니다.
-            if device.isFocusPointOfInterestSupported {
-                
-                let focusPoint = touchPercent(touch : coordinates)
-                
-                do {
-                    try device.lockForConfiguration()
-
-                    // FocusPointOfInterest 를 통해 초점을 잡아줌.
-                    device.focusPointOfInterest = focusPoint
-                    device.focusMode = .autoFocus
-                    device.exposurePointOfInterest = focusPoint
-                    device.exposureMode = AVCaptureExposureMode.continuousAutoExposure
-                    device.unlockForConfiguration()
-                    
-                } catch{
-                    fatalError()
-                }
-            }
-            // 전면 카메라에서는 FocusPointOfInterest 를 지원하지 않는다.
-        }
-        
-    }
-    
-    // 화면 밝기
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
-    
-    func touchPercent(touch coordinates: UITouch) -> CGPoint {
-        
-        // 카메라 사이즈 구하기
-        let screenSize = cameraView.bounds.size
-        
-        // 0~1.0 으로 x, y 화면대비 비율 구하기
-        let x = coordinates.location(in: cameraView).y / screenSize.height
-        let y = 1.0 - coordinates.location(in: cameraView).x / screenSize.width
-        let ratioOfPoint = CGPoint(x: x, y: y)
-        
-        return ratioOfPoint
-        
-    }
-    
-}
 
