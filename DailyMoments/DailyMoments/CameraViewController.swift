@@ -26,9 +26,15 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
     
     // You use an AVCaptureSession object to coordinate the flow of data from AV input devices to outputs.
+    
+    var captureDevice: AVCaptureDevice? // AVCaptureDevice 객체는 물리적 캡처 장치와 해당 장치와 관련된 속성을 나타냅니다. 캡처 장치를 사용하여 기본 하드웨어의 속성을 구성합니다. 캡처 장치는 또한 AVCaptureSession 객체에 입력 데이터 (예 : 오디오 또는 비디오)를 제공합니다.
+    
     var captureSession: AVCaptureSession? // AV 입력장치에서 출력으로의 데이터 흐름을 조정하는 AVCaptureSession 객체입니다.
+    
     var sessionOutput: AVCapturePhotoOutput? // 스틸 사진과 관련된 대부분의 캡처 워크 플로에 대한 최신 인터페이스를 제공하는 AVCaptureOutput의 구체적인 하위 클래스입니다.
+    
     var previewLayer: AVCaptureVideoPreviewLayer? // 입력 장치에서 캡처 한 비디오를 표시하는 데 사용하는 CALayer의 하위 클래스입니다. AVCapureSession과 함께 사용합니다.
+    
     var settingsForMonitoring: AVCapturePhotoSettings? // 단일 사진 캡처 요청에 필요한 모든 기능과 설정을 설명하는 변경 가능한 객체입니다.
     
     var cameraFlashSwitchedStatus: Int = 0 // FlashMode 구분을 위한 저장 프로퍼티
@@ -151,12 +157,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     // 촬영하기
     @IBAction func takePhoto(_ sender: Any) {
-
+        
         if let authorizationStatusOfCamera = authorizationStatus {
             switch authorizationStatusOfCamera {
             case .authorized:
                 print(authorizationStatusOfCamera)
-               
+                
                 settingsForMonitoring = AVCapturePhotoSettings()
                 
                 DispatchQueue.main.async {
@@ -190,15 +196,15 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             let currentCameraInput:AVCaptureInput = session.inputs.first as! AVCaptureInput
             session.removeInput(currentCameraInput)
             
-            // Get new input
-            var newCamera:AVCaptureDevice! = nil
+            captureDevice = nil
+            
             if let input = currentCameraInput as? AVCaptureDeviceInput {
                 if(input.device.position == .back){
-                    newCamera = cameraWithPosition(position: .front)
+                    captureDevice = cameraWithPosition(position: .front)
                     session.sessionPreset = AVCaptureSessionPreset1280x720
                     
                 } else if(input.device.position == .front){
-                    newCamera = cameraWithPosition(position: .back)
+                    captureDevice = cameraWithPosition(position: .back)
                     session.sessionPreset = AVCaptureSessionPreset1920x1080
                 }
             }
@@ -207,7 +213,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             var err: NSError?
             var newVideoInput: AVCaptureDeviceInput!
             do {
-                newVideoInput = try AVCaptureDeviceInput(device: newCamera)
+                newVideoInput = try AVCaptureDeviceInput(device: captureDevice)
             } catch let err1 as NSError {
                 err = err1
                 newVideoInput = nil
@@ -239,7 +245,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         switchOfCameraBarButtonItem.isEnabled = true
         flashOfCameraBarButtonItem.isEnabled = true
-        
+    
         captureSession = AVCaptureSession()
         sessionOutput = AVCapturePhotoOutput()
         previewLayer = AVCaptureVideoPreviewLayer()
@@ -270,6 +276,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 for discoveredDevice in (deviceSession?.devices)! {
                     
                     if discoveredDevice.position == AVCaptureDevicePosition.back {
+                        captureDevice = discoveredDevice // Device를 Set
+                        
                         do {
                             let input = try AVCaptureDeviceInput(device: discoveredDevice)
                             if session.canAddInput(input){
@@ -305,9 +313,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
     
     
-    
-    
-    
     // Find a camera with the specified AVCaptureDevicePosition, returning nil if one is not found
     func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
         
@@ -333,13 +338,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             if let image = takedPhotoImage {
                 switch PHPhotoLibrary.authorizationStatus() {
                 case .authorized:
-                    //설정 - 사진 승인 상태이기에 앨범에 저장 후에 이동
                     
+                    //설정 - 사진 승인 상태이기에 앨범에 저장 후에 이동
                     UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveCompleted), nil)
                     
                 case .denied, .notDetermined:
-                    //설정 - 사진 미승인 상태이기에 앨범에 저장 하지 않고 다음 화면으로 이동
                     
+                    //설정 - 사진 미승인 상태이기에 앨범에 저장 하지 않고 다음 화면으로 이동
                     navigateToFilterViewControllerWithResizeImage(source: image)
                     
                 default:
@@ -351,7 +356,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     // UIImageWriteToSavedPhotosAlbum 메소드 수행 후에 completionSelector
     func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
-        dump(image)
         navigateToFilterViewControllerWithResizeImage(source: image)
     }
     
@@ -361,6 +365,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         
         if let editPhotoViewController = storyboard?.instantiateViewController(withIdentifier: storyboardIdentifierConstantOfEditPhotoViewController) as? EditPhotoViewController {
+            
             editPhotoViewController.takenPhotoImage = image
             editPhotoViewController.takenResizedPhotoImage = resizedImage
             
@@ -395,6 +400,9 @@ extension CameraViewController {
         case auto
     }
     
+    
+    // MARK:- Flash Mode
+    
     func getCurrentFlashMode(_ mode : Int) -> AVCaptureFlashMode{
         
         var valueOfAVCaptureFlashMode: AVCaptureFlashMode = .off
@@ -410,6 +418,56 @@ extension CameraViewController {
             break;
         }
         return valueOfAVCaptureFlashMode
+    }
+    
+    // MARK:- Change the device’s activeFormat property.
+    
+    // 초점 맞추기
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        if let coordinates = touches.first, let device = captureDevice {
+            
+            // 전면 카메라는 FocusPointOfInterest를 지원하지 않습니다.
+            if device.isFocusPointOfInterestSupported {
+                
+                let focusPoint = touchPercent(touch : coordinates)
+                
+                do {
+                    try device.lockForConfiguration()
+
+                    // FocusPointOfInterest 를 통해 초점을 잡아줌.
+                    device.focusPointOfInterest = focusPoint
+                    device.focusMode = .autoFocus
+                    device.exposurePointOfInterest = focusPoint
+                    device.exposureMode = AVCaptureExposureMode.continuousAutoExposure
+                    device.unlockForConfiguration()
+                    
+                } catch{
+                    fatalError()
+                }
+            }
+            // 전면 카메라에서는 FocusPointOfInterest 를 지원하지 않는다.
+        }
+        
+    }
+    
+    // 화면 밝기
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    func touchPercent(touch coordinates: UITouch) -> CGPoint {
+        
+        // 카메라 사이즈 구하기
+        let screenSize = cameraView.bounds.size
+        
+        // 0~1.0 으로 x, y 화면대비 비율 구하기
+        let x = coordinates.location(in: cameraView).y / screenSize.height
+        let y = 1.0 - coordinates.location(in: cameraView).x / screenSize.width
+        let ratioOfPoint = CGPoint(x: x, y: y)
+        
+        return ratioOfPoint
+        
     }
     
 }

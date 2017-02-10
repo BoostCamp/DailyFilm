@@ -12,6 +12,7 @@ import Photos
 class EditPhotoViewController: UIViewController {
 
     @IBOutlet weak var imagefilterCollectionView: UICollectionView!
+    
     @IBOutlet weak var photographedImage: UIImageView!
     
     var takenPhotoImage: UIImage? // 촬영한 원본 Image
@@ -26,9 +27,11 @@ class EditPhotoViewController: UIViewController {
         imagefilterCollectionView.delegate = self
         imagefilterCollectionView.dataSource = self
         
+        // 촬영한 이미지를 set
         photographedImage.image = takenPhotoImage
         
-        imageTapStatus = false // 이미지가 안눌린 상태로 초기값 설정
+        // 이미지가 안눌린 상태로 초기값 설정
+        imageTapStatus = false
         
         // 이미지에서 Tap Gesture 받을 수 있게 설정 (기본값은 false)
         photographedImage.isUserInteractionEnabled = true
@@ -73,7 +76,7 @@ class EditPhotoViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-    
+      
 }
 
 
@@ -84,8 +87,12 @@ extension EditPhotoViewController : UICollectionViewDataSource, UICollectionView
     struct PhotoEditorTypes{
         
         static let titles: [String?] = ["Filter"]
-        static let rowTitles: [[String?]?] = [["Normal", "Mono", "Tonal", "Noir", "Fade", "Chrome", "Process", "Transfer", "Instant"]]
         
+        // filter input Key
+        static let rowTitles: [[String?]?] = [["Normal", "CIPhotoEffectMono", "CIPhotoEffectTonal", "CIPhotoEffectNoir", "CIPhotoEffectFade", "CIPhotoEffectChrome", "CIPhotoEffectProcess", "CIPhotoEffectTransfer", "CIPhotoEffectTransfer"]]
+        
+        // filter 이름
+        static let rowTitlesValues: [[String?]?] = [["Normal", "Mono", "Tonal", "Noir", "Fade", "Chrome", "tProcess", "Transfer", "Instant"]]
         
         static func numberOfRows(of section: Int) -> Int {
             return rowTitles[section]?.count ?? 0
@@ -109,8 +116,13 @@ extension EditPhotoViewController : UICollectionViewDataSource, UICollectionView
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EditPhotoViewController.cameraFilterCollectionViewCellIdentifier, for: indexPath) as! CameraFillterCollectionViewCell
         
-        cell.filterTitleLabel.text = PhotoEditorTypes.rowTitles[indexPath.section]?[indexPath.row]
-        cell.filterImageView.image = takenResizedPhotoImage
+        cell.filterTitleLabel.text = PhotoEditorTypes.rowTitlesValues[indexPath.section]?[indexPath.row]
+             
+        if let filterTitle = PhotoEditorTypes.rowTitles[indexPath.section]?[indexPath.row] {
+            cell.filterImageView.image = takenResizedPhotoImage?.applyFilter(type: filterTitle)
+                
+        }
+        
         return cell
     }
     
@@ -121,6 +133,13 @@ extension EditPhotoViewController : UICollectionViewDataSource, UICollectionView
         if let selectedCell = collectionView.cellForItem(at: indexPath) as? CameraFillterCollectionViewCell{
             
             selectedCell.isSelected = true
+            
+            if let filterTitle = PhotoEditorTypes.rowTitles[indexPath.section]?[indexPath.row] {
+                
+                DispatchQueue.main.async {
+                    self.photographedImage.image = self.takenPhotoImage?.applyFilter(type: filterTitle)
+                }
+            }
             
             // 선택한 셀을 수평 중간으로 스크롤링 해주는 메소드
             self.imagefilterCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
