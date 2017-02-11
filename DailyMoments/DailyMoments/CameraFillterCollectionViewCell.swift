@@ -16,20 +16,11 @@ class CameraFillterCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         filterTitleLabel.textColor =  self.isSelected ? UIColor.black : UIColor.gray
     }
-    
+
     override var isSelected: Bool {
-        get {
-            return super.isSelected
-        }
-        set {
-            if newValue {
-                super.isSelected = true
-                self.filterTitleLabel.textColor = UIColor.black
-            } else if newValue == false {
-                super.isSelected = false
-                self.filterTitleLabel.textColor = UIColor.gray
-            }
+        didSet {
+            // if가 더 컴파일 속도가 빠름
+            self.filterTitleLabel.textColor = isSelected ? UIColor.black : UIColor.gray
         }
     }
-    
 }

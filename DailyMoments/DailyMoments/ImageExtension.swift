@@ -53,18 +53,30 @@ extension UIImage {
             fatalError("error..")
         }
         
+        /*
+         
+         OpenGL ES는 하드웨어 가속 2D 및 3D 그래픽 렌더링을위한 C 기반 인터페이스를 제공합니다. iOS의 OpenGL ES 프레임 워크 (OpenGLES.framework)는 OpenGL ES 사양의 버전 1.1, 2.0 및 3.0 구현을 제공합니다.
+
+         EAGL penGL ES 용 플랫폼 별 API
+         the platform-specific APIs for OpenGL ES on iOS devices,
+         
+         */
+        
         let openGLContext = EAGLContext(api: .openGLES3)
+        
         let context = CIContext(eaglContext: openGLContext!)
         
         let ciImage = CIImage(cgImage: image)
         
-        let filter = CIFilter(name: filterName)
-        filter?.setDefaults()
-        filter?.setValue(ciImage, forKey: kCIInputImageKey)
-        
-        if let output = filter?.value(forKey: kCIOutputImageKey) as? CIImage {
-
-            resultImage = UIImage(cgImage: context.createCGImage(output, from: output.extent)!, scale: scale, orientation: originalOrientation)
+        if let filter = CIFilter(name: filterName) {
+            filter.setDefaults()
+            filter.setValue(ciImage, forKey: kCIInputImageKey)
+            
+            if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
+                
+                resultImage = UIImage(cgImage: context.createCGImage(output, from: output.extent)!, scale: scale, orientation: originalOrientation)
+            }
+            
         }
         
         return resultImage

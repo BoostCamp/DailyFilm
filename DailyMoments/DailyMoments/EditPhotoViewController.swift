@@ -89,10 +89,28 @@ extension EditPhotoViewController : UICollectionViewDataSource, UICollectionView
         static let titles: [String?] = ["Filter"]
         
         // filter input Key
-        static let rowTitles: [[String?]?] = [["Normal", "CIPhotoEffectMono", "CIPhotoEffectTonal", "CIPhotoEffectNoir", "CIPhotoEffectFade", "CIPhotoEffectChrome", "CIPhotoEffectProcess", "CIPhotoEffectTransfer", "CIPhotoEffectTransfer"]]
+        static let rowTitles: [[String?]?] =
+            [["Normal",
+              "CIPhotoEffectMono",
+              "CIPhotoEffectTonal",
+              "CIPhotoEffectNoir",
+              "CIPhotoEffectFade",
+              "CIPhotoEffectChrome",
+              "CIPhotoEffectProcess",
+              "CIPhotoEffectTransfer",
+              "CIPhotoEffectTransfer"]]
         
         // filter 이름
-        static let rowTitlesValues: [[String?]?] = [["Normal", "Mono", "Tonal", "Noir", "Fade", "Chrome", "tProcess", "Transfer", "Instant"]]
+        static let rowTitlesValues: [[String?]?] =
+            [["Normal",
+              "Mono",
+              "Tonal",
+              "Noir",
+              "Fade",
+              "Chrome",
+              "Process",
+              "Transfer",
+              "Instant"]]
         
         static func numberOfRows(of section: Int) -> Int {
             return rowTitles[section]?.count ?? 0
