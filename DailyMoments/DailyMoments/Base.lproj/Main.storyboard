@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -183,7 +184,15 @@
                             <constraint firstItem="YoP-j4-kri" firstAttribute="centerY" secondItem="OAk-FI-Pcv" secondAttribute="centerY" id="tg1-Ns-tYh"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Pfp-pq-BBY">
+                        <barButtonItem key="rightBarButtonItem" title="다음" id="dgp-1x-cPx">
+                            <connections>
+                                <segue destination="haz-Pw-ELe" kind="show" identifier="showAddContentViewController" id="gcT-MM-d2r"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="imagefilterCollectionView" destination="a2X-BT-T7U" id="J76-hM-acJ"/>
                         <outlet property="photographedImage" destination="YoP-j4-kri" id="3z1-Uj-3cr"/>
@@ -191,7 +200,70 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dbR-bw-o3s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1024.8" y="304.4977511244378"/>
+            <point key="canvasLocation" x="1964" y="304.4977511244378"/>
+        </scene>
+        <!--Add Content View Controller-->
+        <scene sceneID="qec-Yd-PZp">
+            <objects>
+                <viewController id="haz-Pw-ELe" customClass="AddContentViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6vH-7N-6G7"/>
+                        <viewControllerLayoutGuide type="bottom" id="laL-Up-S81"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HgQ-8V-0uq">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="slC-oR-u2h">
+                                <rect key="frame" x="16" y="64" width="343" height="118.5"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5O1-Ha-5eS">
+                                        <rect key="frame" x="0.0" y="0.0" width="118.5" height="118.5"/>
+                                    </imageView>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="사진에 남기고 싶은 말을 입력하세요." textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="CHA-UI-xvS" userLabel="Text Filed ">
+                                        <rect key="frame" x="138.5" y="0.0" width="204.5" height="118.5"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="5O1-Ha-5eS" firstAttribute="width" secondItem="slC-oR-u2h" secondAttribute="height" id="kt7-jH-7lR"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="slC-oR-u2h" firstAttribute="trailing" secondItem="HgQ-8V-0uq" secondAttribute="trailingMargin" id="RBY-HE-wjk"/>
+                            <constraint firstItem="slC-oR-u2h" firstAttribute="top" secondItem="6vH-7N-6G7" secondAttribute="bottom" constant="20" id="oXf-7f-qOd"/>
+                            <constraint firstItem="slC-oR-u2h" firstAttribute="leading" secondItem="HgQ-8V-0uq" secondAttribute="leadingMargin" id="unZ-uO-5lX"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Vx8-dE-LtB"/>
+                        <barButtonItem image="navigation" id="lL5-nh-TCe"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ZU5-93-Ccz"/>
+                        <barButtonItem image="time" id="07e-px-zgk"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ghY-dw-oVy"/>
+                        <barButtonItem image="star" id="e00-mF-8C9"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="zsr-Sa-VCC"/>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" id="EAC-fO-zVp">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="7AT-io-y6A">
+                            <connections>
+                                <action selector="completedPosting:" destination="haz-Pw-ELe" id="o9f-Cs-vNV"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="contentTextField" destination="CHA-UI-xvS" id="maN-XD-se9"/>
+                        <outlet property="previewOfPhotoToPostImageView" destination="5O1-Ha-5eS" id="M1u-yR-v2a"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cE5-Zd-bNM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2700" y="301.79910044977515"/>
         </scene>
         <!--Home Tab Bar Controller-->
         <scene sceneID="X8N-wE-xRA">
@@ -226,7 +298,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -280,6 +352,24 @@
             </objects>
             <point key="canvasLocation" x="-1076" y="305"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ntE-VG-Pg5">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jyH-aV-KNf" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rVl-Ey-txi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="dcS-RD-4Y0" kind="relationship" relationship="rootViewController" id="p0m-E6-rU4"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X7I-1v-bwm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1024.8" y="304.4977511244378"/>
+        </scene>
     </scenes>
     <resources>
         <image name="account" width="24" height="24"/>
@@ -287,9 +377,12 @@
         <image name="camera_flash_off" width="32" height="32"/>
         <image name="camera_shutter" width="64" height="64"/>
         <image name="diary_home" width="24" height="24"/>
+        <image name="navigation" width="24" height="24"/>
+        <image name="star" width="24" height="24"/>
         <image name="switch_camera_position" width="32" height="32"/>
+        <image name="time" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Tkb-AI-rUo"/>
+        <segue reference="u0J-Vl-lx5"/>
     </inferredMetricsTieBreakers>
 </document>

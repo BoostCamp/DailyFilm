@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D0AD2CD1E50B4E6006D1C2E /* AddContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */; };
+		3D0AD2CF1E50B5E3006D1C2E /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0AD2CE1E50B5E3006D1C2E /* UIColorExtension.swift */; };
 		3D1952DA1E487467006A05BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952D91E487467006A05BC /* AppDelegate.swift */; };
 		3D1952DC1E487467006A05BC /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952DB1E487467006A05BC /* CameraViewController.swift */; };
 		3D1952DF1E487467006A05BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1952DD1E487467006A05BC /* Main.storyboard */; };
@@ -34,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddContentViewController.swift; sourceTree = "<group>"; };
+		3D0AD2CE1E50B5E3006D1C2E /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		3D1952D61E487467006A05BC /* DailyMoments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMoments.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1952D91E487467006A05BC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D1952DB1E487467006A05BC /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 				3DD1E54B1E4C644A008FB12F /* DiaryHomeViewController.swift */,
 				3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */,
 				3D5882681E4DAC3E00F82A59 /* CameraViewControllerExtension.swift */,
+				3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */,
+				3D0AD2CE1E50B5E3006D1C2E /* UIColorExtension.swift */,
 			);
 			path = DailyMoments;
 			sourceTree = "<group>";
@@ -225,6 +231,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D0AD2CD1E50B4E6006D1C2E /* AddContentViewController.swift in Sources */,
 				3D1952DC1E487467006A05BC /* CameraViewController.swift in Sources */,
 				3D5882691E4DAC3E00F82A59 /* CameraViewControllerExtension.swift in Sources */,
 				3DD1E54C1E4C644A008FB12F /* DiaryHomeViewController.swift in Sources */,
@@ -235,6 +242,7 @@
 				3DD1E5461E4C2AA5008FB12F /* Constants.swift in Sources */,
 				3D38AE771E4AFFE60056CF5E /* EditPhotoViewController.swift in Sources */,
 				3DD7E2411E4B305100AD288F /* CameraFillterCollectionViewCell.swift in Sources */,
+				3D0AD2CF1E50B5E3006D1C2E /* UIColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

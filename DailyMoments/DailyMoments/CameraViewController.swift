@@ -54,6 +54,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("viewWillAppear in CameraViewController")
+
+        // toolbar hide
+        navigationController?.isToolbarHidden = true
         
         let availableCameraHardware:Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
         shutterOfCameraBarButtonItem.isEnabled = availableCameraHardware
@@ -67,13 +70,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 setUpCamera() // 카메라 setup
                 
             case .denied:
-                print(authorizationStatusOfCamera)
                 showNotice(alertCase: .Camera) // 접근 권한이 없으므로 사용자에게 설정 - DailyMoments - 카메라 허가 요청 UIAlertController 호출
                 
                 disableCameraOptionButton() // 플래쉬, 스위칭 버튼 disabled
                 
             case .notDetermined:
-                print(authorizationStatusOfCamera)
                 AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler : { (granted: Bool) in
                     
                     if granted {
@@ -170,7 +171,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                     if let photoCaptureSetting = self.settingsForMonitoring, let capturePhotoOutput = self.sessionOutput{
                         
                         photoCaptureSetting.flashMode = self.getCurrentFlashMode(self.cameraFlashSwitchedStatus)
+                        
+                        // 자동 안정화 이미지 여부, default는 true
+                    
                         photoCaptureSetting.isAutoStillImageStabilizationEnabled = true
+                    
+                        // 활성 장치 및 형식에서 지원하는 최고 해상도로 스틸 이미지를 캡처할지 여부를 지정.
                         photoCaptureSetting.isHighResolutionPhotoEnabled = false
                         
                         capturePhotoOutput.capturePhoto(with: photoCaptureSetting, delegate: self)

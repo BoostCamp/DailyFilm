@@ -19,6 +19,7 @@ class EditPhotoViewController: UIViewController {
     var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
     var imageTapStatus: Bool? // 이미지 탭 여부
 
+    fileprivate static let showAddContentViewControllerSegueIdentifier = "showAddContentViewController"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +47,10 @@ class EditPhotoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("viewWillAppear in EditPhotoViewController")
+
+        // toolbar hide
+        navigationController?.isToolbarHidden = true
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -67,15 +72,21 @@ class EditPhotoViewController: UIViewController {
     }
     
     
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        if segue.identifier == EditPhotoViewController.showAddContentViewControllerSegueIdentifier {
+            if let addTextViewController:AddContentViewController = segue.destination as? AddContentViewController {
+                addTextViewController.takenResizedPhotoImage = photographedImage.image
+            }
+            
+        }
+        
     }
-    */
+ 
       
 }
 
