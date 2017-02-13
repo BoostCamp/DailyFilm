@@ -99,23 +99,13 @@
 		3D1952D81E487467006A05BC /* DailyMoments */ = {
 			isa = PBXGroup;
 			children = (
+				3DA82C061E5191DF00061CE2 /* View */,
+				3DA82C051E51918B00061CE2 /* Controller */,
+				3DA82C041E51917600061CE2 /* Resource */,
+				3DA82C031E51913800061CE2 /* Model */,
 				3DEAAE261E51690D000D593D /* Extension */,
 				3D1952D91E487467006A05BC /* AppDelegate.swift */,
-				3D1952DB1E487467006A05BC /* CameraViewController.swift */,
-				3D1952DD1E487467006A05BC /* Main.storyboard */,
-				3D1952E01E487467006A05BC /* Assets.xcassets */,
-				3D1952E21E487467006A05BC /* LaunchScreen.storyboard */,
 				3D1952E51E487467006A05BC /* Info.plist */,
-				3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */,
-				3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */,
-				3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */,
-				3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */,
-				3DD1E5451E4C2AA5008FB12F /* Constants.swift */,
-				3DD1E54B1E4C644A008FB12F /* DiaryHomeViewController.swift */,
-				3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */,
-				3D5882681E4DAC3E00F82A59 /* CameraViewControllerExtension.swift */,
-				3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */,
-				3D0AD2CE1E50B5E3006D1C2E /* UIColorExtension.swift */,
 			);
 			path = DailyMoments;
 			sourceTree = "<group>";
@@ -129,9 +119,51 @@
 			path = DailyMomentsTests;
 			sourceTree = "<group>";
 		};
+		3DA82C031E51913800061CE2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3DD1E5451E4C2AA5008FB12F /* Constants.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		3DA82C041E51917600061CE2 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				3D1952E01E487467006A05BC /* Assets.xcassets */,
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
+		3DA82C051E51918B00061CE2 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3D1952DB1E487467006A05BC /* CameraViewController.swift */,
+				3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */,
+				3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */,
+				3DD1E54B1E4C644A008FB12F /* DiaryHomeViewController.swift */,
+				3D5882681E4DAC3E00F82A59 /* CameraViewControllerExtension.swift */,
+				3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		3DA82C061E5191DF00061CE2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3D1952DD1E487467006A05BC /* Main.storyboard */,
+				3D1952E21E487467006A05BC /* LaunchScreen.storyboard */,
+				3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		3DEAAE261E51690D000D593D /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */,
+				3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */,
+				3D0AD2CE1E50B5E3006D1C2E /* UIColorExtension.swift */,
 				3DEAAE271E51691B000D593D /* DateExtension.swift */,
 			);
 			name = Extension;
