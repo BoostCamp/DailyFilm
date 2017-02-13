@@ -24,8 +24,6 @@
 		3DD55EC31E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */; };
 		3DD7E2411E4B305100AD288F /* CameraFillterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */; };
 		3DEAAE281E51691B000D593D /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAAE271E51691B000D593D /* DateExtension.swift */; };
-		7006D501B03D6405243D6375 /* Pods_DailyMoments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7672D8B490BB0B36C3B0ED26 /* Pods_DailyMoments.framework */; };
-		986AD065A9F473CDE290324E /* Pods_DailyMomentsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFB77B02E71D53D735595B21 /* Pods_DailyMomentsTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,7 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		18875C5040B64EC46123395D /* Pods-DailyMoments.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyMoments.release.xcconfig"; path = "Pods/Target Support Files/Pods-DailyMoments/Pods-DailyMoments.release.xcconfig"; sourceTree = "<group>"; };
 		3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddContentViewController.swift; sourceTree = "<group>"; };
 		3D0AD2CE1E50B5E3006D1C2E /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		3D1952D61E487467006A05BC /* DailyMoments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMoments.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,11 +58,6 @@
 		3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITapGestureRecognizerExtension.swift; sourceTree = "<group>"; };
 		3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFillterCollectionViewCell.swift; sourceTree = "<group>"; };
 		3DEAAE271E51691B000D593D /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
-		698BB858EB46C453DD382CFF /* Pods-DailyMomentsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyMomentsTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DailyMomentsTests/Pods-DailyMomentsTests.release.xcconfig"; sourceTree = "<group>"; };
-		7672D8B490BB0B36C3B0ED26 /* Pods_DailyMoments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DailyMoments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BFB77B02E71D53D735595B21 /* Pods_DailyMomentsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DailyMomentsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D5C7B024D7C84FD51AB6684B /* Pods-DailyMoments.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyMoments.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyMoments/Pods-DailyMoments.debug.xcconfig"; sourceTree = "<group>"; };
-		E80E18C9D94AC285CA88D849 /* Pods-DailyMomentsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyMomentsTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyMomentsTests/Pods-DailyMomentsTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +65,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7006D501B03D6405243D6375 /* Pods_DailyMoments.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,32 +72,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				986AD065A9F473CDE290324E /* Pods_DailyMomentsTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		24BF8A19029821227B656EE2 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D5C7B024D7C84FD51AB6684B /* Pods-DailyMoments.debug.xcconfig */,
-				18875C5040B64EC46123395D /* Pods-DailyMoments.release.xcconfig */,
-				E80E18C9D94AC285CA88D849 /* Pods-DailyMomentsTests.debug.xcconfig */,
-				698BB858EB46C453DD382CFF /* Pods-DailyMomentsTests.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		3D1952CD1E487467006A05BC = {
 			isa = PBXGroup;
 			children = (
 				3D1952D81E487467006A05BC /* DailyMoments */,
 				3D1952ED1E487467006A05BC /* DailyMomentsTests */,
 				3D1952D71E487467006A05BC /* Products */,
-				24BF8A19029821227B656EE2 /* Pods */,
-				C1C5DB5254089644F68B7D90 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -160,15 +137,6 @@
 			name = Extension;
 			sourceTree = "<group>";
 		};
-		C1C5DB5254089644F68B7D90 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				7672D8B490BB0B36C3B0ED26 /* Pods_DailyMoments.framework */,
-				BFB77B02E71D53D735595B21 /* Pods_DailyMomentsTests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -176,12 +144,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D1952F31E487467006A05BC /* Build configuration list for PBXNativeTarget "DailyMoments" */;
 			buildPhases = (
-				6E460E00EC5F9029A8F72D19 /* [CP] Check Pods Manifest.lock */,
 				3D1952D21E487467006A05BC /* Sources */,
 				3D1952D31E487467006A05BC /* Frameworks */,
 				3D1952D41E487467006A05BC /* Resources */,
-				DC7F23F9254D070A144D5C63 /* [CP] Embed Pods Frameworks */,
-				EAF18485BEB6CFCC05238F02 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -196,12 +161,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D1952F61E487467006A05BC /* Build configuration list for PBXNativeTarget "DailyMomentsTests" */;
 			buildPhases = (
-				A377330E7260575F58B4E195 /* [CP] Check Pods Manifest.lock */,
 				3D1952E61E487467006A05BC /* Sources */,
 				3D1952E71E487467006A05BC /* Frameworks */,
 				3D1952E81E487467006A05BC /* Resources */,
-				42DBE011857E28EFC08517FB /* [CP] Embed Pods Frameworks */,
-				2C9B98E08D497DC33540CD50 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -274,99 +236,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		2C9B98E08D497DC33540CD50 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DailyMomentsTests/Pods-DailyMomentsTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		42DBE011857E28EFC08517FB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DailyMomentsTests/Pods-DailyMomentsTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6E460E00EC5F9029A8F72D19 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		A377330E7260575F58B4E195 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		DC7F23F9254D070A144D5C63 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DailyMoments/Pods-DailyMoments-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EAF18485BEB6CFCC05238F02 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DailyMoments/Pods-DailyMoments-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3D1952D21E487467006A05BC /* Sources */ = {
@@ -522,7 +391,6 @@
 		};
 		3D1952F41E487467006A05BC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D5C7B024D7C84FD51AB6684B /* Pods-DailyMoments.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 887CC3EW57;
@@ -536,7 +404,6 @@
 		};
 		3D1952F51E487467006A05BC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18875C5040B64EC46123395D /* Pods-DailyMoments.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 887CC3EW57;
@@ -550,7 +417,6 @@
 		};
 		3D1952F71E487467006A05BC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E80E18C9D94AC285CA88D849 /* Pods-DailyMomentsTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -566,7 +432,6 @@
 		};
 		3D1952F81E487467006A05BC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 698BB858EB46C453DD382CFF /* Pods-DailyMomentsTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
