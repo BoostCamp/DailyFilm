@@ -9,38 +9,34 @@
 import UIKit
 
 class AddContentViewController: UIViewController {
-
+    
     
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
- 
+    
     var takenResizedPhotoImage: UIImage?
     
     @IBOutlet weak var contentTextField: UITextField!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-/*
-        let screenSize: CGRect = UIScreen.main.bounds
-        let sizeOfpreviewImageView: CGFloat = screenSize.width * 0.2
-        previewOfPhotoToPostImageView.frame = CGRect(x: 0, y: 0, width: sizeOfpreviewImageView, height: sizeOfpreviewImageView)
-*/
-
+        
+        
+        // resize하여 view에 보여줌.
         previewOfPhotoToPostImageView.image = takenResizedPhotoImage?.resizeImage(targetSize: CGSize(width: 64, height: 64))
-
+        
         // rightBarButton인 Done버튼 tint색을 애플의 파란색으로 변경
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appleBlue()
         
         contentTextField.delegate = self
     }
-
+    
     // MARK: View Controller Lifecycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         navigationController?.isToolbarHidden = false
-
+        
         // UIKeyboardWillShow, UIKeyboardWillHide이벤트 통지 가입 (NSNotification.Name)
         subscribeToKeyboardNotifications()
         
@@ -61,25 +57,20 @@ class AddContentViewController: UIViewController {
         super.viewDidDisappear(animated)
     }
     
-    
     @IBAction func completedPosting(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension AddContentViewController: UITextFieldDelegate {
+    
+    enum ContentType: Int {
+        case location = 0
+        case time
+        case favorite
+    }
+    
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         print("textFieldShouldBeginEditing")
@@ -89,6 +80,9 @@ extension AddContentViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print("textFieldDidBeginEditing")
+        if contentTextField.inputAccessoryView == nil {
+            addDoneButtonOnKeyboard()
+        }
     }
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
@@ -99,10 +93,11 @@ extension AddContentViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("textFieldShouldReturn")
-
+        
         // Enter was pressed
-        textField.resignFirstResponder()
-
+        dismissKeyboard()
+        //        textField.resignFirstResponder()
+        
         return true
     }
     
@@ -153,5 +148,62 @@ extension AddContentViewController: UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
         
+    }
+    
+    func dismissKeyboard(){
+        contentTextField.resignFirstResponder()
+    }
+    
+    func addContent(to type: UIBarButtonItem){
+        dump(type.tag)
+        
+        switch type.tag {
+        case ContentType.location.rawValue :
+            print("촬영 위치")
+        case ContentType.time.rawValue :
+            print("게시 시간")
+        case ContentType.favorite.rawValue :
+            print("위시리스트 설정 여부")
+        default:
+            return
+        }
+        
+    }
+    
+    func addDoneButtonOnKeyboard() {
+        
+        let screenWidthSize:CGFloat = UIScreen.main.bounds.width
+        
+        let locationImage: UIImage? = UIImage(named: "location")
+        let timeImage: UIImage? = UIImage(named: "time")
+        let favoriteImage: UIImage? = UIImage(named: "favorite")
+        
+        let contentTypeToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: screenWidthSize, height: 44))
+        contentTypeToolbar.barStyle = UIBarStyle.default
+        
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        
+        let locationBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(addContent(to:)))
+        locationBarButtonAtAccesoryView.tag = ContentType.location.rawValue
+        
+        let timeBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: timeImage, style: .plain, target: self, action: #selector(addContent(to:)))
+        timeBarButtonAtAccesoryView.tag = ContentType.time.rawValue
+        
+        let favoriteBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: favoriteImage, style: .plain, target: self, action: #selector(addContent(to:)))
+        favoriteBarButtonAtAccesoryView.tag = ContentType.favorite.rawValue
+        
+        var items = [UIBarButtonItem]()
+        items.append(flexSpace)
+        items.append(locationBarButtonAtAccesoryView)
+        items.append(flexSpace)
+        items.append(timeBarButtonAtAccesoryView)
+        items.append(flexSpace)
+        items.append(favoriteBarButtonAtAccesoryView)
+        items.append(flexSpace)
+        
+        contentTypeToolbar.items = items
+        contentTypeToolbar.sizeToFit()
+        
+        contentTextField.inputAccessoryView = contentTypeToolbar
     }
 }

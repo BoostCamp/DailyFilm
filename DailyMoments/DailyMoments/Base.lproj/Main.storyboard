@@ -241,11 +241,11 @@
                     </view>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Vx8-dE-LtB"/>
-                        <barButtonItem image="navigation" id="lL5-nh-TCe"/>
+                        <barButtonItem image="location" id="lL5-nh-TCe"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ZU5-93-Ccz"/>
                         <barButtonItem image="time" id="07e-px-zgk"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ghY-dw-oVy"/>
-                        <barButtonItem image="star" id="e00-mF-8C9"/>
+                        <barButtonItem image="favorite" id="e00-mF-8C9"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="zsr-Sa-VCC"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="EAC-fO-zVp">
@@ -377,8 +377,8 @@
         <image name="camera_flash_off" width="32" height="32"/>
         <image name="camera_shutter" width="64" height="64"/>
         <image name="diary_home" width="24" height="24"/>
-        <image name="navigation" width="24" height="24"/>
-        <image name="star" width="24" height="24"/>
+        <image name="favorite" width="24" height="24"/>
+        <image name="location" width="24" height="24"/>
         <image name="switch_camera_position" width="32" height="32"/>
         <image name="time" width="24" height="24"/>
     </resources>
