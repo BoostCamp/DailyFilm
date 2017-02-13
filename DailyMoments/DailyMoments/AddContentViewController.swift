@@ -58,6 +58,7 @@ class AddContentViewController: UIViewController {
     }
     
     @IBAction func completedPosting(_ sender: Any) {
+        dismissKeyboard()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -81,7 +82,7 @@ extension AddContentViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print("textFieldDidBeginEditing")
         if contentTextField.inputAccessoryView == nil {
-            addDoneButtonOnKeyboard()
+            addContentTypeButtonOnKeyboard()
         }
     }
     
@@ -185,7 +186,7 @@ extension AddContentViewController: UITextFieldDelegate {
         
     }
     
-    func addDoneButtonOnKeyboard() {
+    func addContentTypeButtonOnKeyboard() {
         
         let screenWidthSize:CGFloat = UIScreen.main.bounds.width
         
