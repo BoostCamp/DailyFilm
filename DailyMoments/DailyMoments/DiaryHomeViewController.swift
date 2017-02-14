@@ -15,8 +15,36 @@ class DiaryHomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
+        
+        let fileManager = FileManager.default
+        let directoryPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentDirectory: String = directoryPaths[0]
+        let databasePath: String = documentDirectory.appending("/database.db")
+        
+        if fileManager.fileExists(atPath: databasePath as String) == false {
+            let database = FMDatabase(path: databasePath as String)
+            if database == nil{
+                print("DB 생성 오류")
+            }
+
+            if((database?.open()) != nil) {
+                
+                if !(database?.executeStatements(CreateTableStatements.userProfile))! {
+                    print("USER_PROFILE CREATE TABLE ERROR")
+                }
+                
+                if !(database?.executeStatements(CreateTableStatements.post))!{
+                    print("POST CREATE TABLE ERROR")
+                }
+                
+                database?.close()
+                
+            } else {
+                print("DB 연결 오류")
+            }
+        }
     }
 
     

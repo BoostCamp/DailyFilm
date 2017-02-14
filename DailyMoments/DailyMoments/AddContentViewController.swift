@@ -7,19 +7,35 @@
 //
 
 import UIKit
+import CoreLocation
 
 class AddContentViewController: UIViewController {
     
     
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
-    
+    @IBOutlet weak var contentTextField: UITextField!
+
     var takenResizedPhotoImage: UIImage?
     
-    @IBOutlet weak var contentTextField: UITextField!
+    let manager = CLLocationManager()
+    var currentLocation: CLLocation?
+    var currentPlacemark: CLPlacemark?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if (CLLocationManager.locationServicesEnabled()) {
+            manager.delegate = self
+            manager.desiredAccuracy = kCLLocationAccuracyBest
+            manager.requestWhenInUseAuthorization()
+            manager.startUpdatingLocation()
+            
+            currentLocation = nil
+            currentPlacemark = nil
+            
+        } else {
+            print("Location services are not enabled");
+        }
         
         // resize하여 view에 보여줌.
         previewOfPhotoToPostImageView.image = takenResizedPhotoImage?.resizeImage(targetSize: CGSize(width: 64, height: 64))
@@ -60,6 +76,47 @@ class AddContentViewController: UIViewController {
     @IBAction func completedPosting(_ sender: Any) {
         dismissKeyboard()
         self.dismiss(animated: true, completion: nil)
+    }
+
+    
+    @IBAction func addContent(_ sender: Any) {
+        
+        if let buttonType = sender as? UIBarButtonItem {
+        
+            switch buttonType.tag {
+            case ContentType.location.rawValue :
+                print("촬영 위치")
+                
+                if let currentLocation = currentLocation {
+                    dump(currentLocation)
+                    reverseGeocodingRequestForSpecifiedLocation(location: currentLocation)
+                }
+                
+            case ContentType.time.rawValue :
+                print("게시 시간")
+                
+                // Date 생성
+                let date:Date = Date()
+                
+                //Calendar Component에 맞게 Date 변환
+                let now:Date = date.getDateComponents()
+                
+                // 현재 시간 기준으로 timeIntervalSince1970 추출
+                let timeIntervalOfNow:TimeInterval = now.timeIntervalSince1970
+                
+                //timeIntervla format으로 현재 date 추출
+                let currentDateInTimeIntervalFormat = Date(timeIntervalSince1970: timeIntervalOfNow)
+                
+                contentTextField.text = currentDateInTimeIntervalFormat.toString()
+                
+            case ContentType.favorite.rawValue :
+                print("위시리스트 설정 여부")
+            default:
+                return
+            }
+            
+            
+        }
     }
     
 }
@@ -155,37 +212,6 @@ extension AddContentViewController: UITextFieldDelegate {
         contentTextField.resignFirstResponder()
     }
     
-    func addContent(to type: UIBarButtonItem){
-        dump(type.tag)
-        
-        switch type.tag {
-        case ContentType.location.rawValue :
-            print("촬영 위치")
-        case ContentType.time.rawValue :
-            print("게시 시간")
-            
-            // Date 생성
-            let date:Date = Date()
-            
-            //Calendar Component에 맞게 Date 변환
-            let now:Date = date.getDateComponents()
-            
-            // 현재 시간 기준으로 timeIntervalSince1970 추출
-            let timeIntervalOfNow:TimeInterval = now.timeIntervalSince1970
-            
-            //timeIntervla format으로 현재 date 추출
-            let currentDateInTimeIntervalFormat = Date(timeIntervalSince1970: timeIntervalOfNow)
-            
-            contentTextField.text = currentDateInTimeIntervalFormat.toString()
-            
-        case ContentType.favorite.rawValue :
-            print("위시리스트 설정 여부")
-        default:
-            return
-        }
-        
-    }
-    
     func addContentTypeButtonOnKeyboard() {
         
         let screenWidthSize:CGFloat = UIScreen.main.bounds.width
@@ -199,13 +225,13 @@ extension AddContentViewController: UITextFieldDelegate {
         
         let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
         
-        let locationBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(addContent(to:)))
+        let locationBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: locationImage, style: .plain, target: self, action: #selector(addContent(_:)))
         locationBarButtonAtAccesoryView.tag = ContentType.location.rawValue
         
-        let timeBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: timeImage, style: .plain, target: self, action: #selector(addContent(to:)))
+        let timeBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: timeImage, style: .plain, target: self, action: #selector(addContent(_:)))
         timeBarButtonAtAccesoryView.tag = ContentType.time.rawValue
         
-        let favoriteBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: favoriteImage, style: .plain, target: self, action: #selector(addContent(to:)))
+        let favoriteBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: favoriteImage, style: .plain, target: self, action: #selector(addContent(_:)))
         favoriteBarButtonAtAccesoryView.tag = ContentType.favorite.rawValue
         
         var items = [UIBarButtonItem]()
@@ -223,3 +249,53 @@ extension AddContentViewController: UITextFieldDelegate {
         contentTextField.inputAccessoryView = contentTypeToolbar
     }
 }
+
+//, AVCaptureMetadataOutputObjectsDelegate, DTDeviceDelegate
+extension AddContentViewController: CLLocationManagerDelegate {
+   
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        // location Array의 마지막 좌표로 set
+        if let lastLocatoin = locations.last {
+            currentLocation = lastLocatoin
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        contentTextField.text = String(describing: error)
+    }
+
+    
+    func reverseGeocodingRequestForSpecifiedLocation(location: CLLocation) {
+    
+        CLGeocoder().reverseGeocodeLocation(location) { (placemarks, error) -> Void in
+            
+            if error != nil {
+                print("Error + error.localizedDescription")
+                return
+            }
+            
+            if ((placemarks?.count) != nil) {
+                
+                let placemark = (placemarks?[0])! as CLPlacemark
+                
+                self.currentPlacemark = placemark
+                self.displayLocationInfo(self.currentPlacemark!)
+            }
+        }
+    }
+    
+
+    func displayLocationInfo(_ placemark: CLPlacemark){
+        self.manager.stopUpdatingLocation()
+       
+        if let country = placemark.country, let administrativeArea = placemark.administrativeArea, let locality = placemark.locality, let subLocality = placemark.subLocality {
+            contentTextField.text = "\(country) \(administrativeArea) \(locality) \(subLocality)"
+        }
+        
+    }
+    
+
+}
+
+

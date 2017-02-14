@@ -241,11 +241,23 @@
                     </view>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Vx8-dE-LtB"/>
-                        <barButtonItem image="location" id="lL5-nh-TCe"/>
+                        <barButtonItem image="location" id="lL5-nh-TCe">
+                            <connections>
+                                <action selector="addContent:" destination="haz-Pw-ELe" id="1Oq-2S-YF1"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ZU5-93-Ccz"/>
-                        <barButtonItem image="time" id="07e-px-zgk"/>
+                        <barButtonItem tag="1" image="time" id="07e-px-zgk">
+                            <connections>
+                                <action selector="addContent:" destination="haz-Pw-ELe" id="I1S-Xz-uf0"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ghY-dw-oVy"/>
-                        <barButtonItem image="favorite" id="e00-mF-8C9"/>
+                        <barButtonItem tag="2" image="favorite" id="e00-mF-8C9">
+                            <connections>
+                                <action selector="addContent:" destination="haz-Pw-ELe" id="hNi-8M-WDF"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="zsr-Sa-VCC"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="EAC-fO-zVp">
