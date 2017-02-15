@@ -22,8 +22,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var switchOfCameraBarButtonItem: UIBarButtonItem! // 전면/후면카메라 스위치 버튼
     
     var focusBox: UIView!
-    var editedImage: UIImage?
-    var imageFileName: String?
+    var takenPhotoImage: UIImage?
+
     // 참고할 문서.
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
     
@@ -346,31 +346,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         if let photoSampleBuffer = photoSampleBuffer {
             let photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
-            let takedPhotoImage = UIImage(data: photoData!)
+            takenPhotoImage = UIImage(data: photoData!)
             
-            if let image = takedPhotoImage {
-                
-                editedImage = image
-                
-                let now:Date = Date()
-                imageFileName = now.getDateComponents().makeName()
-                
-                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-                //file Path 추가하여 생성
-                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
-                
-                
-                if let imageFileName = imageFileName {
-                    let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFileName)
-                    
-                    do {
-                        try UIImagePNGRepresentation(image)?.write(to: editedImageURL, options: Data.WritingOptions.atomic)
-                        
-                    } catch {
-                        return
-                    }
-                    
-                }
+            if let image = takenPhotoImage {
                 
                 switch PHPhotoLibrary.authorizationStatus() {
                 case .authorized:
@@ -398,23 +376,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             return
         }
         
-        let now:Date = Date()
-        imageFileName = now.getDateComponents().makeName()
-        let imageFilePath: String? = imageFileName?.makeDocumentsDirectoryPath()
-        if let imageFilePath = imageFilePath, let imageFileName = imageFileName {
-            let imageFilePathURL = imageFilePath.makeFileURLWithDocumentsDirectoryPath(with: imageFileName)
-            print("\(imageFilePathURL)")
-            performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
-        }
+        performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
+   
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == CameraViewController.showEditPhotoViewControllerSegueIdentifier, let editPhotoViewController = segue.destination as? EditPhotoViewController, let editedImage = editedImage{
+        if segue.identifier == CameraViewController.showEditPhotoViewControllerSegueIdentifier, let editPhotoViewController = segue.destination as? EditPhotoViewController, let takenPhotoImage = takenPhotoImage{
             
-            let resizedImage = editedImage.resizeImage(targetSize: CGSize(width: 64, height: 64))
+            let resizedImage = takenPhotoImage.resizeImage(targetSize: CGSize(width: 64, height: 64))
             
-            editPhotoViewController.takenPhotoImage = editedImage
-            editPhotoViewController.takenPhotoImageFilePath = imageFileName
+            editPhotoViewController.takenPhotoImage = takenPhotoImage
             editPhotoViewController.takenResizedPhotoImage = resizedImage
             
         }

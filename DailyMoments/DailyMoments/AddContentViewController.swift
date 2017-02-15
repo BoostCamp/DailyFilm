@@ -15,9 +15,9 @@ class AddContentViewController: UIViewController {
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
     @IBOutlet weak var contentTextField: UITextField!
 
-    var takenPhotoImageFilePath: String? // 촬영한 원본 filePath
+    var edidtedPhotoImage: UIImage? // 필터가 적용된 Image
     var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
-    
+
     let manager = CLLocationManager()
     var currentLocation: CLLocation?
     var currentPlacemark: CLPlacemark?
@@ -39,7 +39,8 @@ class AddContentViewController: UIViewController {
         }
         
         // resize하여 view에 보여줌.
-        previewOfPhotoToPostImageView.image = takenResizedPhotoImage?.resizeImage(targetSize: CGSize(width: 64, height: 64))
+        takenResizedPhotoImage =  edidtedPhotoImage?.resizeImage(targetSize: CGSize(width: 64, height: 64))
+        previewOfPhotoToPostImageView.image = takenResizedPhotoImage
         
         // rightBarButton인 Done버튼 tint색을 애플의 파란색으로 변경
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appleBlue()
@@ -118,6 +119,9 @@ class AddContentViewController: UIViewController {
                 //Calendar Component에 맞게 Date 변환
                 let now: Date = date.getDateComponents()
                 // 현재 시간 기준으로 timeIntervalSince1970 추출
+                
+                let imageFileName = now.makeName()
+                
                 let createdDate: TimeInterval? = now.timeIntervalSince1970
                 
                 let content: String? = self.contentTextField.text
@@ -134,8 +138,28 @@ class AddContentViewController: UIViewController {
                     longitude = 0
                 }
                 
-                if let imageFilePath = self.takenPhotoImageFilePath, let content = content, let isFavorite = isFavorite, let createdDate = createdDate, let latitude = latitude, let longitude = longitude {
-                    let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFilePath, content: content, isFavorite: isFavorite, createdDate: createdDate, latitude: latitude, longitude: longitude)
+                let editedImage:UIImage? = self.edidtedPhotoImage
+                
+                
+                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                //file Path 추가하여 생성
+                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
+                
+                
+                // 필터 적용된 이미지(UIImage?)의 옵셔널 바인딩
+                if let editedImage = editedImage {
+                    let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFileName)
+                    
+                    do {
+                        try UIImagePNGRepresentation(editedImage)?.write(to: editedImageURL, options: Data.WritingOptions.atomic)
+                        
+                    } catch {
+                        return
+                    }
+                }
+
+                if let content = content, let isFavorite = isFavorite, let createdDate = createdDate, let latitude = latitude, let longitude = longitude {
+                    let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, latitude: latitude, longitude: longitude)
                     
                     FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
                     
