@@ -100,16 +100,18 @@ class DiaryHomeTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+}
 
     
+extension DiaryHomeTableViewController {
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("\(section)")
         
         return (posts?.count)!
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("cellForRowAt")
 
         let cell = tableView.dequeueReusableCell(withIdentifier: CellConstants.diary, for: indexPath) as! HomeDiaryTableViewCell
         
@@ -119,15 +121,11 @@ class DiaryHomeTableViewController: UITableViewController {
                 //file Path 추가하여 생성
                 let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
                 let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
-                
+              
                 cell.photoImageView?.image = UIImage(contentsOfFile: editedImageURL.path)
-            
                 
             }
-            
         }
-    
-        
         return cell
     }
     
