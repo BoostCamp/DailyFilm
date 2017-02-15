@@ -12,7 +12,8 @@ import Photos
 
 class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
-    let storyboardIdentifierConstantOfEditPhotoViewController: String = "ShowEditPhotoViewController"
+    fileprivate static let showEditPhotoViewControllerSegueIdentifier = "showEditPhotoViewControllerSegue"
+    
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var cameraToolbar: UIToolbar! // 플래쉬, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
@@ -21,8 +22,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var switchOfCameraBarButtonItem: UIBarButtonItem! // 전면/후면카메라 스위치 버튼
     
     var focusBox: UIView!
-    
-    
+    var editedImage: UIImage?
+    var imageFileName: String?
     // 참고할 문서.
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
     
@@ -54,7 +55,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("viewWillAppear in CameraViewController")
-
+        
         // toolbar hide
         navigationController?.isToolbarHidden = true
         
@@ -70,7 +71,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 setUpCamera() // 카메라 setup
                 
             case .denied:
-                showNotice(alertCase: .Camera) // 접근 권한이 없으므로 사용자에게 설정 - DailyMoments - 카메라 허가 요청 UIAlertController 호출
+                showNotice(alertCase: .camera) // 접근 권한이 없으므로 사용자에게 설정 - DailyMoments - 카메라 허가 요청 UIAlertController 호출
                 
                 disableCameraOptionButton() // 플래쉬, 스위칭 버튼 disabled
                 
@@ -160,10 +161,15 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // 촬영하기
     @IBAction func takePhoto(_ sender: Any) {
         
+        
+        authorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
         if let authorizationStatusOfCamera = authorizationStatus {
+            
+            
+            print(authorizationStatusOfCamera.rawValue)
+            
             switch authorizationStatusOfCamera {
             case .authorized:
-                print(authorizationStatusOfCamera)
                 
                 settingsForMonitoring = AVCapturePhotoSettings()
                 
@@ -173,9 +179,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                         photoCaptureSetting.flashMode = self.getCurrentFlashMode(self.cameraFlashSwitchedStatus)
                         
                         // 자동 안정화 이미지 여부, default는 true
-                    
+                        
                         photoCaptureSetting.isAutoStillImageStabilizationEnabled = true
-                    
+                        
                         // 활성 장치 및 형식에서 지원하는 최고 해상도로 스틸 이미지를 캡처할지 여부를 지정.
                         photoCaptureSetting.isHighResolutionPhotoEnabled = false
                         
@@ -185,7 +191,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 
             case .denied:
                 print(authorizationStatusOfCamera)
-                showNotice(alertCase: .Camera)
+                showNotice(alertCase: .camera)
             default:
                 return
                 
@@ -252,7 +258,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         switchOfCameraBarButtonItem.isEnabled = true
         flashOfCameraBarButtonItem.isEnabled = true
-    
+        
         captureSession = AVCaptureSession()
         sessionOutput = AVCapturePhotoOutput()
         previewLayer = AVCaptureVideoPreviewLayer()
@@ -343,6 +349,29 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
             let takedPhotoImage = UIImage(data: photoData!)
             
             if let image = takedPhotoImage {
+                
+                editedImage = image
+                
+                let now:Date = Date()
+                imageFileName = now.getDateComponents().makeName()
+                
+                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                //file Path 추가하여 생성
+                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
+                
+                
+                if let imageFileName = imageFileName {
+                    let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFileName)
+                    
+                    do {
+                        try UIImagePNGRepresentation(image)?.write(to: editedImageURL, options: Data.WritingOptions.atomic)
+                        
+                    } catch {
+                        return
+                    }
+                    
+                }
+                
                 switch PHPhotoLibrary.authorizationStatus() {
                 case .authorized:
                     
@@ -352,7 +381,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 case .denied, .notDetermined:
                     
                     //설정 - 사진 미승인 상태이기에 앨범에 저장 하지 않고 다음 화면으로 이동
-                    navigateToFilterViewControllerWithResizeImage(source: image)
+                    performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
                     
                 default:
                     return
@@ -362,21 +391,32 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
     
     // UIImageWriteToSavedPhotosAlbum 메소드 수행 후에 completionSelector
+    //    func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
+    
     func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
-        navigateToFilterViewControllerWithResizeImage(source: image)
+        if(error != nil) {
+            return
+        }
+        
+        let now:Date = Date()
+        imageFileName = now.getDateComponents().makeName()
+        let imageFilePath: String? = imageFileName?.makeDocumentsDirectoryPath()
+        if let imageFilePath = imageFilePath, let imageFileName = imageFileName {
+            let imageFilePathURL = imageFilePath.makeFileURLWithDocumentsDirectoryPath(with: imageFileName)
+            print("\(imageFilePathURL)")
+            performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
+        }
     }
     
-    //EditorPhotoViewController에 Resize 한 이미지와 Original 이미지를 보내주면서 화면 전환
-    func navigateToFilterViewControllerWithResizeImage(source image: UIImage){
-        let resizedImage = image.resizeImage(targetSize: CGSize(width: 64, height: 64))
-        
-        
-        if let editPhotoViewController = storyboard?.instantiateViewController(withIdentifier: storyboardIdentifierConstantOfEditPhotoViewController) as? EditPhotoViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == CameraViewController.showEditPhotoViewControllerSegueIdentifier, let editPhotoViewController = segue.destination as? EditPhotoViewController, let editedImage = editedImage{
             
-            editPhotoViewController.takenPhotoImage = image
+            let resizedImage = editedImage.resizeImage(targetSize: CGSize(width: 64, height: 64))
+            
+            editPhotoViewController.takenPhotoImage = editedImage
+            editPhotoViewController.takenPhotoImageFilePath = imageFileName
             editPhotoViewController.takenResizedPhotoImage = resizedImage
             
-            navigationController?.pushViewController(editPhotoViewController, animated: false)
         }
     }
     

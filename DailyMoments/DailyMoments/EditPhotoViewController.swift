@@ -16,6 +16,7 @@ class EditPhotoViewController: UIViewController {
     @IBOutlet weak var photographedImage: UIImageView!
     
     var takenPhotoImage: UIImage? // 촬영한 원본 Image
+    var takenPhotoImageFilePath: String? // 촬영한 원본 filePath
     var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
     var imageTapStatus: Bool? // 이미지 탭 여부
 
@@ -80,7 +81,9 @@ class EditPhotoViewController: UIViewController {
         
         if segue.identifier == EditPhotoViewController.showAddContentViewControllerSegueIdentifier {
             if let addTextViewController:AddContentViewController = segue.destination as? AddContentViewController {
+                addTextViewController.takenPhotoImageFilePath = takenPhotoImageFilePath
                 addTextViewController.takenResizedPhotoImage = photographedImage.image
+                
             }
             
         }

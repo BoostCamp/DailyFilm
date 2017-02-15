@@ -87,6 +87,7 @@
                         <outlet property="flashOfCameraBarButtonItem" destination="nCJ-iA-4PT" id="tmd-rf-SkK"/>
                         <outlet property="shutterOfCameraBarButtonItem" destination="TVj-xL-fNw" id="iZI-kU-Nl3"/>
                         <outlet property="switchOfCameraBarButtonItem" destination="L6X-wW-BX7" id="dWX-RL-VW2"/>
+                        <segue destination="dcS-RD-4Y0" kind="show" identifier="showEditPhotoViewControllerSegue" id="iJl-Lk-bhK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C4O-ZK-Eug" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -133,7 +134,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FilterCell" id="OV1-iM-i0T" customClass="CameraFillterCollectionViewCell" customModule="DailyMoments" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="29.5" width="72" height="106"/>
+                                        <rect key="frame" x="0.0" y="30" width="72" height="106"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="72" height="106"/>
@@ -200,7 +201,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dbR-bw-o3s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1964" y="304.4977511244378"/>
+            <point key="canvasLocation" x="1193" y="305"/>
         </scene>
         <!--Add Content View Controller-->
         <scene sceneID="qec-Yd-PZp">
@@ -275,7 +276,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cE5-Zd-bNM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2700" y="301.79910044977515"/>
+            <point key="canvasLocation" x="2343" y="304"/>
         </scene>
         <!--Home Tab Bar Controller-->
         <scene sceneID="X8N-wE-xRA">
@@ -287,10 +288,10 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="Hbe-hI-ikI" kind="relationship" relationship="viewControllers" id="Oey-Nh-3Zm"/>
+                        <segue destination="geC-Mz-CsH" kind="show" identifier="showCameraView" id="u0J-Vl-lx5"/>
+                        <segue destination="997-d8-CuU" kind="relationship" relationship="viewControllers" id="lpl-wI-PfW"/>
                         <segue destination="geC-Mz-CsH" kind="relationship" relationship="viewControllers" id="Tkb-AI-rUo"/>
                         <segue destination="kkj-uk-tIp" kind="relationship" relationship="viewControllers" id="TFC-d3-x4I"/>
-                        <segue destination="geC-Mz-CsH" kind="show" identifier="showCameraView" id="u0J-Vl-lx5"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gqy-lZ-Yy7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -310,7 +311,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -326,24 +327,48 @@
             </objects>
             <point key="canvasLocation" x="-1076" y="1272"/>
         </scene>
-        <!--일기장-->
-        <scene sceneID="KBz-dy-1Lp">
+        <!--Diary Home Table View Controller-->
+        <scene sceneID="nX1-rR-q79">
             <objects>
-                <viewController id="Hbe-hI-ikI" customClass="DiaryHomeViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="k8W-Uc-IEo"/>
-                        <viewControllerLayoutGuide type="bottom" id="RLU-ZM-MtU"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ry9-nW-XT6">
+                <tableViewController id="JsC-DB-MKV" customClass="DiaryHomeTableViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="480" sectionHeaderHeight="28" sectionFooterHeight="28" id="ozH-Gf-ABW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="일기장" image="diary_home" id="mJS-qV-4WF"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SvH-BZ-hds" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiaryCell" rowHeight="480" id="YT6-Ty-JNv" customClass="HomeDiaryTableViewCell" customModule="DailyMoments" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="480"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" tableViewCell="YT6-Ty-JNv" id="x7L-TO-NG6">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="479"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6bM-Ru-f8w">
+                                            <rect key="frame" x="8" y="8" width="359" height="463.5"/>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="6bM-Ru-f8w" firstAttribute="top" secondItem="x7L-TO-NG6" secondAttribute="topMargin" id="7pS-MR-aur"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="6bM-Ru-f8w" secondAttribute="bottom" id="cup-Sr-3Nw"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="6bM-Ru-f8w" secondAttribute="trailing" id="wsR-zJ-wZh"/>
+                                        <constraint firstItem="6bM-Ru-f8w" firstAttribute="leading" secondItem="x7L-TO-NG6" secondAttribute="leadingMargin" id="zS2-fU-eZc"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="photoImageView" destination="6bM-Ru-f8w" id="v5v-OP-4tj"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="JsC-DB-MKV" id="jeF-JD-JEV"/>
+                            <outlet property="delegate" destination="JsC-DB-MKV" id="sQX-0S-4CH"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="Fdm-A2-FAk"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EVX-pw-CJl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1076" y="-618"/>
+            <point key="canvasLocation" x="-136.80000000000001" y="-526.6866566716642"/>
         </scene>
         <!--추가하기-->
         <scene sceneID="oFW-SY-v67">
@@ -364,23 +389,24 @@
             </objects>
             <point key="canvasLocation" x="-1076" y="305"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="ntE-VG-Pg5">
+        <!--Item-->
+        <scene sceneID="V94-J0-dLP">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jyH-aV-KNf" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="997-d8-CuU" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" image="diary_home" id="O1A-Ig-8dP"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rVl-Ey-txi">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7jo-Nk-cph">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="dcS-RD-4Y0" kind="relationship" relationship="rootViewController" id="p0m-E6-rU4"/>
+                        <segue destination="JsC-DB-MKV" kind="relationship" relationship="rootViewController" id="1M8-cb-PsO"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="X7I-1v-bwm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bhe-6r-hza" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1024.8" y="304.4977511244378"/>
+            <point key="canvasLocation" x="-1076" y="-526.6866566716642"/>
         </scene>
     </scenes>
     <resources>
