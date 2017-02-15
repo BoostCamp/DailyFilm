@@ -67,8 +67,8 @@ class FMDatabaseManager: NSObject {
         fmdb?.close()
     }
     
-    func insert(query statement: String, valuesOfColumns: [Any] ) {
-
+    func insert(query statement: String, valuesOfColumns: [Any] ) -> Bool {
+        
         let fileManager = FileManager.default
         
         // document directory 에 database filepath 생성
@@ -80,22 +80,24 @@ class FMDatabaseManager: NSObject {
             
             if fmdb == nil {
                 dump(fmdb?.lastErrorMessage())
-                return
+                return false
             }
             
             if((fmdb?.open()) != nil) {
                 
-                let result = fmdb?.executeUpdate(statement, withArgumentsIn: valuesOfColumns)
-                print("result: \(result)")
-                fmdb?.close()
-                
+                if let result = fmdb?.executeUpdate(statement, withArgumentsIn: valuesOfColumns) {
+                    fmdb?.close()
+                    return result
+                }
+            
             } else {
                 print("DATABASE OPEN ERROR")
                 dump(fmdb?.lastErrorMessage())
                 
-                return
+                return false
             }
         }
+        return false
     }
     
     func selectUserProfile(query statement: String, value userId: String...) -> [UserProfile]{

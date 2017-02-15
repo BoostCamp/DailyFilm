@@ -38,7 +38,7 @@ extension CameraViewController {
     }
     
     // MARK:- Change the device’s activeFormat property.
-
+    
     
     // 초점 맞추기
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -102,7 +102,7 @@ extension CameraViewController {
         var rectangleBounds = screenBounds
         rectangleBounds.size.width = screenBounds.size.width / 5
         rectangleBounds.size.height = screenBounds.size.width / 5
-
+        
         // 터치된 좌표에 focusBox의 높이, 너비의 절반 값을 빼주어서 터치한 좌표를 중심으로 그려지게 설정
         rectangleBounds.origin.x = coordinates.location(in: cameraView).x - (rectangleBounds.size.width / 2)
         rectangleBounds.origin.y = coordinates.location(in: cameraView).y - (rectangleBounds.size.height / 2)
@@ -110,6 +110,6 @@ extension CameraViewController {
         self.focusBox = UIView(frame: rectangleBounds)
         self.focusBox.layer.borderColor = UIColor.init(red: 255, green: 255, blue: 0, alpha: 0.5).cgColor
         self.focusBox.layer.borderWidth = 0.5
-
+        
     }
 }

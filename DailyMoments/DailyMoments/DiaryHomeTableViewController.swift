@@ -16,7 +16,6 @@ class DiaryHomeTableViewController: UITableViewController {
     var userIndex:Int32?
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Do any additional setup after loading the view.
         
         FMDatabaseManager.shareManager().openDatabase(databaseName: DatabaseConstant.databaseName)
@@ -62,7 +61,7 @@ class DiaryHomeTableViewController: UITableViewController {
         
         let userProfile: UserProfile = UserProfile(userIndex: 0, userId: "nso502354@gmail.com", userPassword: "1234", userNickname: "namsang", createdDate: timeIntervalOfNow )
         
-        FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
+        let successFlag = FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
         
         let userProfiles: [UserProfile] = FMDatabaseManager.shareManager().selectUserProfile(query: Statement.Select.userProfile, value: "nso502354@gamil.com")
         
@@ -111,8 +110,9 @@ extension DiaryHomeTableViewController {
         return (posts?.count)!
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: CellConstants.diary, for: indexPath) as! HomeDiaryTableViewCell
         
         if let post = posts?[indexPath.row] {
@@ -120,13 +120,22 @@ extension DiaryHomeTableViewController {
                 let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                 //file Path 추가하여 생성
                 let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
-                let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
-              
-                cell.photoImageView?.image = UIImage(contentsOfFile: editedImageURL.path)
                 
+                let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
+                
+                let fixedOrientationimage:UIImage? = UIImage(contentsOfFile: editedImageURL.path)
+                
+                if let image = fixedOrientationimage {
+                    cell.photoImageView?.image = image.cropToSquareImage()
+                }
             }
         }
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let screenBounds = UIScreen.main.bounds
+        return screenBounds.width
     }
     
 }

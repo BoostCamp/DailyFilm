@@ -9,13 +9,14 @@
 import UIKit
 
 extension UIImage {
+    
+    // target의 정한 사이즈 만큼 resize
     func resizeImage(targetSize: CGSize) -> UIImage {
         
-        let scale = UIScreen.main.scale
         let size = self.size
         
-        let widthRatio  = targetSize.width  / self.size.width * scale
-        let heightRatio = targetSize.height / self.size.height * scale
+        let widthRatio  = targetSize.width  / self.size.width
+        let heightRatio = targetSize.height / self.size.height 
         
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
@@ -43,6 +44,36 @@ extension UIImage {
         return newImage
     }
     
+     // image를 1:1 비율로 crop
+     func cropToSquareImage() -> UIImage{
+        
+        var cropRect: CGRect?
+        let imageWidth = self.size.width
+        let imageHeight = self.size.height
+        
+        if imageWidth < imageHeight {
+            // Potrait mode
+            cropRect = CGRect(x: 0.0, y: (imageHeight - imageWidth) / 2.0, width: imageWidth, height: imageWidth)
+        } else if imageWidth > imageHeight{
+            // Landscape mode
+            cropRect = CGRect(x: (imageWidth - imageHeight) / 2.0, y: 0.0, width: imageHeight, height: imageHeight)
+        } else {
+            return self
+        }
+        
+        // Draw neew image in current graphics context
+
+        guard let rect: CGRect = cropRect else {
+            return UIImage()
+        }
+        
+        let rectangleImage:CGImage = self.cgImage!.cropping(to: rect)!
+
+        
+        return UIImage(cgImage: rectangleImage)
+    }
+    
+    // image에 fliter 적용하는 메소드
     func applyFilter(type filterName: String) -> UIImage{
        
         var resultImage:UIImage = self
@@ -81,4 +112,64 @@ extension UIImage {
         
         return resultImage
     }
+    
+    // imageOrientation을 set
+    func fixOrientationOfImage() -> UIImage? {
+        if self.imageOrientation == .up {
+            return self
+        }
+        
+        // We need to calculate the proper transformation to make the image upright.
+        // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+        var transform = CGAffineTransform.identity
+        
+        switch self.imageOrientation {
+        case .down, .downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(M_PI))
+        case .left, .leftMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.rotated(by: CGFloat(M_PI_2))
+        case .right, .rightMirrored:
+            transform = transform.translatedBy(x: 0, y: self.size.height)
+            transform = transform.rotated(by: -CGFloat(M_PI_2))
+        default:
+            break
+        }
+        
+        switch self.imageOrientation {
+        case .upMirrored, .downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        case .leftMirrored, .rightMirrored:
+            transform = transform.translatedBy(x: self.size.height, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        default:
+            break
+        }
+        
+        // Now we draw the underlying CGImage into a new context, applying the transform
+        // calculated above.
+        guard let context = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height), bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0, space: self.cgImage!.colorSpace!, bitmapInfo: self.cgImage!.bitmapInfo.rawValue) else {
+            return nil
+        }
+        
+        context.concatenate(transform)
+        
+        switch self.imageOrientation {
+        case .left, .leftMirrored, .right, .rightMirrored:
+            context.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.height, height: self.size.width))
+            
+        default:
+            context.draw(self.cgImage!, in: CGRect(origin: .zero, size: self.size))
+        }
+        
+        // And now we just create a new UIImage from the drawing context
+        guard let CGImage = context.makeImage() else {
+            return nil
+        }
+        
+        return UIImage(cgImage: CGImage)
+    }
+    
 }

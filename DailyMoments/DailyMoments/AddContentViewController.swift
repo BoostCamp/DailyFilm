@@ -14,10 +14,10 @@ class AddContentViewController: UIViewController {
     
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
     @IBOutlet weak var contentTextField: UITextField!
-
+    
     var edidtedPhotoImage: UIImage? // 필터가 적용된 Image
     var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
-
+    
     let manager = CLLocationManager()
     var currentLocation: CLLocation?
     var currentPlacemark: CLPlacemark?
@@ -38,9 +38,14 @@ class AddContentViewController: UIViewController {
             print("Location services are not enabled");
         }
         
-        // resize하여 view에 보여줌.
-        takenResizedPhotoImage =  edidtedPhotoImage?.resizeImage(targetSize: CGSize(width: 64, height: 64))
-        previewOfPhotoToPostImageView.image = takenResizedPhotoImage
+        // center crop -> resize하여 view에 보여줌.
+        
+        if let previewPhoto = generatePreviewPhoto(source: edidtedPhotoImage) {
+            previewOfPhotoToPostImageView.image = previewPhoto
+        }
+        
+        previewOfPhotoToPostImageView.image = generatePreviewPhoto(source: edidtedPhotoImage)
+        
         
         // rightBarButton인 Done버튼 tint색을 애플의 파란색으로 변경
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appleBlue()
@@ -75,7 +80,7 @@ class AddContentViewController: UIViewController {
         super.viewDidDisappear(animated)
     }
     
- 
+    
     
     func showNotice(alertCase : SettingType){
         
@@ -92,15 +97,78 @@ class AddContentViewController: UIViewController {
         
         present(alertController, animated: true, completion: nil)
     }
-
     
     
-    func savePostInfo(_ userIndex: Int32, completion: (() -> Void)?){
+    
+    func savePostInfo(_ userIndex: Int32, completion: ((_ success:Bool) -> Void)?){
         
-        dismissKeyboard()
         
-        completion?()
-        dismiss(animated: true, completion: nil)
+        
+        // Date 생성
+        let date: Date = Date()
+        //Calendar Component에 맞게 Date 변환
+        let now: Date = date.getDateComponents()
+        // 현재 시간 기준으로 timeIntervalSince1970 추출
+        
+        let imageFileName = now.makeName()
+        
+        let createdDate: TimeInterval? = now.timeIntervalSince1970
+        
+        let content: String? = self.contentTextField.text
+        let isFavorite: Int32? = 0
+        
+        var latitude: Float?
+        var longitude: Float?
+        
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            latitude  = Float((self.currentLocation?.coordinate.latitude)!)
+            longitude = Float((self.currentLocation?.coordinate.longitude)!)
+        } else if CLLocationManager.authorizationStatus() == .denied {
+            latitude = 0
+            longitude = 0
+        }
+        
+        let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        //file Path 추가하여 생성
+        let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
+        
+        
+        // 필터 적용된 이미지(UIImage?)의 옵셔널 바인딩
+        if let editedImage = self.edidtedPhotoImage {
+            let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFileName)
+            
+            do {
+                try UIImagePNGRepresentation(editedImage)?.write(to: editedImageURL, options: Data.WritingOptions.atomic)
+                
+            } catch {
+                return
+            }
+        }
+        
+        if let content = content, let isFavorite = isFavorite, let createdDate = createdDate, let latitude = latitude, let longitude = longitude {
+            let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, latitude: latitude, longitude: longitude)
+            
+            let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
+            
+            completion?(successFlag)
+            
+        }
+    }
+    
+    
+    // 작은 크기로 보여줄 UIImage를 생성하는 메소드. crop Image -> resize Image
+    func generatePreviewPhoto(source image: UIImage?) -> UIImage? {
+        
+        if let image = image {
+            
+            let widthOfscreenSize:CGFloat = UIScreen.main.bounds.width
+            let valueToDivideTheScreen:CGFloat = CGFloat.init(cellUnitValue)
+            let widthOfImage = widthOfscreenSize / valueToDivideTheScreen
+            let cropedImage: UIImage = image.cropToSquareImage()
+            
+            return cropedImage.resizeImage(targetSize: CGSize(width: widthOfImage, height: widthOfImage))
+        }
+        return UIImage()
     }
     
     
@@ -111,59 +179,17 @@ class AddContentViewController: UIViewController {
         let userIndex:Int32? = userProfiles[0].userIndex
         
         if let userIndex = userIndex {
-            savePostInfo(userIndex, completion: { () in
+            savePostInfo(userIndex, completion: { (success:Bool) in
                 
-                
-                // Date 생성
-                let date: Date = Date()
-                //Calendar Component에 맞게 Date 변환
-                let now: Date = date.getDateComponents()
-                // 현재 시간 기준으로 timeIntervalSince1970 추출
-                
-                let imageFileName = now.makeName()
-                
-                let createdDate: TimeInterval? = now.timeIntervalSince1970
-                
-                let content: String? = self.contentTextField.text
-                let isFavorite: Int32? = 0
-                
-                var latitude: Float?
-                var longitude: Float?
-                
-                if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-                    latitude  = Float((self.currentLocation?.coordinate.latitude)!)
-                    longitude = Float((self.currentLocation?.coordinate.longitude)!)
-                } else if CLLocationManager.authorizationStatus() == .denied {
-                    latitude = 0
-                    longitude = 0
+                if success {
+                    self.dismissKeyboard()
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    // 실패시
+                    print("posting fail")
                 }
                 
-                let editedImage:UIImage? = self.edidtedPhotoImage
                 
-                
-                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-                //file Path 추가하여 생성
-                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
-                
-                
-                // 필터 적용된 이미지(UIImage?)의 옵셔널 바인딩
-                if let editedImage = editedImage {
-                    let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFileName)
-                    
-                    do {
-                        try UIImagePNGRepresentation(editedImage)?.write(to: editedImageURL, options: Data.WritingOptions.atomic)
-                        
-                    } catch {
-                        return
-                    }
-                }
-
-                if let content = content, let isFavorite = isFavorite, let createdDate = createdDate, let latitude = latitude, let longitude = longitude {
-                    let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, latitude: latitude, longitude: longitude)
-                    
-                    FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
-                    
-                }
                 
             })
         }
@@ -173,7 +199,7 @@ class AddContentViewController: UIViewController {
     @IBAction func addContent(_ sender: Any) {
         
         if let buttonType = sender as? UIBarButtonItem {
-        
+            
             switch buttonType.tag {
             case ContentType.location.rawValue :
                 print("촬영 위치")
@@ -307,7 +333,7 @@ extension AddContentViewController: UITextFieldDelegate {
     }
     
     func dismissKeyboard(){
-        contentTextField.resignFirstResponder()
+        self.view.endEditing(true)
     }
     
     func addContentTypeButtonOnKeyboard() {
@@ -350,7 +376,7 @@ extension AddContentViewController: UITextFieldDelegate {
 
 //, AVCaptureMetadataOutputObjectsDelegate, DTDeviceDelegate
 extension AddContentViewController: CLLocationManagerDelegate {
-   
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // location Array의 마지막 좌표로 set
@@ -362,7 +388,7 @@ extension AddContentViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         dump(error)
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse {
             manager.startUpdatingLocation()
@@ -374,7 +400,7 @@ extension AddContentViewController: CLLocationManagerDelegate {
     }
     
     func reverseGeocodingRequestForSpecifiedLocation(location: CLLocation) {
-    
+        
         CLGeocoder().reverseGeocodeLocation(location) { (placemarks, error) -> Void in
             
             if error != nil {
@@ -392,17 +418,17 @@ extension AddContentViewController: CLLocationManagerDelegate {
         }
     }
     
-
+    
     func displayLocationInfo(_ placemark: CLPlacemark){
         self.manager.stopUpdatingLocation()
-       
+        
         if let country = placemark.country, let administrativeArea = placemark.administrativeArea, let locality = placemark.locality, let subLocality = placemark.subLocality {
             contentTextField.text = "\(country) \(administrativeArea) \(locality) \(subLocality)"
         }
         
     }
     
-
+    
 }
 
 

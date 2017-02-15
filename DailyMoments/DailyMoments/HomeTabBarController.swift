@@ -15,10 +15,6 @@ class HomeTabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        
-        //퍼미션 체크 (카메라, 사진)
-//        self.permissionCheck()
-        
     }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {

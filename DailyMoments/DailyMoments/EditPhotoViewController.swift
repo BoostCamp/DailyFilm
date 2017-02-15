@@ -28,8 +28,6 @@ class EditPhotoViewController: UIViewController {
         imagefilterCollectionView.delegate = self
         imagefilterCollectionView.dataSource = self
         
-        // 촬영한 이미지를 .right 방향에서 .up 방향으로 set
-        takenPhotoImage = fixOrientationOfImage(image: takenPhotoImage!)
         photographedImage.image = takenPhotoImage
         
         // 이미지가 안눌린 상태로 초기값 설정
@@ -37,6 +35,8 @@ class EditPhotoViewController: UIViewController {
         
         // 이미지에서 Tap Gesture 받을 수 있게 설정 (기본값은 false)
         photographedImage.isUserInteractionEnabled = true
+        
+        
         
         let photographedImageGestureRecogninzer:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageForFullView))
         photographedImage.addGestureRecognizer(photographedImageGestureRecogninzer)
@@ -81,6 +81,7 @@ class EditPhotoViewController: UIViewController {
         
         if segue.identifier == EditPhotoViewController.showAddContentViewControllerSegueIdentifier {
             if let addTextViewController:AddContentViewController = segue.destination as? AddContentViewController {
+                self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
                 addTextViewController.edidtedPhotoImage = photographedImage.image
             }
             
@@ -150,7 +151,7 @@ extension EditPhotoViewController : UICollectionViewDataSource, UICollectionView
              
         if let filterTitle = PhotoEditorTypes.rowTitles[indexPath.section]?[indexPath.row] {
             cell.filterImageView.image = takenResizedPhotoImage?.applyFilter(type: filterTitle)
-                
+
         }
         
         return cell
@@ -184,6 +185,8 @@ extension EditPhotoViewController : UICollectionViewDataSource, UICollectionView
             deselectedCell.isSelected = false
         }
     }
+    
+    
 }
 
 extension EditPhotoViewController {
@@ -214,65 +217,5 @@ extension EditPhotoViewController {
             imagefilterCollectionView.isHidden = false
         }
     }
-    
-    func fixOrientationOfImage(image: UIImage) -> UIImage? {
-        if image.imageOrientation == .up {
-            return image
-        }
-        
-        // We need to calculate the proper transformation to make the image upright.
-        // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
-        var transform = CGAffineTransform.identity
-        
-        switch image.imageOrientation {
-        case .down, .downMirrored:
-            transform = transform.translatedBy(x: image.size.width, y: image.size.height)
-            transform = transform.rotated(by: CGFloat(M_PI))
-        case .left, .leftMirrored:
-            transform = transform.translatedBy(x: image.size.width, y: 0)
-            transform = transform.rotated(by: CGFloat(M_PI_2))
-        case .right, .rightMirrored:
-            transform = transform.translatedBy(x: 0, y: image.size.height)
-            transform = transform.rotated(by: -CGFloat(M_PI_2))
-        default:
-            break
-        }
-        
-        switch image.imageOrientation {
-        case .upMirrored, .downMirrored:
-            transform = transform.translatedBy(x: image.size.width, y: 0)
-            transform = transform.scaledBy(x: -1, y: 1)
-        case .leftMirrored, .rightMirrored:
-            transform = transform.translatedBy(x: image.size.height, y: 0)
-            transform = transform.scaledBy(x: -1, y: 1)
-        default:
-            break
-        }
-        
-        // Now we draw the underlying CGImage into a new context, applying the transform
-        // calculated above.
-        guard let context = CGContext(data: nil, width: Int(image.size.width), height: Int(image.size.height), bitsPerComponent: image.cgImage!.bitsPerComponent, bytesPerRow: 0, space: image.cgImage!.colorSpace!, bitmapInfo: image.cgImage!.bitmapInfo.rawValue) else {
-            return nil
-        }
-        
-        context.concatenate(transform)
-        
-        switch image.imageOrientation {
-        case .left, .leftMirrored, .right, .rightMirrored:
-            context.draw(image.cgImage!, in: CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width))
-            
-        default:
-            context.draw(image.cgImage!, in: CGRect(origin: .zero, size: image.size))
-        }
-        
-        // And now we just create a new UIImage from the drawing context
-        guard let CGImage = context.makeImage() else {
-            return nil
-        }
-        
-        return UIImage(cgImage: CGImage)
-    }
-    
-
 }
 

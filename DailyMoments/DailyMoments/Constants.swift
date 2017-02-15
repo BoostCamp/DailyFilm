@@ -19,6 +19,8 @@ struct CellConstants{
     static let diary: String = "DiaryCell"
 }
 
+let cellUnitValue: Float = 5
+
 
 struct AlertContentConstant{
     static let titles: [String?] = ["카메라 사용 권한", "사진 앨범 사용 권한", "위치 정보 사용 권한"]

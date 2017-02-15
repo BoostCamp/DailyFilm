@@ -346,7 +346,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         if let photoSampleBuffer = photoSampleBuffer {
             let photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
-            takenPhotoImage = UIImage(data: photoData!)
+            guard let photoImage = UIImage(data: photoData!) else {
+                print("photoImage guard error")
+                return
+            }
+            
+            // fixed Orientation
+            takenPhotoImage = photoImage.fixOrientationOfImage()
             
             if let image = takenPhotoImage {
                 
@@ -383,11 +389,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == CameraViewController.showEditPhotoViewControllerSegueIdentifier, let editPhotoViewController = segue.destination as? EditPhotoViewController, let takenPhotoImage = takenPhotoImage{
             
-            let resizedImage = takenPhotoImage.resizeImage(targetSize: CGSize(width: 64, height: 64))
-            
             editPhotoViewController.takenPhotoImage = takenPhotoImage
-            editPhotoViewController.takenResizedPhotoImage = resizedImage
-            
+            editPhotoViewController.takenResizedPhotoImage = generatePreviewPhoto(source: takenPhotoImage)
         }
     }
     
@@ -405,6 +408,23 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         alertController.addAction(UIAlertAction(title: AlertContentConstant.cancel, style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
+    }
+    
+    
+    
+    // 작은 크기로 보여줄 UIImage를 생성하는 메소드. crop Image -> resize Image
+    func generatePreviewPhoto(source image: UIImage?) -> UIImage? {
+        
+        if let image = image  {
+            let widthOfscreenSize:CGFloat = UIScreen.main.bounds.width
+            let valueToDivideTheScreen:CGFloat = CGFloat.init(cellUnitValue)
+            let widthOfImage = widthOfscreenSize / valueToDivideTheScreen
+            
+            let cropedImage: UIImage = image.cropToSquareImage()
+            
+            return cropedImage.resizeImage(targetSize: CGSize(width: widthOfImage, height: widthOfImage))
+        }
+        return UIImage()
     }
 }
 

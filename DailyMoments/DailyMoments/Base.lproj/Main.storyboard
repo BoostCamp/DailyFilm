@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -63,13 +64,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="Y8U-oH-Sr2" secondAttribute="bottom" id="299-Pq-J3a"/>
-                            <constraint firstItem="bBd-4M-KLn" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="Gza-Ti-DO9"/>
-                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="top" secondItem="bBd-4M-KLn" secondAttribute="bottom" id="Xl4-HS-PU9"/>
-                            <constraint firstAttribute="trailing" secondItem="Y8U-oH-Sr2" secondAttribute="trailing" id="bQe-VK-z16"/>
-                            <constraint firstAttribute="trailing" secondItem="bBd-4M-KLn" secondAttribute="trailing" id="kWz-8A-tDC"/>
-                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="wkO-Bw-6uu"/>
-                            <constraint firstItem="bBd-4M-KLn" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="zO1-fq-88h"/>
+                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="top" secondItem="bBd-4M-KLn" secondAttribute="bottom" id="1mz-5u-P6A"/>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="1y5-GQ-m4j"/>
+                            <constraint firstAttribute="trailing" secondItem="Y8U-oH-Sr2" secondAttribute="trailing" id="5b9-ns-85d"/>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="Bfy-ot-my6"/>
+                            <constraint firstAttribute="trailing" secondItem="bBd-4M-KLn" secondAttribute="trailing" id="FwA-Jg-NXp"/>
+                            <constraint firstItem="bBd-4M-KLn" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="Opf-0R-Ike"/>
+                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="fsk-ek-vBT"/>
+                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="Y8U-oH-Sr2" secondAttribute="bottom" id="sax-8q-ECH"/>
+                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="top" secondItem="bBd-4M-KLn" secondAttribute="bottom" id="xhr-V7-LIc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="IG3-Pv-vx8">
@@ -121,11 +124,8 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a2X-BT-T7U">
-                                <rect key="frame" x="0.0" y="502" width="375" height="165"/>
+                                <rect key="frame" x="0.0" y="533.5" width="375" height="133.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="165" id="ZAm-cA-WwB"/>
-                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hdi-E3-kXN">
                                     <size key="itemSize" width="72" height="106"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -134,7 +134,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FilterCell" id="OV1-iM-i0T" customClass="CameraFillterCollectionViewCell" customModule="DailyMoments" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="30" width="72" height="106"/>
+                                        <rect key="frame" x="0.0" y="14" width="72" height="106"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="72" height="106"/>
@@ -180,6 +180,7 @@
                             <constraint firstItem="YoP-j4-kri" firstAttribute="leading" secondItem="OAk-FI-Pcv" secondAttribute="leading" id="LHF-kk-rcN"/>
                             <constraint firstItem="Pn2-rt-EoP" firstAttribute="top" secondItem="YoP-j4-kri" secondAttribute="bottom" id="OLp-8l-NJg"/>
                             <constraint firstAttribute="trailing" secondItem="a2X-BT-T7U" secondAttribute="trailing" id="Sz5-D0-9f8"/>
+                            <constraint firstItem="a2X-BT-T7U" firstAttribute="height" secondItem="OAk-FI-Pcv" secondAttribute="height" multiplier="0.2" id="ajn-7h-RVp"/>
                             <constraint firstItem="a2X-BT-T7U" firstAttribute="leading" secondItem="OAk-FI-Pcv" secondAttribute="leading" id="bfy-pv-zmL"/>
                             <constraint firstItem="YoP-j4-kri" firstAttribute="centerX" secondItem="OAk-FI-Pcv" secondAttribute="centerX" id="ghv-aX-nZl"/>
                             <constraint firstItem="YoP-j4-kri" firstAttribute="centerY" secondItem="OAk-FI-Pcv" secondAttribute="centerY" id="tg1-Ns-tYh"/>
@@ -215,22 +216,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="slC-oR-u2h">
-                                <rect key="frame" x="16" y="64" width="343" height="118.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="slC-oR-u2h">
+                                <rect key="frame" x="16" y="64" width="343" height="96.5"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5O1-Ha-5eS">
-                                        <rect key="frame" x="0.0" y="0.0" width="118.5" height="118.5"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5O1-Ha-5eS" userLabel="Preview Photo">
+                                        <rect key="frame" x="0.0" y="0.0" width="161.5" height="96.5"/>
                                     </imageView>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="사진에 남기고 싶은 말을 입력하세요." textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="CHA-UI-xvS" userLabel="Text Filed ">
-                                        <rect key="frame" x="138.5" y="0.0" width="204.5" height="118.5"/>
+                                        <rect key="frame" x="181.5" y="0.0" width="161.5" height="96.5"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstItem="5O1-Ha-5eS" firstAttribute="width" secondItem="slC-oR-u2h" secondAttribute="height" id="kt7-jH-7lR"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -331,20 +329,20 @@
         <scene sceneID="nX1-rR-q79">
             <objects>
                 <tableViewController id="JsC-DB-MKV" customClass="DiaryHomeTableViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="480" sectionHeaderHeight="28" sectionFooterHeight="28" id="ozH-Gf-ABW">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="ozH-Gf-ABW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiaryCell" rowHeight="480" id="YT6-Ty-JNv" customClass="HomeDiaryTableViewCell" customModule="DailyMoments" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="480"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiaryCell" id="YT6-Ty-JNv" customClass="HomeDiaryTableViewCell" customModule="DailyMoments" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" tableViewCell="YT6-Ty-JNv" id="x7L-TO-NG6">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="479"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6bM-Ru-f8w">
-                                            <rect key="frame" x="8" y="8" width="359" height="463.5"/>
+                                            <rect key="frame" x="8" y="8" width="359" height="28"/>
                                         </imageView>
                                     </subviews>
                                     <constraints>
