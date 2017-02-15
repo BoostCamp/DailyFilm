@@ -18,7 +18,7 @@ extension Date {
     func makeName() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMddHHmmss"
-        return dateFormatter.string(from: self)
+        return "/IMG_" + dateFormatter.string(from: self)
     }
     
     

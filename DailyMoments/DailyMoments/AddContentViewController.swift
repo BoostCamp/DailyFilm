@@ -15,7 +15,8 @@ class AddContentViewController: UIViewController {
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
     @IBOutlet weak var contentTextField: UITextField!
 
-    var takenResizedPhotoImage: UIImage?
+    var takenPhotoImageFilePath: String? // 촬영한 원본 filePath
+    var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
     
     let manager = CLLocationManager()
     var currentLocation: CLLocation?
@@ -46,7 +47,7 @@ class AddContentViewController: UIViewController {
         contentTextField.delegate = self
     }
     
-    // MARK: View Controller Lifecycle
+    // MARK:- View Controller Lifecycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -73,11 +74,77 @@ class AddContentViewController: UIViewController {
         super.viewDidDisappear(animated)
     }
     
-    @IBAction func completedPosting(_ sender: Any) {
-        dismissKeyboard()
-        self.dismiss(animated: true, completion: nil)
+ 
+    
+    func showNotice(alertCase : SettingType){
+        
+        let alertController = UIAlertController(title: AlertContentConstant.titles[alertCase.rawValue], message: AlertContentConstant.messages[alertCase.rawValue], preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: AlertContentConstant.setting, style: .default, handler: { (action:UIAlertAction) -> Void in
+            let settingsUrl = URL(string: UIApplicationOpenSettingsURLString)
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(settingsUrl!, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(settingsUrl!)
+            }
+        }))
+        alertController.addAction(UIAlertAction(title: AlertContentConstant.cancel, style: .cancel, handler: nil))
+        
+        present(alertController, animated: true, completion: nil)
     }
 
+    
+    
+    func savePostInfo(_ userIndex: Int32, completion: (() -> Void)?){
+        
+        dismissKeyboard()
+        
+        completion?()
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    @IBAction func completedPosting(_ sender: Any) {
+        
+        let userProfiles:[UserProfile] = FMDatabaseManager.shareManager().selectUserProfile(query: Statement.Select.userProfile, value: "nso502354@gamil.com")
+        
+        let userIndex:Int32? = userProfiles[0].userIndex
+        
+        if let userIndex = userIndex {
+            savePostInfo(userIndex, completion: { () in
+                
+                
+                // Date 생성
+                let date: Date = Date()
+                //Calendar Component에 맞게 Date 변환
+                let now: Date = date.getDateComponents()
+                // 현재 시간 기준으로 timeIntervalSince1970 추출
+                let createdDate: TimeInterval? = now.timeIntervalSince1970
+                
+                let content: String? = self.contentTextField.text
+                let isFavorite: Int32? = 0
+                
+                var latitude: Float?
+                var longitude: Float?
+                
+                if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+                    latitude  = Float((self.currentLocation?.coordinate.latitude)!)
+                    longitude = Float((self.currentLocation?.coordinate.longitude)!)
+                } else if CLLocationManager.authorizationStatus() == .denied {
+                    latitude = 0
+                    longitude = 0
+                }
+                
+                if let imageFilePath = self.takenPhotoImageFilePath, let content = content, let isFavorite = isFavorite, let createdDate = createdDate, let latitude = latitude, let longitude = longitude {
+                    let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFilePath, content: content, isFavorite: isFavorite, createdDate: createdDate, latitude: latitude, longitude: longitude)
+                    
+                    FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
+                    
+                }
+                
+            })
+        }
+    }
+    
     
     @IBAction func addContent(_ sender: Any) {
         
@@ -87,10 +154,14 @@ class AddContentViewController: UIViewController {
             case ContentType.location.rawValue :
                 print("촬영 위치")
                 
-                if let currentLocation = currentLocation {
-                    dump(currentLocation)
-                    reverseGeocodingRequestForSpecifiedLocation(location: currentLocation)
+                if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+                    if let currentLocation = currentLocation {
+                        reverseGeocodingRequestForSpecifiedLocation(location: currentLocation)
+                    }
+                } else if CLLocationManager.authorizationStatus() == .denied {
+                    showNotice(alertCase: .location)
                 }
+                
                 
             case ContentType.time.rawValue :
                 print("게시 시간")
@@ -120,6 +191,9 @@ class AddContentViewController: UIViewController {
     }
     
 }
+
+
+// MARK:- UITextFieldDelegate & keyboard show/hide
 
 extension AddContentViewController: UITextFieldDelegate {
     
@@ -154,7 +228,7 @@ extension AddContentViewController: UITextFieldDelegate {
         
         // Enter was pressed
         dismissKeyboard()
-        //        textField.resignFirstResponder()
+        
         
         return true
     }
@@ -262,9 +336,18 @@ extension AddContentViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        contentTextField.text = String(describing: error)
+        dump(error)
     }
 
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            manager.startUpdatingLocation()
+            print("startUpdatingLocation called")
+        } else if status == .denied {
+            manager.stopUpdatingLocation()
+            print("stopUpdatingLocation called")
+        }
+    }
     
     func reverseGeocodingRequestForSpecifiedLocation(location: CLLocation) {
     
