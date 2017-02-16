@@ -15,12 +15,22 @@ enum SettingType: Int {
     case location
 }
 
-struct CellConstants{
-    static let diary: String = "DiaryCell"
+struct DiaryPhotoTableViewConstants{
+    
+    static let showDiaryContentDetailViewControllerSegueIdentifier = "showDiaryContentDetailViewController"
+    
+    static let identifierOfCell: [String?] = ["DiaryPhotoCell", "DiaryContentCell"]
+    
+    static func numberOfRows() -> Int {
+        return identifierOfCell.count
+    }
+    
+    static func cellIdentifier(for indexPath: IndexPath) -> String {
+        return identifierOfCell[indexPath.row]!
+    }
 }
 
 let cellUnitValue: Float = 5
-
 
 struct AlertContentConstant{
     static let titles: [String?] = ["카메라 사용 권한", "사진 앨범 사용 권한", "위치 정보 사용 권한"]

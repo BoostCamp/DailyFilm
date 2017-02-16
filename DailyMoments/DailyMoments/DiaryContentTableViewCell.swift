@@ -1,36 +1,30 @@
 //
-//  HomeDiaryTableViewCell.swift
+//  DiaryContentTableViewCell.swift
 //  DailyMoments
 //
-//  Created by 남상욱 on 2017. 2. 15..
+//  Created by 남상욱 on 2017. 2. 16..
 //  Copyright © 2017년 nam. All rights reserved.
 //
 
 import UIKit
 
-
+// 사진의 내용을 클릭하여 DetailView로 이동시키기 위한 delegation 프로토콜
 protocol ContentLabelDelegate {
-    func showDetailContent(sender: HomeDiaryTableViewCell)
+    func showDetailContent(sender: DiaryContentTableViewCell)
 }
 
-
-class HomeDiaryTableViewCell: UITableViewCell {
-
+class DiaryContentTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var userProfileImageView: UIImageView!
-    @IBOutlet weak var userIdLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
-    @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var createdDate: UILabel!
     
     
     var delegate: ContentLabelDelegate?
-
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
         contentLabel.isUserInteractionEnabled = true
         
         let gestureRecognizerOfContentLabel: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapContentLabel(sender:)))
@@ -39,16 +33,15 @@ class HomeDiaryTableViewCell: UITableViewCell {
         
     }
     
-    func tapContentLabel(sender:UITapGestureRecognizer) {
-        if let delegate = self.delegate {
-            delegate.showDetailContent(sender: self)
-        }
-    }
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
     }
     
+    func tapContentLabel(sender:UITapGestureRecognizer) {
+        if let delegate = self.delegate {
+            delegate.showDetailContent(sender: self)
+        }
+    }
 }

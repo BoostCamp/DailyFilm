@@ -11,8 +11,7 @@ import Photos
 
 class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate {
     
-     fileprivate static let showDiaryContentDetailViewControllerSegueIdentifier = "showDiaryContentDetailViewController"
-    
+ 
     
     var authorizationStatus: PHAuthorizationStatus? // // Photo 접근 권한을 위한 저장 프로퍼티
     var posts: [Post]? // post 개수
@@ -23,9 +22,29 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         print("viewDidLoad")
-//        tableView.allowsSelection = false
         
         FMDatabaseManager.shareManager().openDatabase(databaseName: DatabaseConstant.databaseName)
+        
+        
+        // Date 생성
+        let date:Date = Date()
+        
+        //Calendar Component에 맞게 Date 변환
+        let now:Date = date.getDateComponents()
+        
+        // 현재 시간 기준으로 timeIntervalSince1970 추출
+        let timeIntervalOfNow:TimeInterval = now.timeIntervalSince1970
+        
+        let userProfile: UserProfile = UserProfile(userIndex: 0, userId: "nso502354@gmail.com", userPassword: "1234", userNickname: "namsang", createdDate: timeIntervalOfNow )
+        
+        let successFlag = FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
+        
+        let userProfiles: [UserProfile] = FMDatabaseManager.shareManager().selectUserProfile(query: Statement.Select.userProfile, value: "nso502354@gamil.com")
+        
+        userIndex = userProfiles[0].userIndex
+        if let userIndex = userIndex {
+            posts = FMDatabaseManager.shareManager().selectPosts(query: Statement.Select.post, value : userIndex)
+        }
     }
     
     
@@ -98,109 +117,170 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
     
     
     
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
         print("prepare")
-        if segue.identifier == DiaryHomeTableViewController.showDiaryContentDetailViewControllerSegueIdentifier {
+        if segue.identifier == DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier {
             if let diaryContentDetailViewController:DiaryContentDetailViewController = segue.destination as? DiaryContentDetailViewController {
                 
+                self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
                 diaryContentDetailViewController.userIndex = userIndex
                 diaryContentDetailViewController.createdDate = createdDate
                 
             }
         }
-        
-        
-        
-     }
-    
-    
+    }
 }
-
-
-
-/*
- 
- if let addTextViewController:AddContentViewController = segue.destination as? AddContentViewController {
- self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
- addTextViewController.edidtedPhotoImage = photographedImage.image
- }
-
- 
- */
 
 
 extension DiaryHomeTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return (posts?.count)!
+
+        return DiaryPhotoTableViewConstants.numberOfRows()
     }
     
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
+
+        return (posts?.count)!
         
-        return 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: DiaryPhotoTableViewConstants.cellIdentifier(for: indexPath), for: indexPath)
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: CellConstants.diary, for: indexPath) as! HomeDiaryTableViewCell
-        
-        
-        
-        // for using ContentLabelDelegate
-        cell.delegate = self
+        guard let post = posts?[indexPath.section] else {
+            fatalError()
+        }
         
         
-        if let post = posts?[indexPath.row] {
-            if let address = post.address, let imageFilePath = post.imageFilePath, let content = post.content, let createdDate = post.createdDate {
-                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-                //file Path 추가하여 생성
-                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
-                
-                let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
-                
-                let fixedOrientationimage:UIImage? = UIImage(contentsOfFile: editedImageURL.path)
-                
-                if let image = fixedOrientationimage {
+        if let cell = cell as? DiaryPhotoTableViewCell {
+        
+            if indexPath.row == 0{
+         
+                if let imageFilePath = post.imageFilePath {
                     
-                    cell.userIdLabel?.text = "nso502354@gmail.com"
-                    cell.locationLabel.text = address
-                    cell.photoImageView?.image = image.cropToSquareImage()
+                    // Create a DocumentDirectoryPath
+                    let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                   
+                    // URL of DocumentDirectoryPath
+                    let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
+                    
+                    // file URL of DocumentDirectoryPath
+                    let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
+                    
+                    let fixedOrientationimage: UIImage? = UIImage(contentsOfFile: editedImageURL.path)
+                    
+                    if let image = fixedOrientationimage {
+                        cell.photoImageView?.image = image.cropToSquareImage()
+                    }
+                }
+                
+            }
+        } else if let cell = cell as? DiaryContentTableViewCell {
+        
+            if indexPath.row == 1{
+                
+                if let content = post.content, let createdDate = post.createdDate {
+                    // for using ContentLabelDelegate
+                    cell.delegate = self
                     cell.contentLabel.text = content
-                    
                     cell.createdDate.text = Date(timeIntervalSince1970: createdDate).toString()
-                    
                 }
             }
         }
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        var cellHeight: CGFloat = 0
         let screenBounds = UIScreen.main.bounds
-        return screenBounds.width * 1.5
+        
+        if indexPath.row == 0 {
+            cellHeight = screenBounds.width
+        } else if indexPath.row == 1 {
+            cellHeight = screenBounds.width / 4
+        }
+        
+        return cellHeight
     }
     
     
-    func showDetailContent(sender: HomeDiaryTableViewCell){
-        print("showDetailContent")
-        let cell:HomeDiaryTableViewCell = sender as HomeDiaryTableViewCell
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        dump(posts)
+        
+        let screenHeight = UIScreen.main.bounds.height
+        let screenWidth = UIScreen.main.bounds.width
+        let headerHieght =  screenHeight / 10
+        let profileImageSize = screenWidth / 10
+        let intervalSize = (headerHieght - profileImageSize) / 2
+        guard let post = posts?[section] else {
+            return UIView()
+            
+        }
+        
+        let view = UIView()
+        
+        
+        let profileImageView: UIImageView = UIImageView(image: UIImage(named: "person"))
+        profileImageView.frame = CGRect(x: intervalSize, y: intervalSize, width: profileImageSize, height: profileImageSize)
+        profileImageView.contentMode = .scaleAspectFill
+        view.addSubview(profileImageView)
+        
+        
+        
+        let stackView: UIStackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fillProportionally
+        stackView.frame = CGRect(x: profileImageSize + (intervalSize * 2), y: (intervalSize / 2) , width: screenWidth - profileImageSize, height: headerHieght - intervalSize)
+        
+        let userIdLabel: UILabel = UILabel()
+        
+        userIdLabel.sizeToFit()
+        userIdLabel.text = String(describing: post.userIndex)
+        
+        
+        let addressLabel: UILabel = UILabel()
+        addressLabel.sizeToFit()
+        
+        if let address = post.address {
+            addressLabel.text = address
+            addressLabel.textColor = UIColor.darkGray
+            addressLabel.font = UIFont(name: addressLabel.font.fontName, size: 14)
+        }
+        
+        
+        stackView.addArrangedSubview(userIdLabel)
+        stackView.addArrangedSubview(addressLabel)
+        
+        view.addSubview(stackView)
+        
+        return view
+    }
+    
+    override func  tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let screenHeightSize = UIScreen.main.bounds.height
+        
+        return screenHeightSize / 10
+    }
+    
+    func showDetailContent(sender: DiaryContentTableViewCell){
+        let cell:DiaryContentTableViewCell = sender as DiaryContentTableViewCell
         let date = cell.createdDate.text?.convertStringToDate()
         createdDate = date?.timeIntervalSince1970
-        dump(createdDate)
-
-        performSegue(withIdentifier: DiaryHomeTableViewController.showDiaryContentDetailViewControllerSegueIdentifier, sender: self)
+        
+        performSegue(withIdentifier: DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier, sender: self)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let post = posts?[indexPath.row] {
-            dump(post)
             
         }
     }
