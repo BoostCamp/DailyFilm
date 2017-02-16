@@ -9,19 +9,20 @@
 import Foundation
 
 extension Date {
+    
     //dateFormatter에 맞게 String 타입으로 반환
     func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy. MM. dd HH:mm:ss"
         return dateFormatter.string(from: self)
     }
+    
+    
     func makeName() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMddHHmmss"
         return "/IMG_" + dateFormatter.string(from: self)
     }
-    
-    
     
     
     // 현재 시간을 DateComponents 형식으로 반환

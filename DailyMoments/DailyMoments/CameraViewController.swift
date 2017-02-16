@@ -388,9 +388,10 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == CameraViewController.showEditPhotoViewControllerSegueIdentifier, let editPhotoViewController = segue.destination as? EditPhotoViewController, let takenPhotoImage = takenPhotoImage{
-            
+          
             editPhotoViewController.takenPhotoImage = takenPhotoImage
             editPhotoViewController.takenResizedPhotoImage = generatePreviewPhoto(source: takenPhotoImage)
+            
         }
     }
     

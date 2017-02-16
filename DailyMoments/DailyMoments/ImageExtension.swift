@@ -77,7 +77,7 @@ extension UIImage {
     func applyFilter(type filterName: String) -> UIImage{
        
         var resultImage:UIImage = self
-        let scale = UIScreen.main.scale
+        
         let originalOrientation: UIImageOrientation = self.imageOrientation
         
         guard let image = self.cgImage  else {
@@ -105,7 +105,10 @@ extension UIImage {
             
             if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
                 
-                resultImage = UIImage(cgImage: context.createCGImage(output, from: output.extent)!, scale: scale, orientation: originalOrientation)
+/*
+        scale : The scale factor to assume when interpreting the image data. Applying a scale factor of 1.0 results in an image whose size matches the pixel-based dimensions of the image. Applying a different scale factor changes the size of the image as reported by the size property.
+*/
+                resultImage = UIImage(cgImage: context.createCGImage(output, from: output.extent)!, scale: 1, orientation: originalOrientation)
             }
             
         }

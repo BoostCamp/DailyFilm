@@ -9,18 +9,25 @@
 import UIKit
 import Photos
 
-class DiaryHomeTableViewController: UITableViewController {
-
+class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate {
+    
+     fileprivate static let showDiaryContentDetailViewControllerSegueIdentifier = "showDiaryContentDetailViewController"
+    
+    
     var authorizationStatus: PHAuthorizationStatus? // // Photo 접근 권한을 위한 저장 프로퍼티
     var posts: [Post]? // post 개수
-    var userIndex:Int32?
+    var userIndex: Int32? // userIndex
+    var createdDate: TimeInterval? // 생성 시간
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        print("viewDidLoad")
+//        tableView.allowsSelection = false
         
         FMDatabaseManager.shareManager().openDatabase(databaseName: DatabaseConstant.databaseName)
     }
-
+    
     
     // MARK: - View Controller Lifecyle
     
@@ -28,7 +35,7 @@ class DiaryHomeTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         print("viewWillAppear in DiaryHomeViewController")
         
-      
+        
         PHPhotoLibrary.authorizationStatus()
         
         authorizationStatus = PHPhotoLibrary.authorizationStatus()
@@ -48,7 +55,7 @@ class DiaryHomeTableViewController: UITableViewController {
                 print(authorizationStatusOfPhoto)
             }
         }
-
+        
         
         // Date 생성
         let date:Date = Date()
@@ -89,20 +96,44 @@ class DiaryHomeTableViewController: UITableViewController {
         print("viewDidDisappear in DiaryHomeViewController")
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
+    
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+        print("prepare")
+        if segue.identifier == DiaryHomeTableViewController.showDiaryContentDetailViewControllerSegueIdentifier {
+            if let diaryContentDetailViewController:DiaryContentDetailViewController = segue.destination as? DiaryContentDetailViewController {
+                
+                diaryContentDetailViewController.userIndex = userIndex
+                diaryContentDetailViewController.createdDate = createdDate
+                
+            }
+        }
+        
+        
+        
+     }
+    
     
 }
 
-    
+
+
+/*
+ 
+ if let addTextViewController:AddContentViewController = segue.destination as? AddContentViewController {
+ self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+ addTextViewController.edidtedPhotoImage = photographedImage.image
+ }
+
+ 
+ */
+
+
 extension DiaryHomeTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -110,13 +141,24 @@ extension DiaryHomeTableViewController {
         return (posts?.count)!
     }
     
-
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        
+        return 1
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CellConstants.diary, for: indexPath) as! HomeDiaryTableViewCell
         
+        
+        
+        // for using ContentLabelDelegate
+        cell.delegate = self
+        
+        
         if let post = posts?[indexPath.row] {
-            if let imageFilePath = post.imageFilePath {
+            if let address = post.address, let imageFilePath = post.imageFilePath, let content = post.content, let createdDate = post.createdDate {
                 let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
                 //file Path 추가하여 생성
                 let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
@@ -126,7 +168,14 @@ extension DiaryHomeTableViewController {
                 let fixedOrientationimage:UIImage? = UIImage(contentsOfFile: editedImageURL.path)
                 
                 if let image = fixedOrientationimage {
+                    
+                    cell.userIdLabel?.text = "nso502354@gmail.com"
+                    cell.locationLabel.text = address
                     cell.photoImageView?.image = image.cropToSquareImage()
+                    cell.contentLabel.text = content
+                    
+                    cell.createdDate.text = Date(timeIntervalSince1970: createdDate).toString()
+                    
                 }
             }
         }
@@ -135,7 +184,25 @@ extension DiaryHomeTableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let screenBounds = UIScreen.main.bounds
-        return screenBounds.width
+        return screenBounds.width * 1.5
+    }
+    
+    
+    func showDetailContent(sender: HomeDiaryTableViewCell){
+        print("showDetailContent")
+        let cell:HomeDiaryTableViewCell = sender as HomeDiaryTableViewCell
+        let date = cell.createdDate.text?.convertStringToDate()
+        createdDate = date?.timeIntervalSince1970
+        dump(createdDate)
+
+        performSegue(withIdentifier: DiaryHomeTableViewController.showDiaryContentDetailViewControllerSegueIdentifier, sender: self)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let post = posts?[indexPath.row] {
+            dump(post)
+            
+        }
     }
     
 }

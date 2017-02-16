@@ -22,4 +22,14 @@ extension String {
         return filePath.appendingPathComponent(self)
         
     }
+    
+    
+    //dataFofmatter에 맞게 Date 타입으로 반환
+    func convertStringToDate() -> Date? {
+        print(self)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy. MM. dd HH:mm:ss"
+        return dateFormatter.date(from: self)
+    }
+    
 }

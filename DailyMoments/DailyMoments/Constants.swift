@@ -55,6 +55,7 @@ struct Statement {
             "content TEXT NOT NULL, \n" +
             "is_favorite integer, \n" +
             "created_date timestamp DEFAULT CURRENT_TIMESTAMP, \n" +
+            "address TEXT DAFUALT NULL, \n" +
             "latitude FLOAT DEFAULT NULL, \n" +
             "longitude FLOAT DEFAULT NULL, \n" +
             "CONSTRAINT user_index FOREIGN KEY (user_index) REFERENCES USER_PROFILE (user_index) ON DELETE CASCADE ON UPDATE CASCADE \n" +
@@ -69,8 +70,8 @@ struct Statement {
         "values(?, ?, ?, ?);"
         
         static let post = "INSERT INTO POST( \n" +
-            "user_index, image_file_path, content, is_favorite, created_date, latitude, longitude) \n" +
-        "values(?, ?, ?, ?, ?, ?, ?);"
+            "user_index, image_file_path, content, is_favorite, created_date, address, latitude, longitude) \n" +
+        "values(?, ?, ?, ?, ?, ?, ?, ?);"
         
     }
     
@@ -78,8 +79,9 @@ struct Statement {
         
         static let userProfile = "SELECT user_index, user_id, user_password, user_nickname, created_date FROM USER_PROFILE;"
         
-        static let post = "SELECT post_index, user_index, image_file_path, content, is_favorite, created_date, latitude, longitude FROM POST WHERE user_index = ?;"
-        
+        static let post = "SELECT post_index, user_index, image_file_path, content, is_favorite, created_date, address, latitude, longitude FROM POST WHERE user_index = ?;"
+     
+        static let postById = "SELECT image_file_path, content, is_favorite, address, latitude, longitude FROM POST WHERE user_index = ? and created_date = ?;"
     }
 }
 

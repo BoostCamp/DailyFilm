@@ -21,6 +21,7 @@ class AddContentViewController: UIViewController {
     let manager = CLLocationManager()
     var currentLocation: CLLocation?
     var currentPlacemark: CLPlacemark?
+    var address: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,9 +45,6 @@ class AddContentViewController: UIViewController {
             previewOfPhotoToPostImageView.image = previewPhoto
         }
         
-        previewOfPhotoToPostImageView.image = generatePreviewPhoto(source: edidtedPhotoImage)
-        
-        
         // rightBarButton인 Done버튼 tint색을 애플의 파란색으로 변경
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appleBlue()
         
@@ -59,7 +57,7 @@ class AddContentViewController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.isToolbarHidden = false
-        
+
         // UIKeyboardWillShow, UIKeyboardWillHide이벤트 통지 가입 (NSNotification.Name)
         subscribeToKeyboardNotifications()
         
@@ -105,15 +103,24 @@ class AddContentViewController: UIViewController {
         
         
         // Date 생성
+        
         let date: Date = Date()
         //Calendar Component에 맞게 Date 변환
         let now: Date = date.getDateComponents()
-        // 현재 시간 기준으로 timeIntervalSince1970 추출
         
+        // 현재 시간 기준으로 timeIntervalSince1970 추출
+        let createdDate: TimeInterval? = now.timeIntervalSince1970
+        dump(createdDate)
+        
+        //1487227355.6198459 ->  1487227355.0
+        let createdDateInt: TimeInterval? = Double(Int(createdDate!))
+
         let imageFileName = now.makeName()
         
-        let createdDate: TimeInterval? = now.timeIntervalSince1970
-        
+        if self.contentTextField.text == "" {
+            self.contentTextField.text = address! + "에서 " + Date.init(timeIntervalSince1970: createdDateInt!).toString() + "에 찍은 사진입니다."
+            
+        }
         let content: String? = self.contentTextField.text
         let isFavorite: Int32? = 0
         
@@ -123,9 +130,11 @@ class AddContentViewController: UIViewController {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             latitude  = Float((self.currentLocation?.coordinate.latitude)!)
             longitude = Float((self.currentLocation?.coordinate.longitude)!)
+            
         } else if CLLocationManager.authorizationStatus() == .denied {
             latitude = 0
             longitude = 0
+            
         }
         
         let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
@@ -145,10 +154,10 @@ class AddContentViewController: UIViewController {
             }
         }
         
-        if let content = content, let isFavorite = isFavorite, let createdDate = createdDate, let latitude = latitude, let longitude = longitude {
-            let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, latitude: latitude, longitude: longitude)
+        if let content = content, let isFavorite = isFavorite, let createdDate = createdDateInt, let address = address, let latitude = latitude, let longitude = longitude {
+            let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, address: address, latitude: latitude, longitude: longitude)
             
-            let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
+            let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.address as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
             
             completion?(successFlag)
             
@@ -188,9 +197,7 @@ class AddContentViewController: UIViewController {
                     // 실패시
                     print("posting fail")
                 }
-                
-                
-                
+            
             })
         }
     }
@@ -382,6 +389,7 @@ extension AddContentViewController: CLLocationManagerDelegate {
         // location Array의 마지막 좌표로 set
         if let lastLocatoin = locations.last {
             currentLocation = lastLocatoin
+            reverseGeocodingRequestForSpecifiedLocation(location: currentLocation!)
         }
     }
     
@@ -423,7 +431,8 @@ extension AddContentViewController: CLLocationManagerDelegate {
         self.manager.stopUpdatingLocation()
         
         if let country = placemark.country, let administrativeArea = placemark.administrativeArea, let locality = placemark.locality, let subLocality = placemark.subLocality {
-            contentTextField.text = "\(country) \(administrativeArea) \(locality) \(subLocality)"
+            
+            address = "\(country) \(administrativeArea) \(locality) \(subLocality)"
         }
         
     }

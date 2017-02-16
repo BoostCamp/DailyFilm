@@ -16,6 +16,7 @@
 		3D1952E41E487467006A05BC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1952E21E487467006A05BC /* LaunchScreen.storyboard */; };
 		3D1952EF1E487467006A05BC /* DailyMomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952EE1E487467006A05BC /* DailyMomentsTests.swift */; };
 		3D38AE771E4AFFE60056CF5E /* EditPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */; };
+		3D49B4F31E55657C000A6A7E /* DiaryContentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D49B4F21E55657C000A6A7E /* DiaryContentDetailViewController.swift */; };
 		3D7448BD1E4B896B0003F6AB /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */; };
 		3D80A7871E53EDF400B9720E /* HomeDiaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D80A7861E53EDF400B9720E /* HomeDiaryTableViewCell.swift */; };
 		3DA82C141E51952500061CE2 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA82C0A1E51952500061CE2 /* FMDatabase.m */; };
@@ -61,6 +62,7 @@
 		3D1952EE1E487467006A05BC /* DailyMomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMomentsTests.swift; sourceTree = "<group>"; };
 		3D1952F01E487467006A05BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPhotoViewController.swift; sourceTree = "<group>"; };
+		3D49B4F21E55657C000A6A7E /* DiaryContentDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiaryContentDetailViewController.swift; sourceTree = "<group>"; };
 		3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		3D80A7861E53EDF400B9720E /* HomeDiaryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeDiaryTableViewCell.swift; sourceTree = "<group>"; };
 		3DA82C081E51952500061CE2 /* DailyMoments-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DailyMoments-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				3DD1E54B1E4C644A008FB12F /* DiaryHomeTableViewController.swift */,
 				3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */,
 				3DB460A01E54814A00646710 /* CameraViewControllerExtension.swift */,
+				3D49B4F21E55657C000A6A7E /* DiaryContentDetailViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				3DD55EC31E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift in Sources */,
 				3DCB99941E49B28900B6EB21 /* HomeTabBarController.swift in Sources */,
 				3DD1E5461E4C2AA5008FB12F /* Constants.swift in Sources */,
+				3D49B4F31E55657C000A6A7E /* DiaryContentDetailViewController.swift in Sources */,
 				3DBEBBB91E52D80A004A06E1 /* StringExtension.swift in Sources */,
 				3D38AE771E4AFFE60056CF5E /* EditPhotoViewController.swift in Sources */,
 				3D80A7871E53EDF400B9720E /* HomeDiaryTableViewCell.swift in Sources */,

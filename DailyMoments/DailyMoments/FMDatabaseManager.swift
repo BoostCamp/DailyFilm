@@ -181,10 +181,11 @@ class FMDatabaseManager: NSObject {
                         let content: String = (results?.string(forColumn: "content"))!
                         let isFavorite: Int32 = (results?.int(forColumn: "is_favorite"))!
                         let createdDate: Double = (results?.double(forColumn: "created_date"))!
+                        let address: String = (results?.string(forColumn: "address"))!
                         let latitude = (results?.double(forColumn: "latitude"))!
                         let longitude = (results?.double(forColumn: "longitude"))!
                         
-                        let post: Post = Post(postIndex: postIndex, userIndex: userIndex, imageFilePath: imageFilePath, content: content, isFavorite: isFavorite, createdDate: createdDate, latitude: Float(latitude), longitude: Float(longitude))
+                        let post: Post = Post(postIndex: postIndex, userIndex: userIndex, imageFilePath: imageFilePath, content: content, isFavorite: isFavorite, createdDate: createdDate, address: address, latitude: Float(latitude), longitude: Float(longitude))
                         
                         posts.append(post)
                         
@@ -199,6 +200,60 @@ class FMDatabaseManager: NSObject {
             }
         }
         return posts
+    }
+    
+    
+    func selectSpecificUserPostAtCreatedDate(query statement: String, value uniqueKeyOfPost: Any...) -> Post?{
+        
+        
+        dump(uniqueKeyOfPost)
+        var post: Post?
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String) {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+            
+            
+            if((fmdb?.open()) != nil) {
+                
+                let results:FMResultSet? =  fmdb?.executeQuery(statement, withArgumentsIn: uniqueKeyOfPost)
+                
+                if results != nil {
+                    
+                    if (results?.next())! {
+                        
+                        let imageFilePath: String = (results?.string(forColumn: "image_file_path"))!
+                        let content: String = (results?.string(forColumn: "content"))!
+                        let isFavorite: Int32 = (results?.int(forColumn: "is_favorite"))!
+                        let address: String = (results?.string(forColumn: "address"))!
+                        let latitude = (results?.double(forColumn: "latitude"))!
+                        let longitude = (results?.double(forColumn: "longitude"))!
+                        
+                        post = Post(postIndex: 0, userIndex: 0, imageFilePath: imageFilePath, content: content, isFavorite: isFavorite, createdDate: 0, address: address, latitude: Float(latitude), longitude: Float(longitude))
+                        dump(post)
+                    }
+                    fmdb?.close()
+                    return post // return post
+
+                }
+                
+            } else {
+                print("DATABASE OPEN ERROR")
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+        }
+        return post // return nil
     }
 }
 

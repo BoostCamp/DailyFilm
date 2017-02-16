@@ -325,7 +325,7 @@
             </objects>
             <point key="canvasLocation" x="-1076" y="1272"/>
         </scene>
-        <!--Diary Home Table View Controller-->
+        <!--일기장-->
         <scene sceneID="nX1-rR-q79">
             <objects>
                 <tableViewController id="JsC-DB-MKV" customClass="DiaryHomeTableViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
@@ -333,27 +333,87 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiaryCell" id="YT6-Ty-JNv" customClass="HomeDiaryTableViewCell" customModule="DailyMoments" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="DiaryCell" id="YT6-Ty-JNv" customClass="HomeDiaryTableViewCell" customModule="DailyMoments" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" tableViewCell="YT6-Ty-JNv" id="x7L-TO-NG6">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="YT6-Ty-JNv" id="x7L-TO-NG6">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6bM-Ru-f8w">
-                                            <rect key="frame" x="8" y="8" width="359" height="28"/>
-                                        </imageView>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="z8o-CO-kRi">
+                                            <rect key="frame" x="0.0" y="-0.5" width="375" height="9761"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="if1-sf-yVj">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person" translatesAutoresizingMaskIntoConstraints="NO" id="Cth-MB-DHp" userLabel="User Profile Photo">
+                                                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="50"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="Cth-MB-DHp" secondAttribute="height" id="tZH-ke-FRv"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="V6Q-4w-8cZ">
+                                                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="50"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ovk-Eq-Z3F" userLabel="Id">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="187.5" height="25"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B12-h8-MWb" userLabel="Location">
+                                                                    <rect key="frame" x="0.0" y="25" width="187.5" height="25"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="qeC-rV-Ibb"/>
+                                                    </constraints>
+                                                </stackView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GD3-HI-is1" userLabel="Photo Image">
+                                                    <rect key="frame" x="0.0" y="50" width="375" height="9671"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="GD3-HI-is1" secondAttribute="height" id="AQV-SL-aYE"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Content" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z9D-9J-qct" userLabel="Content">
+                                                    <rect key="frame" x="0.0" y="9721" width="375" height="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Created Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uhy-JI-5lY" userLabel="Created Date">
+                                                    <rect key="frame" x="0.0" y="9721" width="375" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="MuE-bK-oPD" userLabel="height = 30"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="6bM-Ru-f8w" firstAttribute="top" secondItem="x7L-TO-NG6" secondAttribute="topMargin" id="7pS-MR-aur"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="6bM-Ru-f8w" secondAttribute="bottom" id="cup-Sr-3Nw"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="6bM-Ru-f8w" secondAttribute="trailing" id="wsR-zJ-wZh"/>
-                                        <constraint firstItem="6bM-Ru-f8w" firstAttribute="leading" secondItem="x7L-TO-NG6" secondAttribute="leadingMargin" id="zS2-fU-eZc"/>
+                                        <constraint firstAttribute="trailing" secondItem="z8o-CO-kRi" secondAttribute="trailing" id="FlR-6i-VNK"/>
+                                        <constraint firstItem="z8o-CO-kRi" firstAttribute="top" secondItem="x7L-TO-NG6" secondAttribute="top" id="YtQ-J4-epE"/>
+                                        <constraint firstItem="z8o-CO-kRi" firstAttribute="leading" secondItem="x7L-TO-NG6" secondAttribute="leading" id="Z60-ge-NOU"/>
+                                        <constraint firstAttribute="bottom" secondItem="z8o-CO-kRi" secondAttribute="bottom" id="zfT-qU-vSe"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="photoImageView" destination="6bM-Ru-f8w" id="v5v-OP-4tj"/>
+                                    <outlet property="contentLabel" destination="Z9D-9J-qct" id="rRW-f5-6DT"/>
+                                    <outlet property="createdDate" destination="uhy-JI-5lY" id="MdJ-cq-0Bu"/>
+                                    <outlet property="locationLabel" destination="B12-h8-MWb" id="g4p-UV-Duh"/>
+                                    <outlet property="photoImageView" destination="GD3-HI-is1" id="zlz-mK-sbf"/>
+                                    <outlet property="userIdLabel" destination="Ovk-Eq-Z3F" id="0BD-5L-ael"/>
+                                    <outlet property="userProfileImageView" destination="Cth-MB-DHp" id="A6l-Ha-rkv"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -362,11 +422,45 @@
                             <outlet property="delegate" destination="JsC-DB-MKV" id="sQX-0S-4CH"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Fdm-A2-FAk"/>
+                    <navigationItem key="navigationItem" title="일기장" id="Fdm-A2-FAk"/>
+                    <connections>
+                        <segue destination="1hp-rt-dt0" kind="show" identifier="showDiaryContentDetailViewController" id="wa8-li-gNo"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EVX-pw-CJl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-136.80000000000001" y="-526.6866566716642"/>
+        </scene>
+        <!--Diary Content Detail View Controller-->
+        <scene sceneID="HTy-Pw-vVk">
+            <objects>
+                <viewController id="1hp-rt-dt0" customClass="DiaryContentDetailViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="LcI-7h-3l1"/>
+                        <viewControllerLayoutGuide type="bottom" id="wl9-T1-VZw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="PY9-KF-SGd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QHQ-kz-FrW">
+                                <rect key="frame" x="16" y="64" width="343" height="554"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="contentTextView" destination="QHQ-kz-FrW" id="1Cf-Ns-gaf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ISW-OV-773" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="781.60000000000002" y="-527.58620689655174"/>
         </scene>
         <!--추가하기-->
         <scene sceneID="oFW-SY-v67">
@@ -415,6 +509,7 @@
         <image name="diary_home" width="24" height="24"/>
         <image name="favorite" width="24" height="24"/>
         <image name="location" width="24" height="24"/>
+        <image name="person" width="24" height="24"/>
         <image name="switch_camera_position" width="32" height="32"/>
         <image name="time" width="24" height="24"/>
     </resources>
