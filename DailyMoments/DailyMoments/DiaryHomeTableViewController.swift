@@ -219,7 +219,7 @@ extension DiaryHomeTableViewController {
         let screenHeight = UIScreen.main.bounds.height
         let screenWidth = UIScreen.main.bounds.width
         let headerHieght =  screenHeight / 10
-        let profileImageSize = screenWidth / 10
+        let profileImageSize = screenWidth / 12
         let intervalSize = (headerHieght - profileImageSize) / 2
         guard let post = posts?[section] else {
             return UIView()

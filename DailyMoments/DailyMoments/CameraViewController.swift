@@ -127,11 +127,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         switch cameraFlashSwitchedStatus {
         case FlashModeConstant.off.rawValue:
-            flashOfCameraBarButtonItem.image = UIImage(named: "camera_flash_off")
+            flashOfCameraBarButtonItem.image = UIImage(named: "flash_off")
         case FlashModeConstant.on.rawValue:
-            flashOfCameraBarButtonItem.image = UIImage(named: "camera_flash_on")
+            flashOfCameraBarButtonItem.image = UIImage(named: "flash_on")
         case FlashModeConstant.auto.rawValue:
-            flashOfCameraBarButtonItem.image = UIImage(named: "camera_flash_auto")
+            flashOfCameraBarButtonItem.image = UIImage(named: "flash_auto")
         default:
             break;
         }

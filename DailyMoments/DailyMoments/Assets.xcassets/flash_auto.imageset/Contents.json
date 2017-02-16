@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "switch_camera_position.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "flash_auto.png",
       "scale" : "2x"
     },
     {

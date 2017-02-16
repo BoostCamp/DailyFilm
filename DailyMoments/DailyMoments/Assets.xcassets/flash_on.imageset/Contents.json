@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "diary_home.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "flash_on.png",
       "scale" : "2x"
     },
     {
