@@ -205,8 +205,6 @@ class FMDatabaseManager: NSObject {
     
     func selectSpecificUserPostAtCreatedDate(query statement: String, value uniqueKeyOfPost: Any...) -> Post?{
         
-        
-        dump(uniqueKeyOfPost)
         var post: Post?
         
         let fileManager = FileManager.default
@@ -229,7 +227,6 @@ class FMDatabaseManager: NSObject {
                 let results:FMResultSet? =  fmdb?.executeQuery(statement, withArgumentsIn: uniqueKeyOfPost)
                 
                 if results != nil {
-                    
                     if (results?.next())! {
                         
                         let imageFilePath: String = (results?.string(forColumn: "image_file_path"))!
@@ -254,6 +251,83 @@ class FMDatabaseManager: NSObject {
             }
         }
         return post // return nil
+    }
+    
+    
+    func selectUserIndexFromUserId(query statement: String, value userId: Any...) -> Int32 {
+        
+        var userIndex: Int32 = 0
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String) {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+
+            if ((fmdb?.open()) != nil) {
+                
+                let results:FMResultSet? = fmdb?.executeQuery(statement, withArgumentsIn: userId)
+                
+                if results != nil {
+                    while(results?.next())! {
+                        
+                        userIndex = (results?.int(forColumn: "user_id"))!
+                    }
+                    fmdb?.close()
+                }
+            }
+            
+        }
+        return userIndex
+    }
+    
+    
+    
+    func selectSpecificUserPost(query statement: String, value userIndex: Int32...) -> Int {
+        
+        var count: Int = 0
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String) {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+            
+            if((fmdb?.open()) != nil) {
+                
+                let results:FMResultSet? =  fmdb?.executeQuery(statement, withArgumentsIn: userIndex)
+                
+                if results != nil {
+                    if (results?.next())! {
+                        count = Int((results?.int(forColumn: "Count"))!)
+                    }
+                    fmdb?.close()
+                }
+                
+            } else {
+                print("DATABASE OPEN ERROR")
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+        }
+
+        return count
     }
 }
 

@@ -9,6 +9,13 @@
 import Foundation
 
 
+struct UserProfileConstants {
+    static let id: String = "nso502354@gmail.com"
+    static let password: String = "1234"
+    static let nickname: String = "namsang"
+}
+
+
 enum SettingType: Int {
     case camera = 0
     case photo
@@ -89,9 +96,14 @@ struct Statement {
         
         static let userProfile = "SELECT user_index, user_id, user_password, user_nickname, created_date FROM USER_PROFILE;"
         
-        static let post = "SELECT post_index, user_index, image_file_path, content, is_favorite, created_date, address, latitude, longitude FROM POST WHERE user_index = ?;"
+        static let post = "SELECT post_index, user_index, image_file_path, content, is_favorite, created_date, address, latitude, longitude FROM POST WHERE user_index = ? order by post_index desc;"
      
         static let postById = "SELECT image_file_path, content, is_favorite, address, latitude, longitude FROM POST WHERE user_index = ? and created_date = ?;"
+    
+        static let userIndexOfUser = "SELECT user_index FROM USER_PROFILE WHERE user_id = ?;"
+        
+        static let postCountOfUser = "SELECT COUNT(*) as Count FROM POST WHERE user_index = ?;"
+    
     }
 }
 

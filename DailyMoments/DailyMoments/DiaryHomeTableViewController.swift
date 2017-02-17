@@ -11,12 +11,11 @@ import Photos
 
 class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate {
     
- 
-    
     var authorizationStatus: PHAuthorizationStatus? // // Photo 접근 권한을 위한 저장 프로퍼티
-    var posts: [Post]? // post 개수
+    var posts: [Post]? // post Array
     var userIndex: Int32? // userIndex
     var createdDate: TimeInterval? // 생성 시간
+    var postCount: Int? //post 개수
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,27 +23,13 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
         print("viewDidLoad")
         
         FMDatabaseManager.shareManager().openDatabase(databaseName: DatabaseConstant.databaseName)
+   
+        userIndex = FMDatabaseManager.shareManager().selectUserIndexFromUserId(query: Statement.Select.userIndexOfUser, value: UserProfileConstants.id)
         
-        
-        // Date 생성
-        let date:Date = Date()
-        
-        //Calendar Component에 맞게 Date 변환
-        let now:Date = date.getDateComponents()
-        
-        // 현재 시간 기준으로 timeIntervalSince1970 추출
-        let timeIntervalOfNow:TimeInterval = now.timeIntervalSince1970
-        
-        let userProfile: UserProfile = UserProfile(userIndex: 0, userId: "nso502354@gmail.com", userPassword: "1234", userNickname: "namsang", createdDate: timeIntervalOfNow )
-        
-        let successFlag = FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
-        
-        let userProfiles: [UserProfile] = FMDatabaseManager.shareManager().selectUserProfile(query: Statement.Select.userProfile, value: "nso502354@gamil.com")
-        
-        userIndex = userProfiles[0].userIndex
-        if let userIndex = userIndex {
-            posts = FMDatabaseManager.shareManager().selectPosts(query: Statement.Select.post, value : userIndex)
+        guard let userIndex = userIndex else {
+            fatalError()
         }
+        postCount = FMDatabaseManager.shareManager().selectSpecificUserPost(query: Statement.Select.postCountOfUser, value: userIndex)
     }
     
     
@@ -85,7 +70,7 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
         // 현재 시간 기준으로 timeIntervalSince1970 추출
         let timeIntervalOfNow:TimeInterval = now.timeIntervalSince1970
         
-        let userProfile: UserProfile = UserProfile(userIndex: 0, userId: "nso502354@gmail.com", userPassword: "1234", userNickname: "namsang", createdDate: timeIntervalOfNow )
+        let userProfile: UserProfile = UserProfile(userIndex: 0, userId: UserProfileConstants.id, userPassword: UserProfileConstants.password, userNickname: UserProfileConstants.nickname, createdDate: timeIntervalOfNow )
         
         let successFlag = FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
         
@@ -94,6 +79,7 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
         userIndex = userProfiles[0].userIndex
         if let userIndex = userIndex {
             posts = FMDatabaseManager.shareManager().selectPosts(query: Statement.Select.post, value : userIndex)
+            postCount = posts?.count
         }
         
         tableView.reloadData()
@@ -146,7 +132,8 @@ extension DiaryHomeTableViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
 
-        return (posts?.count)!
+//        return (posts?.count)!
+        return postCount!
         
     }
     
@@ -213,9 +200,7 @@ extension DiaryHomeTableViewController {
     
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        dump(posts)
-        
+                
         let screenHeight = UIScreen.main.bounds.height
         let screenWidth = UIScreen.main.bounds.width
         let headerHieght =  screenHeight / 10
@@ -245,7 +230,7 @@ extension DiaryHomeTableViewController {
         
         userIdLabel.sizeToFit()
         userIdLabel.text = String(describing: post.userIndex)
-        
+        userIdLabel.font = UIFont(name: userIdLabel.font.fontName, size: 14)
         
         let addressLabel: UILabel = UILabel()
         addressLabel.sizeToFit()
@@ -253,7 +238,7 @@ extension DiaryHomeTableViewController {
         if let address = post.address {
             addressLabel.text = address
             addressLabel.textColor = UIColor.darkGray
-            addressLabel.font = UIFont(name: addressLabel.font.fontName, size: 14)
+            addressLabel.font = UIFont(name: addressLabel.font.fontName, size: 12)
         }
         
         

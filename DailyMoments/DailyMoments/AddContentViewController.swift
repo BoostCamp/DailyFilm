@@ -222,21 +222,7 @@ class AddContentViewController: UIViewController {
                 
             case ContentType.time.rawValue :
                 print("게시 시간")
-                
-                // Date 생성
-                let date:Date = Date()
-                
-                //Calendar Component에 맞게 Date 변환
-                let now:Date = date.getDateComponents()
-                
-                // 현재 시간 기준으로 timeIntervalSince1970 추출
-                let timeIntervalOfNow:TimeInterval = now.timeIntervalSince1970
-                
-                //timeIntervla format으로 현재 date 추출
-                let currentDateInTimeIntervalFormat = Date(timeIntervalSince1970: timeIntervalOfNow)
-                
-                contentTextField.text = currentDateInTimeIntervalFormat.toString()
-                
+            
             case ContentType.favorite.rawValue :
                 print("위시리스트 설정 여부")
             default:
@@ -433,10 +419,10 @@ extension AddContentViewController: CLLocationManagerDelegate {
         if let country = placemark.country, let administrativeArea = placemark.administrativeArea, let locality = placemark.locality, let subLocality = placemark.subLocality {
             
             address = "\(country) \(administrativeArea) \(locality) \(subLocality)"
+            
         }
         
     }
-    
     
 }
 
