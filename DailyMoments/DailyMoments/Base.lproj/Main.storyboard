@@ -28,10 +28,6 @@
                                 <rect key="frame" x="0.0" y="44" width="375" height="535"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="MF1-Z0-UUD" appends="YES" id="FPu-QD-o3i"/>
-                                    <outletCollection property="gestureRecognizers" destination="Ll4-yW-2PJ" appends="YES" id="BUC-1S-i2z"/>
-                                </connections>
                             </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y8U-oH-Sr2">
                                 <rect key="frame" x="0.0" y="579" width="375" height="88"/>
@@ -94,16 +90,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C4O-ZK-Eug" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="MF1-Z0-UUD" userLabel="Left Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="swtichCameraEffect:" destination="8QR-Tj-sM5" id="j1B-yj-8Qv"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="Ll4-yW-2PJ" userLabel="Right Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="swtichCameraEffect:" destination="8QR-Tj-sM5" id="1ez-fK-sFd"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="109.59999999999999" y="304.4977511244378"/>
         </scene>
@@ -119,12 +105,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YoP-j4-kri">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YoP-j4-kri">
+                                <rect key="frame" x="0.0" y="44" width="375" height="579"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a2X-BT-T7U">
-                                <rect key="frame" x="0.0" y="533.5" width="375" height="133.5"/>
+                                <rect key="frame" x="0.0" y="489.5" width="375" height="133.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hdi-E3-kXN">
                                     <size key="itemSize" width="72" height="106"/>
@@ -186,6 +172,15 @@
                             <constraint firstItem="YoP-j4-kri" firstAttribute="centerY" secondItem="OAk-FI-Pcv" secondAttribute="centerY" id="tg1-Ns-tYh"/>
                         </constraints>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="c8d-ou-9l6"/>
+                        <barButtonItem image="image_filter" id="Dv0-yU-OsC"/>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Bs1-C8-gpq"/>
+                        <barButtonItem image="image_rotate" id="vfm-kx-DYh"/>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Sg3-f9-a56"/>
+                        <barButtonItem image="image_crop" id="FqU-z0-1KB"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="sz9-Z4-Icr"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" id="Pfp-pq-BBY">
                         <barButtonItem key="rightBarButtonItem" title="다음" id="dgp-1x-cPx">
                             <connections>
@@ -194,7 +189,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="imagefilterCollectionView" destination="a2X-BT-T7U" id="J76-hM-acJ"/>
                         <outlet property="photographedImage" destination="YoP-j4-kri" id="3z1-Uj-3cr"/>
@@ -483,6 +478,9 @@
         <image name="favorite" width="22" height="22"/>
         <image name="flash_off" width="25" height="25"/>
         <image name="home" width="25" height="25"/>
+        <image name="image_crop" width="22" height="22"/>
+        <image name="image_filter" width="22" height="22"/>
+        <image name="image_rotate" width="22" height="22"/>
         <image name="location" width="22" height="22"/>
         <image name="more" width="25" height="25"/>
         <image name="time" width="22" height="22"/>

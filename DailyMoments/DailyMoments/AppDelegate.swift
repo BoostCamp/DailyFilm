@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let toolbar = UIToolbar.appearance()
         toolbar.barTintColor = UIColor.white
-        toolbar.tintColor = UIColor.gray
+        toolbar.tintColor = UIColor.darkGray
         toolbar.setShadowImage(UIImage(), forToolbarPosition: .top)
         
         return true

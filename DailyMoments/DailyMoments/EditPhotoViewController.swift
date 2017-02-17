@@ -49,8 +49,8 @@ class EditPhotoViewController: UIViewController {
         super.viewWillAppear(animated)
         print("viewWillAppear in EditPhotoViewController")
 
-        // toolbar hide
-        navigationController?.isToolbarHidden = true
+        // toolbar show
+        navigationController?.isToolbarHidden = false
 
     }
     
@@ -73,6 +73,30 @@ class EditPhotoViewController: UIViewController {
     }
     
     
+    // MARK: - Toolbar IBAction
+    
+    @IBAction func imageEditAction(_ sender: Any) {
+        if let editImageBarButton: UIBarButtonItem = sender as? UIBarButtonItem {
+
+            switch editImageBarButton.tag {
+            case 0:
+                print("filter")
+                imagefilterCollectionView.isHidden = false
+            case 1:
+                print("rotate image")
+                imagefilterCollectionView.isHidden = true
+            case 2:
+                print("crop image")
+                imagefilterCollectionView.isHidden = true
+            default:
+                return
+            }
+
+        }
+        
+    
+    }
+    
 
     // MARK: - Navigation
 
@@ -84,12 +108,8 @@ class EditPhotoViewController: UIViewController {
                 self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
                 addTextViewController.edidtedPhotoImage = photographedImage.image
             }
-            
         }
-        
     }
- 
-      
 }
 
 
@@ -211,9 +231,11 @@ extension EditPhotoViewController {
         // NavigationBar와 하단의 CollectionView를 show/hide
         if tap {
             navigationController?.isNavigationBarHidden = true
+            navigationController?.isToolbarHidden = true
             imagefilterCollectionView.isHidden = true
         } else {
             navigationController?.isNavigationBarHidden = false
+            navigationController?.isToolbarHidden = false
             imagefilterCollectionView.isHidden = false
         }
     }

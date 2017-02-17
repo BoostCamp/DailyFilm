@@ -279,7 +279,7 @@ class FMDatabaseManager: NSObject {
                 if results != nil {
                     while(results?.next())! {
                         
-                        userIndex = (results?.int(forColumn: "user_id"))!
+                        userIndex = (results?.int(forColumn: "user_index"))!
                     }
                     fmdb?.close()
                 }

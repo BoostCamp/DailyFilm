@@ -39,17 +39,34 @@ extension CameraViewController {
     
     // MARK:- Change the device’s activeFormat property.
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("end")
+    }
     
     // 초점 맞추기
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
         
         if let coordinates = touches.first, let device = captureDevice {
             
+            
+            print("x: \( coordinates.location(in: cameraView).x), y: \(coordinates.location(in: cameraView).y)")
+            print("cameraView height: \(cameraView.bounds.height)")
+            var point = CGPoint.zero
+            point.y = coordinates.location(in: cameraView).y / cameraView.bounds.height
+            
+            print("cameraView touch y ratio: \( 1 - point.y / 5)")
+            
+            
+            
             // 전면 카메라는 FocusPointOfInterest를 지원하지 않습니다.
             if device.isFocusPointOfInterestSupported, device.isFocusModeSupported(AVCaptureFocusMode.autoFocus) {
-                
                 let focusPoint = touchPercent(touch : coordinates)
-                
+                dump(focusPoint)
                 do {
                     try device.lockForConfiguration()
                     
@@ -61,9 +78,14 @@ extension CameraViewController {
                     device.unlockForConfiguration()
                     
                     if focusBox != nil {
-                        self.focusBox.removeFromSuperview()
+                        // 초점 박스가 있으면 위치를 바꿔줌
+                        changeFocusBoxCenter(for: coordinates.location(in: cameraView))
+                    } else {
+                        // 초점 박스가 없으면 그려줌
+                        makeRectangle(at : coordinates)
                     }
-                    makeRectangle(at : coordinates)
+                    
+                    
                     cameraView.addSubview(self.focusBox)
                 } catch{
                     fatalError()
@@ -71,22 +93,62 @@ extension CameraViewController {
             }
             // 전면 카메라에서는 FocusPointOfInterest 를 지원하지 않는다.
         }
+
         
+        
+        
+        /* 
+         if let coordinates = touches.first, let device = captureDevice {
+      
+            
+      
+                let focusPoint = touchPercent(touch : coordinates)
+                
+                do {
+                    try device.lockForConfiguration()
+                    //focus 잡은 point로 set
+                    device.setFocusModeLockedWithLensPosition(AVCaptureLensPositionCurrent, completionHandler: { (time) in
+//                        print("setFocusModeLockedWithLensPosition:", time)
+                    })
+                    let minISO = device.activeFormat.minISO
+                    let maxISO = device.activeFormat.maxISO
+                    let clampedISO = Float(focusPoint.y) * (maxISO - minISO) + minISO
+//                        print(focusPoint.y)
+                    
+                    //                    print("minISO: \(minISO)")
+//                    print("maxISO: \(maxISO)")
+//                    print("clampedISO: \(clampedISO)")
+
+                    device.setExposureModeCustomWithDuration(AVCaptureExposureDurationCurrent, iso: clampedISO, completionHandler: { (time) in
+//                        print("setExposureModeCustomWithDuration:", time)
+                    })
+                    device.unlockForConfiguration()
+                    
+                    if focusBox != nil {
+                        self.focusBox.removeFromSuperview()
+                    }
+                    makeRectangle(at : coordinates)
+                    cameraView.addSubview(self.focusBox)
+                } catch{
+                    fatalError()
+                }
+ 
+        }*/
+
     }
     
-    // 화면 밝기
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+    // 초점 박스를 이동하는 메소드
+    func changeFocusBoxCenter(for location: CGPoint )
+    {
+        self.focusBox.center.x = location.x
+        self.focusBox.center.y = location.y
     }
     
     func touchPercent(touch coordinates: UITouch) -> CGPoint {
         
-        // 카메라 사이즈 구하기
-        let screenSize = cameraView.bounds.size
-        
         // 0~1.0 으로 x, y 화면대비 비율 구하기
-        let x = coordinates.location(in: cameraView).y / screenSize.height
-        let y = 1.0 - coordinates.location(in: cameraView).x / screenSize.width
+        let x = coordinates.location(in: cameraView).y / cameraView.bounds.height
+        let y = 1.0 - coordinates.location(in: cameraView).x / cameraView.bounds.width
         let ratioOfPoint = CGPoint(x: x, y: y)
         
         return ratioOfPoint

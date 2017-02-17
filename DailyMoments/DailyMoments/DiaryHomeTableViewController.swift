@@ -39,7 +39,8 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
         super.viewWillAppear(animated)
         print("viewWillAppear in DiaryHomeViewController")
         
-        
+        UIApplication.shared.isStatusBarHidden = false // status bar show
+
         PHPhotoLibrary.authorizationStatus()
         
         authorizationStatus = PHPhotoLibrary.authorizationStatus()
