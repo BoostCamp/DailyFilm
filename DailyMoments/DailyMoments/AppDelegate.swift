@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBar.barTintColor = UIColor.white
         tabBar.tintColor = UIColor.black
         tabBar.shadowImage = UIImage()
-       
+    
         
         // Set Default UIToolbar appearance
         
@@ -38,6 +38,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         toolbar.barTintColor = UIColor.white
         toolbar.tintColor = UIColor.darkGray
         toolbar.setShadowImage(UIImage(), forToolbarPosition: .top)
+        toolbar.clipsToBounds = true
+        
+        
+        
         
         return true
     }

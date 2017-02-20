@@ -14,13 +14,22 @@ class CameraFillterCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var filterImageView: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
-        filterTitleLabel.textColor =  self.isSelected ? UIColor.black : UIColor.gray
+        
+        if isSelected {
+            self.filterTitleLabel.textColor = UIColor.black
+        } else {
+            self.filterTitleLabel.textColor = UIColor.gray
+        }
     }
-
+    
     override var isSelected: Bool {
         didSet {
-            // if가 더 컴파일 속도가 빠름
-            self.filterTitleLabel.textColor = isSelected ? UIColor.black : UIColor.gray
+            
+            if isSelected {
+                self.filterTitleLabel.textColor = UIColor.black
+            } else {
+                self.filterTitleLabel.textColor = UIColor.gray
+            }
         }
     }
 }

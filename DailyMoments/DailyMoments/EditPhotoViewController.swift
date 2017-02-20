@@ -29,7 +29,7 @@ class EditPhotoViewController: UIViewController {
         imagefilterCollectionView.dataSource = self
         
         photographedImage.image = takenPhotoImage
-        
+
         // 이미지가 안눌린 상태로 초기값 설정
         imageTapStatus = false
         
@@ -60,11 +60,14 @@ class EditPhotoViewController: UIViewController {
         
         // 콜렉션 뷰의 첫번째 Cell을 선택함.
         self.imagefilterCollectionView.selectItem(at: IndexPath.init(item: 0, section: 0), animated: true, scrollPosition: .bottom)
+        
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         print("viewWillDisappear in EditPhotoViewController")
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -81,13 +84,12 @@ class EditPhotoViewController: UIViewController {
             switch editImageBarButton.tag {
             case 0:
                 print("filter")
-                imagefilterCollectionView.isHidden = false
+                
             case 1:
                 print("rotate image")
-                imagefilterCollectionView.isHidden = true
+                
             case 2:
                 print("crop image")
-                imagefilterCollectionView.isHidden = true
             default:
                 return
             }
@@ -131,7 +133,7 @@ extension EditPhotoViewController : UICollectionViewDataSource, UICollectionView
               "CIPhotoEffectChrome",
               "CIPhotoEffectProcess",
               "CIPhotoEffectTransfer",
-              "CIPhotoEffectTransfer"]]
+              "CIPhotoEffectInstant"]]
         
         // filter 이름
         static let rowTitlesValues: [[String?]?] =

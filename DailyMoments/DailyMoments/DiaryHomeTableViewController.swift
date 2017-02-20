@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate {
+class DiaryHomeTableViewController: UITableViewController {
     
     var authorizationStatus: PHAuthorizationStatus? // // Photo 접근 권한을 위한 저장 프로퍼티
     var posts: [Post]? // post Array
@@ -23,7 +23,7 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
         print("viewDidLoad")
         
         FMDatabaseManager.shareManager().openDatabase(databaseName: DatabaseConstant.databaseName)
-   
+        
         userIndex = FMDatabaseManager.shareManager().selectUserIndexFromUserId(query: Statement.Select.userIndexOfUser, value: UserProfileConstants.id)
         
         guard let userIndex = userIndex else {
@@ -40,7 +40,7 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
         print("viewWillAppear in DiaryHomeViewController")
         
         UIApplication.shared.isStatusBarHidden = false // status bar show
-
+        
         PHPhotoLibrary.authorizationStatus()
         
         authorizationStatus = PHPhotoLibrary.authorizationStatus()
@@ -110,13 +110,17 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
         print("prepare")
-        if segue.identifier == DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier {
+        
+        if segue.identifier == DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier, let index = tableView.indexPathsForSelectedRows?.first {
+            tableView.deselectRow(at: index, animated: true)
+            
             if let diaryContentDetailViewController:DiaryContentDetailViewController = segue.destination as? DiaryContentDetailViewController {
                 
                 self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
-                diaryContentDetailViewController.userIndex = userIndex
-                diaryContentDetailViewController.createdDate = createdDate
+                
+                diaryContentDetailViewController.post = posts?[index.row]
                 
             }
         }
@@ -127,148 +131,153 @@ class DiaryHomeTableViewController: UITableViewController, ContentLabelDelegate 
 extension DiaryHomeTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        return DiaryPhotoTableViewConstants.numberOfRows()
+        
+        return postCount!
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 1
+    }
 
-//        return (posts?.count)!
-        return postCount!
-        
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DiaryPhotoTableViewConstants.cellIdentifier(for: indexPath), for: indexPath)
-        
-        guard let post = posts?[indexPath.section] else {
-            fatalError()
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: DiaryPhotoTableViewConstants.cellIdentifier, for: indexPath) as! DiaryPhotoTableViewCell
         
         
-        if let cell = cell as? DiaryPhotoTableViewCell {
-        
-            if indexPath.row == 0{
-         
-                if let imageFilePath = post.imageFilePath {
-                    
-                    // Create a DocumentDirectoryPath
-                    let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-                   
-                    // URL of DocumentDirectoryPath
-                    let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
-                    
-                    // file URL of DocumentDirectoryPath
-                    let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
-                    
-                    let fixedOrientationimage: UIImage? = UIImage(contentsOfFile: editedImageURL.path)
-                    
-                    if let image = fixedOrientationimage {
-                        cell.photoImageView?.image = image.cropToSquareImage()
-                    }
-                }
+        if let post = posts?[indexPath.row]  {
+            
+            cell.profileImageView.image = UIImage(named: "person")
+
+            cell.userIdLabel.text = String(describing: post.userIndex)
+            
+            if let address = post.address, let imageFilePath = post.imageFilePath, let content = post.content, let createdDate = post.createdDate {
                 
-            }
-        } else if let cell = cell as? DiaryContentTableViewCell {
-        
-            if indexPath.row == 1{
+                cell.addressLabel.text = address
                 
-                if let content = post.content, let createdDate = post.createdDate {
-                    // for using ContentLabelDelegate
-                    cell.delegate = self
-                    cell.contentLabel.text = content
-                    cell.createdDate.text = Date(timeIntervalSince1970: createdDate).toString()
+                // Create a DocumentDirectoryPath
+                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                
+                // URL of DocumentDirectoryPath
+                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
+                
+                // file URL of DocumentDirectoryPath
+                let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
+                
+                let fixedOrientationimage: UIImage? = UIImage(contentsOfFile: editedImageURL.path)
+                
+                if let image = fixedOrientationimage {
+                    
+                    cell.photoImageView?.image = image.cropToSquareImage()
                 }
+             
+                //                    cell.delegate = self
+                cell.contentsLabel.text = content
+                cell.createDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
+                
             }
         }
         
         return cell
     }
     
+    //    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //
+    //        var cellHeight: CGFloat = 0
+    //        let screenBounds = UIScreen.main.bounds
+    //
+    //        if indexPath.row == 0 {
+    //            cellHeight = screenBounds.width
+    //        } else if indexPath.row == 1 {
+    //            cellHeight = screenBounds.width / 4
+    //        }
+    //
+    //        return cellHeight
+    //    }
+    
+    
+    //    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    //
+    //        let screenHeight = UIScreen.main.bounds.height
+    //        let screenWidth = UIScreen.main.bounds.width
+    //        let headerHieght =  screenHeight / 10
+    //        let profileImageSize = screenWidth / 12
+    //        let intervalSize = (headerHieght - profileImageSize) / 2
+    //        guard let post = posts?[section] else {
+    //            return UIView()
+    //
+    //        }
+    //
+    //        let view = UIView()
+    //
+    //
+    //        let profileImageView: UIImageView = UIImageView(image: UIImage(named: "person"))
+    //        profileImageView.frame = CGRect(x: intervalSize, y: intervalSize, width: profileImageSize, height: profileImageSize)
+    //        profileImageView.contentMode = .scaleAspectFill
+    //        view.addSubview(profileImageView)
+    //
+    //
+    //
+    //        let stackView: UIStackView = UIStackView()
+    //        stackView.axis = .vertical
+    //        stackView.distribution = .fillProportionally
+    //        stackView.frame = CGRect(x: profileImageSize + (intervalSize * 2), y: (intervalSize / 2) , width: screenWidth - profileImageSize, height: headerHieght - intervalSize)
+    //
+    //        let userIdLabel: UILabel = UILabel()
+    //
+    //        userIdLabel.sizeToFit()
+    //        userIdLabel.text = String(describing: post.userIndex)
+    //        userIdLabel.font = UIFont(name: userIdLabel.font.fontName, size: 14)
+    //
+    //        let addressLabel: UILabel = UILabel()
+    //        addressLabel.sizeToFit()
+    //
+    //        if let address = post.address {
+    //            addressLabel.text = address
+    //            addressLabel.textColor = UIColor.darkGray
+    //            addressLabel.font = UIFont(name: addressLabel.font.fontName, size: 12)
+    //        }
+    //
+    //
+    //        stackView.addArrangedSubview(userIdLabel)
+    //        stackView.addArrangedSubview(addressLabel)
+    //
+    //        view.addSubview(stackView)
+    //
+    //        return view
+    //    }
+    
+    //    override func  tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    //        let screenHeightSize = UIScreen.main.bounds.height
+    //
+    //        return screenHeightSize / 10
+    //    }
+    
+    //    func showDetailContent(sender: DiaryContentTableViewCell){
+    //        let cell:DiaryContentTableViewCell = sender as DiaryContentTableViewCell
+    //        let date = cell.createdDate.text?.convertStringToDate()
+    //        createdDate = date?.timeIntervalSince1970
+    //
+    //        performSegue(withIdentifier: DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier, sender: self)
+    //    }
+    
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+
+        return UITableViewAutomaticDimension
+        
+    }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        var cellHeight: CGFloat = 0
-        let screenBounds = UIScreen.main.bounds
-        
-        if indexPath.row == 0 {
-            cellHeight = screenBounds.width
-        } else if indexPath.row == 1 {
-            cellHeight = screenBounds.width / 4
-        }
-        
-        return cellHeight
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-                
-        let screenHeight = UIScreen.main.bounds.height
-        let screenWidth = UIScreen.main.bounds.width
-        let headerHieght =  screenHeight / 10
-        let profileImageSize = screenWidth / 12
-        let intervalSize = (headerHieght - profileImageSize) / 2
-        guard let post = posts?[section] else {
-            return UIView()
-            
-        }
-        
-        let view = UIView()
-        
-        
-        let profileImageView: UIImageView = UIImageView(image: UIImage(named: "person"))
-        profileImageView.frame = CGRect(x: intervalSize, y: intervalSize, width: profileImageSize, height: profileImageSize)
-        profileImageView.contentMode = .scaleAspectFill
-        view.addSubview(profileImageView)
-        
-        
-        
-        let stackView: UIStackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
-        stackView.frame = CGRect(x: profileImageSize + (intervalSize * 2), y: (intervalSize / 2) , width: screenWidth - profileImageSize, height: headerHieght - intervalSize)
-        
-        let userIdLabel: UILabel = UILabel()
-        
-        userIdLabel.sizeToFit()
-        userIdLabel.text = String(describing: post.userIndex)
-        userIdLabel.font = UIFont(name: userIdLabel.font.fontName, size: 14)
-        
-        let addressLabel: UILabel = UILabel()
-        addressLabel.sizeToFit()
-        
-        if let address = post.address {
-            addressLabel.text = address
-            addressLabel.textColor = UIColor.darkGray
-            addressLabel.font = UIFont(name: addressLabel.font.fontName, size: 12)
-        }
-        
-        
-        stackView.addArrangedSubview(userIdLabel)
-        stackView.addArrangedSubview(addressLabel)
-        
-        view.addSubview(stackView)
-        
-        return view
-    }
-    
-    override func  tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let screenHeightSize = UIScreen.main.bounds.height
-        
-        return screenHeightSize / 10
-    }
-    
-    func showDetailContent(sender: DiaryContentTableViewCell){
-        let cell:DiaryContentTableViewCell = sender as DiaryContentTableViewCell
-        let date = cell.createdDate.text?.convertStringToDate()
-        createdDate = date?.timeIntervalSince1970
-        
-        performSegue(withIdentifier: DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier, sender: self)
+
+        return UITableViewAutomaticDimension
+
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let post = posts?[indexPath.row] {
-            
-        }
+        performSegue(withIdentifier: DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier, sender: nil)
     }
     
 }

@@ -329,5 +329,47 @@ class FMDatabaseManager: NSObject {
 
         return count
     }
+    
+    func selectUserNickname(query statement: String, value userIndex: Int32...) -> String? {
+        
+        var userNickname: String?
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String) {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+            
+            if((fmdb?.open()) != nil) {
+                
+                let results:FMResultSet? =  fmdb?.executeQuery(statement, withArgumentsIn: userIndex)
+                
+                if results != nil {
+                    if (results?.next())! {
+//                        userIndex = (results?.int(forColumn: "user_index"))!
+                        userNickname = results?.string(forColumn: "user_nickname")
+                    }
+                    fmdb?.close()
+                }
+                
+            } else {
+                print("DATABASE OPEN ERROR")
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+        }
+        
+        return userNickname
+    }
+
+    
 }
 

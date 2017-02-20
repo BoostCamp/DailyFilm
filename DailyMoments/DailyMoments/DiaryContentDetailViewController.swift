@@ -11,24 +11,15 @@ import UIKit
 class DiaryContentDetailViewController: UIViewController {
 
     
-    
-    /* -----
- 
-     userIndex와 createdDate로 post내용을 select합니다.
-     
-    ----- */
-    var userIndex: Int32? // userIndex와
-    var createdDate: TimeInterval?
-    
-    
+    var post: Post?
+
+    @IBOutlet weak var createDateLabel: UILabel!
+    @IBOutlet weak var nicknameLabel: UILabel!
+    @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var contentTextView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //        static let postById = "SELECT image_file_path, content, is_favorite, address, latitude, longitude FROM WHERE user_index = ? and created_date = ?;"
-
-  
         
         // Do any additional setup after loading the view.
         
@@ -38,9 +29,65 @@ class DiaryContentDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let post:Post = FMDatabaseManager.shareManager().selectSpecificUserPostAtCreatedDate(query: Statement.Select.postById, value: userIndex as Any, createdDate as Any) {
+        
+
+        
+        if let post:Post = self.post {
             
-            contentTextView.text = "\(post.imageFilePath)" + "\(post.content)" + "\(post.isFavorite)" + "\(post.latitude)" + "\(post.longitude)" + "\(post.address)"
+            var text: String = ""
+
+            
+            if let imageFilePath = post.imageFilePath {
+                text += imageFilePath
+                
+                
+                // Create a DocumentDirectoryPath
+                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+                
+                // URL of DocumentDirectoryPath
+                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
+                
+                // file URL of DocumentDirectoryPath
+                let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
+                
+                photoImageView.image = UIImage(contentsOfFile: editedImageURL.path)
+                
+            }
+            
+            
+            
+            let userNickname:String? = FMDatabaseManager.shareManager().selectUserNickname(query: Statement.Select.nicknameOfUser, value: post.userIndex)
+            if let userNickname = userNickname {
+                nicknameLabel.text = userNickname
+            }
+            
+            if let createdDate = post.createdDate {
+                
+                createDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
+            }
+           
+            
+            if let content = post.content {
+                contentTextView.text = content
+            }
+            
+            if let isFavorite = post.isFavorite {
+                text += "\(isFavorite)"
+            }
+            
+            if let latitude = post.latitude {
+                text += "\(latitude)"
+            }
+            
+            if let longitude = post.longitude {
+                text += "\(longitude)"
+            }
+            
+            if let address = post.address {
+                text += address
+            }
+            
+//            contentTextView.text = text
             
         }
     }

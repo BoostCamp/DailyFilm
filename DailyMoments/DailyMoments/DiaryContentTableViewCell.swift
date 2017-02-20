@@ -14,34 +14,34 @@ protocol ContentLabelDelegate {
 }
 
 class DiaryContentTableViewCell: UITableViewCell {
-    
-    @IBOutlet weak var contentLabel: UILabel!
-    @IBOutlet weak var createdDate: UILabel!
-    
-    
-    var delegate: ContentLabelDelegate?
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        
-        contentLabel.isUserInteractionEnabled = true
-        
-        let gestureRecognizerOfContentLabel: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapContentLabel(sender:)))
-        
-        contentLabel.addGestureRecognizer(gestureRecognizerOfContentLabel)
-        
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
-    
-    func tapContentLabel(sender:UITapGestureRecognizer) {
-        if let delegate = self.delegate {
-            delegate.showDetailContent(sender: self)
-        }
-    }
+//    
+//    @IBOutlet weak var contentLabel: UILabel!
+//    @IBOutlet weak var createdDate: UILabel!
+//    
+//    
+//    var delegate: ContentLabelDelegate?
+//    
+//    override func awakeFromNib() {
+//        super.awakeFromNib()
+//        // Initialization code
+//        
+//        contentLabel.isUserInteractionEnabled = true
+//        
+//        let gestureRecognizerOfContentLabel: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapContentLabel(sender:)))
+//        
+//        contentLabel.addGestureRecognizer(gestureRecognizerOfContentLabel)
+//        
+//    }
+//    
+//    override func setSelected(_ selected: Bool, animated: Bool) {
+//        super.setSelected(selected, animated: animated)
+//        
+//        // Configure the view for the selected state
+//    }
+//    
+//    func tapContentLabel(sender:UITapGestureRecognizer) {
+//        if let delegate = self.delegate {
+//            delegate.showDetailContent(sender: self)
+//        }
+//    }
 }

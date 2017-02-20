@@ -12,6 +12,11 @@ class DiaryPhotoTableViewCell: UITableViewCell {
 
     
     @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var userIdLabel: UILabel!
+    @IBOutlet weak var addressLabel: UILabel!
+    @IBOutlet weak var contentsLabel: UILabel!
+    @IBOutlet weak var createDateLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

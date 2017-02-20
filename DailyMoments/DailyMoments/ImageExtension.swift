@@ -50,7 +50,7 @@ extension UIImage {
         var cropRect: CGRect?
         let imageWidth = self.size.width
         let imageHeight = self.size.height
-        
+     
         if imageWidth < imageHeight {
             // Potrait mode
             cropRect = CGRect(x: 0.0, y: (imageHeight - imageWidth) / 2.0, width: imageWidth, height: imageWidth)
@@ -67,10 +67,7 @@ extension UIImage {
             return UIImage()
         }
         
-        let rectangleImage:CGImage = self.cgImage!.cropping(to: rect)!
-
-        
-        return UIImage(cgImage: rectangleImage)
+        return UIImage.init(cgImage: (self.cgImage?.cropping(to: rect))!)
     }
     
     // image에 fliter 적용하는 메소드
@@ -80,8 +77,10 @@ extension UIImage {
         
         let originalOrientation: UIImageOrientation = self.imageOrientation
         
-        guard let image = self.cgImage  else {
-            fatalError("error..")
+        
+        
+        guard let image = resultImage.cgImage  else {
+            return self
         }
         
         /*

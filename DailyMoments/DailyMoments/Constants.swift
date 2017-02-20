@@ -26,15 +26,9 @@ struct DiaryPhotoTableViewConstants{
     
     static let showDiaryContentDetailViewControllerSegueIdentifier = "showDiaryContentDetailViewController"
     
-    static let identifierOfCell: [String?] = ["DiaryPhotoCell", "DiaryContentCell"]
+    static let cellIdentifier: String = "DiaryPhotoCell"
+   
     
-    static func numberOfRows() -> Int {
-        return identifierOfCell.count
-    }
-    
-    static func cellIdentifier(for indexPath: IndexPath) -> String {
-        return identifierOfCell[indexPath.row]!
-    }
 }
 
 let cellUnitValue: Float = 5
@@ -104,6 +98,7 @@ struct Statement {
         
         static let postCountOfUser = "SELECT COUNT(*) as Count FROM POST WHERE user_index = ?;"
     
+        static let nicknameOfUser = "SELECT user_nickname FROM USER_PROFILE WHERE user_index = ?;"
     }
 }
 
