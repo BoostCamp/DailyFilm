@@ -24,35 +24,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y8U-oH-Sr2">
-                                <rect key="frame" x="0.0" y="579" width="375" height="88"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="uJ3-RZ-52g"/>
-                                </constraints>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="3iw-fF-UcN"/>
-                                    <barButtonItem image="flash_off" id="nCJ-iA-4PT" userLabel="Camera Flash Bar Item">
-                                        <connections>
-                                            <action selector="switchCameraFlash:" destination="8QR-Tj-sM5" id="hhQ-Bi-RQB"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="99e-Dx-tNh"/>
-                                    <barButtonItem image="camera_shutter" id="TVj-xL-fNw" userLabel="Camera Shutter Bar Item">
-                                        <connections>
-                                            <action selector="takePhoto:" destination="8QR-Tj-sM5" id="wvb-bA-Xe7"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0fG-uG-bSg"/>
-                                    <barButtonItem image="camera_change" id="L6X-wW-BX7" userLabel="Camera Switch Bar Item">
-                                        <connections>
-                                            <action selector="switchCameraPostion:" destination="8QR-Tj-sM5" id="kpZ-QG-z7g"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="mMf-Gi-ZfO"/>
-                                </items>
-                            </toolbar>
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PLf-YU-bP2">
-                                <rect key="frame" x="0.0" y="44" width="375" height="535"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -68,21 +41,48 @@
                                 <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <size key="shadowOffset" width="1" height="1"/>
                             </label>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Pe-Zn-1qU">
+                                <rect key="frame" x="0.0" y="567" width="375" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="e3P-vG-sOd"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Juu-HZ-nmT"/>
+                                    <barButtonItem image="flash_off" id="6sg-CX-W64" userLabel="Flash switch Bar Button Item">
+                                        <connections>
+                                            <action selector="switchCameraFlash:" destination="8QR-Tj-sM5" id="teZ-vq-AeM"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="rI1-Si-gpF"/>
+                                    <barButtonItem image="camera_shutter" id="63Y-3W-Yys" userLabel="Camera Shutter Bar Button Item">
+                                        <connections>
+                                            <action selector="takePhoto:" destination="8QR-Tj-sM5" id="Pvp-9u-Qjk"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="jaG-aN-Jvc"/>
+                                    <barButtonItem image="camera_change" id="3hB-xW-6XV" userLabel="Camera Change Bar Button Item">
+                                        <connections>
+                                            <action selector="switchCameraPostion:" destination="8QR-Tj-sM5" id="2Jg-WS-LCN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="OQv-9y-Oak"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="top" secondItem="PLf-YU-bP2" secondAttribute="bottom" id="0Gd-Bu-7W0"/>
                             <constraint firstItem="sZU-1g-7yg" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="1Uu-oq-83Q"/>
                             <constraint firstItem="sZU-1g-7yg" firstAttribute="centerX" secondItem="IFP-dn-PAV" secondAttribute="centerX" id="2KM-WA-Z6L"/>
-                            <constraint firstAttribute="trailing" secondItem="Y8U-oH-Sr2" secondAttribute="trailing" id="5b9-ns-85d"/>
-                            <constraint firstAttribute="trailing" secondItem="PLf-YU-bP2" secondAttribute="trailing" id="Hvx-zp-NlO"/>
-                            <constraint firstItem="PLf-YU-bP2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="I4m-sc-oCp"/>
                             <constraint firstItem="sZU-1g-7yg" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" constant="150" id="V4d-VS-McW"/>
-                            <constraint firstItem="PLf-YU-bP2" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="dFg-so-St2"/>
+                            <constraint firstItem="8Pe-Zn-1qU" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="bZK-KU-wWx"/>
+                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="8Pe-Zn-1qU" secondAttribute="bottom" id="c4G-RC-Bd8"/>
+                            <constraint firstAttribute="trailing" secondItem="8Pe-Zn-1qU" secondAttribute="trailing" id="egX-9w-SUg"/>
                             <constraint firstAttribute="trailing" secondItem="sZU-1g-7yg" secondAttribute="trailing" id="fB6-oy-Fus"/>
-                            <constraint firstItem="Y8U-oH-Sr2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="fsk-ek-vBT"/>
-                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="Y8U-oH-Sr2" secondAttribute="bottom" id="sax-8q-ECH"/>
+                            <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="PLf-YU-bP2" secondAttribute="bottom" id="gKJ-IG-bQr"/>
+                            <constraint firstAttribute="trailing" secondItem="PLf-YU-bP2" secondAttribute="trailing" id="iMu-1f-3lo"/>
+                            <constraint firstItem="PLf-YU-bP2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="nye-l3-WyS"/>
+                            <constraint firstItem="PLf-YU-bP2" firstAttribute="top" secondItem="IFP-dn-PAV" secondAttribute="top" id="oeR-as-E4n"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="IG3-Pv-vx8">
@@ -95,12 +95,12 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="cameraToolbar" destination="Y8U-oH-Sr2" id="855-C7-rLA"/>
+                        <outlet property="cameraToolbar" destination="8Pe-Zn-1qU" id="6FI-0w-UEs"/>
                         <outlet property="filterNameLabel" destination="sZU-1g-7yg" id="0fd-D6-Orb"/>
-                        <outlet property="flashOfCameraBarButtonItem" destination="nCJ-iA-4PT" id="tmd-rf-SkK"/>
+                        <outlet property="flashOfCameraBarButtonItem" destination="6sg-CX-W64" id="Elj-rn-5xf"/>
                         <outlet property="previewImageView" destination="PLf-YU-bP2" id="FWZ-xv-Rgz"/>
-                        <outlet property="shutterOfCameraBarButtonItem" destination="TVj-xL-fNw" id="iZI-kU-Nl3"/>
-                        <outlet property="switchOfCameraBarButtonItem" destination="L6X-wW-BX7" id="dWX-RL-VW2"/>
+                        <outlet property="shutterOfCameraBarButtonItem" destination="63Y-3W-Yys" id="6J3-bT-LRW"/>
+                        <outlet property="switchOfCameraBarButtonItem" destination="3hB-xW-6XV" id="eJx-j2-upq"/>
                         <segue destination="dcS-RD-4Y0" kind="show" identifier="showEditPhotoViewControllerSegue" id="iJl-Lk-bhK"/>
                     </connections>
                 </viewController>

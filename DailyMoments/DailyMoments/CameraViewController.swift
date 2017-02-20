@@ -18,8 +18,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     @IBOutlet weak var filterNameLabel: UILabel!
     
-    
-    @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var cameraToolbar: UIToolbar! // 플래쉬, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
     @IBOutlet weak var flashOfCameraBarButtonItem: UIBarButtonItem! // 카메라 플래쉬 버튼
     @IBOutlet weak var shutterOfCameraBarButtonItem: UIBarButtonItem! // 카메라 셔터(촬영) 버튼
@@ -47,7 +45,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     var videoDataOutput: AVCaptureVideoDataOutput? // AVCaptureVideoDataOutput은 캡처중인 비디오에서 압축되지 않은 프레임을 처리하거나 압축 된 프레임에 액세스하는 데 사용하는 AVCaptureOutput의 구체적인 하위 클래스입니다. AVCaptureVideoDataOutput 인스턴스는 다른 미디어 API를 사용하여 처리 할 수있는 비디오 프레임을 생성합니다. captureOutput (_ : didOutputSampleBuffer : from :)
     
     
-//    var previewLayer: AVCaptureVideoPreviewLayer? // 입력 장치에서 캡처 한 비디오를 표시하는 데 사용하는 CALayer의 하위 클래스입니다. AVCapureSession과 함께 사용합니다.
+    //    var previewLayer: AVCaptureVideoPreviewLayer? // 입력 장치에서 캡처 한 비디오를 표시하는 데 사용하는 CALayer의 하위 클래스입니다. AVCapureSession과 함께 사용합니다.
     
     var settingsForMonitoring: AVCapturePhotoSettings? // 단일 사진 캡처 요청에 필요한 모든 기능과 설정을 설명하는 변경 가능한 객체입니다.
     
@@ -66,8 +64,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         captureSession = AVCaptureSession()
         photoOutput = AVCapturePhotoOutput()
         videoDataOutput = AVCaptureVideoDataOutput()
-//        previewLayer = AVCaptureVideoPreviewLayer()
-
+        //        previewLayer = AVCaptureVideoPreviewLayer()
+        
         // openGL ES3 로 이미지를 렌더링할 context 생성
         // About OpenGL ES - https://developer.apple.com/library/prerelease/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793
         // About Core Image - https://developer.apple.com/library/prerelease/content/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_intro/ci_intro.html#//apple_ref/doc/uid/TP30001185
@@ -152,7 +150,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     // MARK:- IBAction
     
-    
     @IBAction func switchCameraFlash(_ sender: Any) {
         // 0: off, 1: on, 2: auto
         cameraFlashSwitchedStatus += 1
@@ -168,8 +165,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         default:
             break;
         }
+        
     }
-    
     
     func fadeViewInThenOut(view : UIView, delay: TimeInterval) {
         
@@ -193,13 +190,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     @IBAction func changeCameraEffectWithSwipeGesture(_ sender: Any) {
         
         if let swipeGesture = sender as? UISwipeGestureRecognizer{
-
+            
             // swipe gesture를 통해서 필터 종류를 카메라 상태에서 변경
             switch swipeGesture.direction {
-            
+                
             // right, left 제스처 direction에 맞게 filterIndex를 -, +, %를 활용해서 필터 선택 인덱스를 계산.
             case UISwipeGestureRecognizerDirection.right:
-
+                
                 filterIndex = (filterIndex! - 1) % PhotoEditorTypes.numberOfFilterType()
                 if filterIndex! < 0 {
                     filterIndex = filterIndex! + PhotoEditorTypes.numberOfFilterType()
@@ -212,7 +209,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             default:
                 return
             }
-        
+            
             if let filterIndex = filterIndex {
                 
                 filterName = PhotoEditorTypes.filterNameArray[filterIndex]
@@ -231,10 +228,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         dismiss(animated: true, completion: nil)
     }
     
+    
     // 촬영하기
     @IBAction func takePhoto(_ sender: Any) {
-        
-        
         authorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
         if let authorizationStatusOfCamera = authorizationStatus {
             
@@ -280,6 +276,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             }
         }
     }
+    
     
     // 전면/후면 카메라 스위칭
     @IBAction func switchCameraPostion(_ sender: Any) {
@@ -377,18 +374,17 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                     captureDevice = discoveredDevice // Device를 Set
                     
                     if cameraPosition == .back {
-                      session.sessionPreset = AVCaptureSessionPreset1920x1080
+                        session.sessionPreset = AVCaptureSessionPreset1920x1080
                     } else if cameraPosition == .front {
                         session.sessionPreset = AVCaptureSessionPreset1280x720
                     }
                     
                     do {
                         let input = try AVCaptureDeviceInput(device: discoveredDevice)
-                        dump(input)
-                        print(session.canAddInput(input))
+                        
                         if session.canAddInput(input){
                             session.addInput(input)
-                            print(session.canAddOutput(photoOutput), session.canAddOutput(videoDataOutput))
+                            
                             if session.canAddOutput(photoOutput), session.canAddOutput(videoDataOutput){
                                 
                                 session.addOutput(photoOutput)
