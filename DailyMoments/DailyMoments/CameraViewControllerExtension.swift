@@ -41,17 +41,8 @@ extension CameraViewController {
     
     // 초점 맞추기
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        dump(touches)
         if let coordinates = touches.first, let device = captureDevice {
-            
-            
-            print("x: \( coordinates.location(in: previewImageView).x), y: \(coordinates.location(in: previewImageView).y)")
-            print("cameraView height: \(previewImageView.bounds.height)")
-            var point = CGPoint.zero
-            point.y = coordinates.location(in: previewImageView).y / previewImageView.bounds.height
-            
-            print("cameraView touch y ratio: \( 1 - point.y / 5)")
-            
-            
             
             // 전면 카메라는 FocusPointOfInterest를 지원하지 않습니다.
             if device.isFocusPointOfInterestSupported, device.isFocusModeSupported(AVCaptureFocusMode.autoFocus) {

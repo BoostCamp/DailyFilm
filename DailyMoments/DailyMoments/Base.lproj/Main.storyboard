@@ -51,7 +51,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="mMf-Gi-ZfO"/>
                                 </items>
                             </toolbar>
-                            <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PLf-YU-bP2">
+                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PLf-YU-bP2">
                                 <rect key="frame" x="0.0" y="44" width="375" height="535"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
@@ -60,15 +60,27 @@
                                     <outletCollection property="gestureRecognizers" destination="NuB-0G-bWn" appends="YES" id="jAh-Sa-Vsp"/>
                                 </connections>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sZU-1g-7yg">
+                                <rect key="frame" x="0.0" y="194" width="375" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="42"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="shadowOffset" width="1" height="1"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Y8U-oH-Sr2" firstAttribute="top" secondItem="PLf-YU-bP2" secondAttribute="bottom" id="0Gd-Bu-7W0"/>
+                            <constraint firstItem="sZU-1g-7yg" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="1Uu-oq-83Q"/>
+                            <constraint firstItem="sZU-1g-7yg" firstAttribute="centerX" secondItem="IFP-dn-PAV" secondAttribute="centerX" id="2KM-WA-Z6L"/>
                             <constraint firstAttribute="trailing" secondItem="Y8U-oH-Sr2" secondAttribute="trailing" id="5b9-ns-85d"/>
                             <constraint firstAttribute="trailing" secondItem="PLf-YU-bP2" secondAttribute="trailing" id="Hvx-zp-NlO"/>
                             <constraint firstItem="PLf-YU-bP2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="I4m-sc-oCp"/>
+                            <constraint firstItem="sZU-1g-7yg" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" constant="150" id="V4d-VS-McW"/>
                             <constraint firstItem="PLf-YU-bP2" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="dFg-so-St2"/>
+                            <constraint firstAttribute="trailing" secondItem="sZU-1g-7yg" secondAttribute="trailing" id="fB6-oy-Fus"/>
                             <constraint firstItem="Y8U-oH-Sr2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="fsk-ek-vBT"/>
                             <constraint firstItem="nnl-AD-M3k" firstAttribute="top" secondItem="Y8U-oH-Sr2" secondAttribute="bottom" id="sax-8q-ECH"/>
                         </constraints>
@@ -84,6 +96,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="cameraToolbar" destination="Y8U-oH-Sr2" id="855-C7-rLA"/>
+                        <outlet property="filterNameLabel" destination="sZU-1g-7yg" id="0fd-D6-Orb"/>
                         <outlet property="flashOfCameraBarButtonItem" destination="nCJ-iA-4PT" id="tmd-rf-SkK"/>
                         <outlet property="previewImageView" destination="PLf-YU-bP2" id="FWZ-xv-Rgz"/>
                         <outlet property="shutterOfCameraBarButtonItem" destination="TVj-xL-fNw" id="iZI-kU-Nl3"/>
@@ -92,12 +105,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C4O-ZK-Eug" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="tL3-H7-XnN" userLabel="Left Swipe Gesture Recognizer">
+                <swipeGestureRecognizer delaysTouchesBegan="YES" direction="left" id="tL3-H7-XnN" userLabel="Left Swipe Gesture Recognizer">
                     <connections>
                         <action selector="changeCameraEffectWithSwipeGesture:" destination="8QR-Tj-sM5" id="SzC-SS-6AB"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="NuB-0G-bWn" userLabel="Right Swipe Gesture Recognizer">
+                <swipeGestureRecognizer delaysTouchesBegan="YES" direction="right" id="NuB-0G-bWn" userLabel="Right Swipe Gesture Recognizer">
                     <connections>
                         <action selector="changeCameraEffectWithSwipeGesture:" destination="8QR-Tj-sM5" id="0P4-Gi-iq6"/>
                     </connections>
@@ -119,7 +132,7 @@
                         <subviews>
                             <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YoP-j4-kri">
                                 <rect key="frame" x="0.0" y="44" width="375" height="579"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a2X-BT-T7U">
                                 <rect key="frame" x="0.0" y="489.5" width="375" height="133.5"/>

@@ -16,6 +16,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     fileprivate static let showEditPhotoViewControllerSegueIdentifier = "showEditPhotoViewControllerSegue"
     
+    @IBOutlet weak var filterNameLabel: UILabel!
+    
     
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet weak var cameraToolbar: UIToolbar! // 플래쉬, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
@@ -27,7 +29,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     var focusBox: UIView!
     var originalPhotoImage: UIImage?
-    var filterName: String?
+    var filterName: String? // CIFilter를 적용할 때 필요한 필터 이름
+    var filterIndex: Int? // 스와이프로 필터를 선택 시에 현재 필터 인덱스를 저장할 프로퍼티
+    var cameraPosition: AVCaptureDevicePosition? // 카메라 포지션을 저장할 프로퍼티
     
     // 참고할 문서.
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
@@ -38,11 +42,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     var captureSession: AVCaptureSession? // AV 입력장치에서 출력으로의 데이터 흐름을 조정하는 AVCaptureSession 객체입니다.
     
-    var sessionOutput: AVCapturePhotoOutput? // 스틸 사진과 관련된 대부분의 캡처 워크 플로에 대한 최신 인터페이스를 제공하는 AVCaptureOutput의 구체적인 하위 클래스입니다.
+    var photoOutput: AVCapturePhotoOutput? // 스틸 사진과 관련된 대부분의 캡처 워크 플로에 대한 최신 인터페이스를 제공하는 AVCaptureOutput의 구체적인 하위 클래스입니다.
     
-    var videoOutput: AVCaptureVideoDataOutput? // AVCaptureVideoDataOutput은 캡처중인 비디오에서 압축되지 않은 프레임을 처리하거나 압축 된 프레임에 액세스하는 데 사용하는 AVCaptureOutput의 구체적인 하위 클래스입니다. AVCaptureVideoDataOutput 인스턴스는 다른 미디어 API를 사용하여 처리 할 수있는 비디오 프레임을 생성합니다. captureOutput (_ : didOutputSampleBuffer : from :)
+    var videoDataOutput: AVCaptureVideoDataOutput? // AVCaptureVideoDataOutput은 캡처중인 비디오에서 압축되지 않은 프레임을 처리하거나 압축 된 프레임에 액세스하는 데 사용하는 AVCaptureOutput의 구체적인 하위 클래스입니다. AVCaptureVideoDataOutput 인스턴스는 다른 미디어 API를 사용하여 처리 할 수있는 비디오 프레임을 생성합니다. captureOutput (_ : didOutputSampleBuffer : from :)
     
-    var previewLayer: AVCaptureVideoPreviewLayer? // 입력 장치에서 캡처 한 비디오를 표시하는 데 사용하는 CALayer의 하위 클래스입니다. AVCapureSession과 함께 사용합니다.
+    
+//    var previewLayer: AVCaptureVideoPreviewLayer? // 입력 장치에서 캡처 한 비디오를 표시하는 데 사용하는 CALayer의 하위 클래스입니다. AVCapureSession과 함께 사용합니다.
     
     var settingsForMonitoring: AVCapturePhotoSettings? // 단일 사진 캡처 요청에 필요한 모든 기능과 설정을 설명하는 변경 가능한 객체입니다.
     
@@ -50,17 +55,30 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     var authorizationStatus: AVAuthorizationStatus? // Camera 접근 권한을 위한 저장 프로퍼티
     
-    
-    var dispatchMainQueue: DispatchQueue?
+    var context: CIContext? // openGL ES3 api를 사용하여 CGImage를 생성하기 위함. iOS7, 3gs, 아이팟터치 3세대 이후 지원하며 3D 라이브러리 중 하나이다. (OpenGL ES (임베디드 단말을 위한 OpenGL)는 크로노스 그룹이 정의한 3차원 컴퓨터 그래픽스 API인 OpenGL의 서브셋으로, 휴대전화, PDA 등과 같은 임베디드 단말을 위한 API이다.)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isStatusBarHidden = true // status bar hide
         cameraFlashSwitchedStatus = FlashModeConstant.off.rawValue // Init
+        cameraPosition = AVCaptureDevicePosition.back // default는 back camera
+        
         captureSession = AVCaptureSession()
-        sessionOutput = AVCapturePhotoOutput()
-        videoOutput = AVCaptureVideoDataOutput()
-        previewLayer = AVCaptureVideoPreviewLayer()
+        photoOutput = AVCapturePhotoOutput()
+        videoDataOutput = AVCaptureVideoDataOutput()
+//        previewLayer = AVCaptureVideoPreviewLayer()
+
+        // openGL ES3 로 이미지를 렌더링할 context 생성
+        // About OpenGL ES - https://developer.apple.com/library/prerelease/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793
+        // About Core Image - https://developer.apple.com/library/prerelease/content/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_intro/ci_intro.html#//apple_ref/doc/uid/TP30001185
+        
+        let openGLContext = EAGLContext(api: .openGLES3)
+        context = CIContext(eaglContext: openGLContext!)
+        
+        filterIndex = 0
+        if let filterIndex = filterIndex {
+            filterName = PhotoEditorTypes.filterNameArray[filterIndex]
+        }
     }
     
     
@@ -95,7 +113,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                     if granted {
                         
                         // GCD
-                        self.dispatchMainQueue?.async {
+                        DispatchQueue.main.async {
                             self.setUpCamera() // 카메라 setup
                         }
                         
@@ -103,7 +121,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                         print(granted)
                         
                         // GCD
-                        self.dispatchMainQueue?.async {
+                        DispatchQueue.main.async {
                             self.disableCameraOptionButton() // 플래쉬, 스위칭 버튼 disabled
                         }
                     }
@@ -153,19 +171,57 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     }
     
     
+    func fadeViewInThenOut(view : UIView, delay: TimeInterval) {
+        
+        let animationDuration = 0.25
+        
+        // Fade in the view
+        UIView.animate(withDuration: animationDuration, animations: { () -> Void in
+            view.alpha = 1
+        }) { (Bool) -> Void in
+            
+            // After the animation completes, fade out the view after a delay
+            
+            UIView.animate(withDuration: animationDuration, delay: delay, options: .curveEaseInOut, animations: { () -> Void in
+                view.alpha = 0
+                
+            },
+                           completion: nil)
+        }
+    }
+    
     @IBAction func changeCameraEffectWithSwipeGesture(_ sender: Any) {
         
         if let swipeGesture = sender as? UISwipeGestureRecognizer{
+
+            // swipe gesture를 통해서 필터 종류를 카메라 상태에서 변경
             switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.left:
-                filterName = "CIPhotoEffectMono"
-                print("Left Swipe")
+            
+            // right, left 제스처 direction에 맞게 filterIndex를 -, +, %를 활용해서 필터 선택 인덱스를 계산.
             case UISwipeGestureRecognizerDirection.right:
-                print("Right Swipe")
-                filterName = "CIPhotoEffectTransfer"
+
+                filterIndex = (filterIndex! - 1) % PhotoEditorTypes.numberOfFilterType()
+                if filterIndex! < 0 {
+                    filterIndex = filterIndex! + PhotoEditorTypes.numberOfFilterType()
+                }
+                
+            case UISwipeGestureRecognizerDirection.left:
+                
+                filterIndex = (filterIndex! + 1) % PhotoEditorTypes.numberOfFilterType()
+                
             default:
                 return
             }
+        
+            if let filterIndex = filterIndex {
+                
+                filterName = PhotoEditorTypes.filterNameArray[filterIndex]
+                if let filterName = filterName {
+                    filterNameLabel.text = filterName.replacingOccurrences(of: PhotoEditorTypes.replacingOccurrencesWord, with: "")
+                }
+            }
+            
+            fadeViewInThenOut(view: filterNameLabel, delay: PhotoEditorTypes.filterNameLabelAnimationDelay)
         }
     }
     
@@ -191,7 +247,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 settingsForMonitoring = AVCapturePhotoSettings()
                 
                 DispatchQueue.main.async {
-                    if let photoCaptureSetting = self.settingsForMonitoring, let capturePhotoOutput = self.sessionOutput{
+                    if let photoCaptureSetting = self.settingsForMonitoring, let capturePhotoOutput = self.photoOutput{
                         
                         
                         let previewPixelType = photoCaptureSetting.availablePreviewPhotoPixelFormatTypes.first!
@@ -232,7 +288,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             
             
             session.beginConfiguration()
-         
+            
             
             // Remove existing input
             let currentCameraInput:AVCaptureInput = session.inputs.first as! AVCaptureInput
@@ -243,10 +299,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             if let input = currentCameraInput as? AVCaptureDeviceInput {
                 if(input.device.position == .back){
                     captureDevice = cameraWithPosition(position: .front)
+                    cameraPosition = AVCaptureDevicePosition.front
                     session.sessionPreset = AVCaptureSessionPreset1280x720
                     
                 } else if(input.device.position == .front){
                     captureDevice = cameraWithPosition(position: .back)
+                    cameraPosition = AVCaptureDevicePosition.back
                     session.sessionPreset = AVCaptureSessionPreset1920x1080
                 }
                 
@@ -268,10 +326,10 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 session.addInput(newVideoInput)
             }
             
-           
+            
             //Commit all the configuration changes at once
             session.commitConfiguration()
-     
+            
         }
     }
     
@@ -287,11 +345,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     func setUpCamera(){
         
-        print("setUpCamera")
+        
         switchOfCameraBarButtonItem.isEnabled = true
         flashOfCameraBarButtonItem.isEnabled = true
-        
-     
         
         
         /*
@@ -315,28 +371,34 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         
         if let session = captureSession {
             for discoveredDevice in (deviceSession?.devices)! {
-                if discoveredDevice.position == AVCaptureDevicePosition.back {
+                
+                // cameraPosition: 카메라가 back, front인지를 저장하는 프로퍼티
+                if discoveredDevice.position == cameraPosition {
                     captureDevice = discoveredDevice // Device를 Set
-                    session.sessionPreset = AVCaptureSessionPreset1920x1080
+                    
+                    if cameraPosition == AVCaptureDevicePosition.back {
+                      session.sessionPreset = AVCaptureSessionPreset1920x1080
+                    } else if cameraPosition == AVCaptureDevicePosition.front {
+                        session.sessionPreset = AVCaptureSessionPreset1280x720
+                    }
+                    
                     do {
                         let input = try AVCaptureDeviceInput(device: discoveredDevice)
                         dump(input)
                         print(session.canAddInput(input))
                         if session.canAddInput(input){
                             session.addInput(input)
-                            print(session.canAddOutput(sessionOutput), session.canAddOutput(videoOutput))
-                            if session.canAddOutput(sessionOutput), session.canAddOutput(videoOutput){
+                            print(session.canAddOutput(photoOutput), session.canAddOutput(videoDataOutput))
+                            if session.canAddOutput(photoOutput), session.canAddOutput(videoDataOutput){
                                 
-                                session.addOutput(sessionOutput)
-                                dispatchMainQueue = DispatchQueue.main
+                                session.addOutput(photoOutput)
                                 
-                                guard let videoOutput = videoOutput else {
+                                guard let videoOutput = videoDataOutput else {
                                     print("video output error")
                                     return
                                 }
                                 
-                                videoOutput.setSampleBufferDelegate(self, queue: dispatchMainQueue)
-//                                videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer"))
+                                videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue.main)
                                 session.addOutput(videoOutput)
                                 
                                 session.startRunning()
@@ -396,35 +458,41 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let ciImageFromCaptureOutput = CIImage(cvPixelBuffer: pixelBuffer!)
-        let context = CIContext(options: nil)
         
+        guard let context = context else {
+            print("context guard error")
+            return
+        }
         originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from: ciImageFromCaptureOutput.extent)!)
         
+        
         if let filterName = filterName {
-            if let filter = CIFilter(name: filterName) {
-                filter.setDefaults()
-                filter.setValue(ciImageFromCaptureOutput, forKey: kCIInputImageKey)
-                if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
-                    self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
-
-                    dispatchMainQueue?.async {
-                        self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
+            
+            if filterName == PhotoEditorTypes.normalStatusFromFilterNameArray(){
+                DispatchQueue.main.async {
+                    self.previewImageView.image = self.originalPhotoImage
+                    
+                }
+            } else {
+                if let filter = CIFilter(name: filterName) {
+                    filter.setDefaults()
+                    filter.setValue(ciImageFromCaptureOutput, forKey: kCIInputImageKey)
+                    if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
+                        
+                        DispatchQueue.main.async {
+                            self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
+                            
+                        }
                     }
                 }
-            }
-        } else {
-            
-            dispatchMainQueue?.async {
-                self.previewImageView.image = self.originalPhotoImage
-                
             }
         }
     }
     
     func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
-
-//        print(sampleBuffer)
-    
+        
+        //                print(sampleBuffer)
+        
     }
     
     
@@ -468,7 +536,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         if segue.identifier == CameraViewController.showEditPhotoViewControllerSegueIdentifier, let editPhotoViewController = segue.destination as? EditPhotoViewController{
             
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+            
+            
+            print("previewImageView orienation: \(previewImageView.image?.imageOrientation.rawValue)")
+            print("originalPhotoImage orienation: \(originalPhotoImage?.imageOrientation.rawValue)")
             editPhotoViewController.takenPhotoImage = previewImageView.image
+            editPhotoViewController.originalPhotoImage = originalPhotoImage
+            editPhotoViewController.selectedFilterIndex = filterIndex
             editPhotoViewController.takenResizedPhotoImage = generatePreviewPhoto(source: originalPhotoImage)
             
         }

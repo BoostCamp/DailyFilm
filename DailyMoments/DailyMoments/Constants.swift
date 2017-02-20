@@ -31,6 +31,34 @@ struct DiaryPhotoTableViewConstants{
     
 }
 
+
+
+let cameraFilterCollectionViewCellIdentifier: String = "FilterCell"
+
+struct PhotoEditorTypes{
+    
+    static let titles: [String?] = ["Filter"]
+    
+    static let replacingOccurrencesWord : String = "CIPhotoEffect"
+    static let filterNameLabelAnimationDelay: TimeInterval = TimeInterval(1)
+    
+    static let filterNameArray: [String] = ["CIPhotoEffectProcess", "CIPhotoEffectInstant", "Normal", "CIPhotoEffectMono", "CIPhotoEffectNoir", "CIPhotoEffectTonal", "CIPhotoEffectFade", "CIPhotoEffectChrome", "CIPhotoEffectTransfer"].sorted(by: >)
+    
+    static func numberOfFilterType() -> Int {
+        return filterNameArray.count
+    }
+    static func titleForIndexPath(_ indexPath: IndexPath) -> String {
+        return filterNameArray[indexPath.row]
+    }
+    
+    static func normalStatusFromFilterNameArray() -> String {
+        return filterNameArray.first!
+    }
+    
+    
+}
+
+
 let cellUnitValue: Float = 5
 
 struct AlertContentConstant{
