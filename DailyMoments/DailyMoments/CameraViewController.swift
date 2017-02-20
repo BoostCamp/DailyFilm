@@ -61,7 +61,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         super.viewDidLoad()
         UIApplication.shared.isStatusBarHidden = true // status bar hide
         cameraFlashSwitchedStatus = FlashModeConstant.off.rawValue // Init
-        cameraPosition = AVCaptureDevicePosition.back // default는 back camera
+        cameraPosition = .back // default는 back camera
         
         captureSession = AVCaptureSession()
         photoOutput = AVCapturePhotoOutput()
@@ -299,12 +299,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             if let input = currentCameraInput as? AVCaptureDeviceInput {
                 if(input.device.position == .back){
                     captureDevice = cameraWithPosition(position: .front)
-                    cameraPosition = AVCaptureDevicePosition.front
+                    cameraPosition = .front
                     session.sessionPreset = AVCaptureSessionPreset1280x720
                     
                 } else if(input.device.position == .front){
                     captureDevice = cameraWithPosition(position: .back)
-                    cameraPosition = AVCaptureDevicePosition.back
+                    cameraPosition = .back
                     session.sessionPreset = AVCaptureSessionPreset1920x1080
                 }
                 
@@ -376,9 +376,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 if discoveredDevice.position == cameraPosition {
                     captureDevice = discoveredDevice // Device를 Set
                     
-                    if cameraPosition == AVCaptureDevicePosition.back {
+                    if cameraPosition == .back {
                       session.sessionPreset = AVCaptureSessionPreset1920x1080
-                    } else if cameraPosition == AVCaptureDevicePosition.front {
+                    } else if cameraPosition == .front {
                         session.sessionPreset = AVCaptureSessionPreset1280x720
                     }
                     
@@ -454,6 +454,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         
+        // 전면 카메라일 때 좌우반전 되지 않게 변경 (video Mirror disabled)
+        if cameraPosition == .front {
+            connection.automaticallyAdjustsVideoMirroring = false
+            connection.isVideoMirrored = true
+        }
         connection.videoOrientation = .portrait
         
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
