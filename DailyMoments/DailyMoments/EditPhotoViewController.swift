@@ -54,6 +54,9 @@ class EditPhotoViewController: UIViewController {
         // toolbar show
         navigationController?.isToolbarHidden = false
         
+        // navigationBar show
+        navigationController?.navigationBar.isHidden = false
+
         // 콜렉션 뷰의 첫번째 Cell을 선택함.
         if let selectedFilterIndex = selectedFilterIndex {
           
@@ -211,10 +214,12 @@ extension EditPhotoViewController {
             navigationController?.isNavigationBarHidden = true
             navigationController?.isToolbarHidden = true
             imagefilterCollectionView.isHidden = true
+            photographedImage.backgroundColor = .black
         } else {
             navigationController?.isNavigationBarHidden = false
             navigationController?.isToolbarHidden = false
             imagefilterCollectionView.isHidden = false
+            photographedImage.backgroundColor = .clear
         }
     }
 }

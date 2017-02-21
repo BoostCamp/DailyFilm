@@ -18,18 +18,40 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     @IBOutlet weak var filterNameLabel: UILabel!
     
-    @IBOutlet weak var cameraToolbar: UIToolbar! // 플래쉬, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
+    @IBOutlet weak var settingToolbar: UIToolbar! // 취소, 화면 비율, 플래쉬 버튼이 있는 툴바
+    @IBOutlet weak var cameraToolbar: UIToolbar! // 사진앨범, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
+    
+    @IBOutlet weak var screenRatioBarButtonItem: UIBarButtonItem! // 스크린 화면 비율을 위한 버튼 (1:1, 3:4, 9:16)
     @IBOutlet weak var flashOfCameraBarButtonItem: UIBarButtonItem! // 카메라 플래쉬 버튼
     @IBOutlet weak var shutterOfCameraBarButtonItem: UIBarButtonItem! // 카메라 셔터(촬영) 버튼
     @IBOutlet weak var switchOfCameraBarButtonItem: UIBarButtonItem! // 전면/후면카메라 스위치 버튼
     
-    @IBOutlet weak var previewImageView: UIImageView!
+    @IBOutlet weak var previewImageView: UIImageView! // 렌즈(input)에서 얻어지는 샘플 데이터를 디스플레이 화면에서 보여주기 위한 view
     
     var focusBox: UIView!
+    
     var originalPhotoImage: UIImage?
+    
     var filterName: String? // CIFilter를 적용할 때 필요한 필터 이름
+    
     var filterIndex: Int? // 스와이프로 필터를 선택 시에 현재 필터 인덱스를 저장할 프로퍼티
+    
     var cameraPosition: AVCaptureDevicePosition? // 카메라 포지션을 저장할 프로퍼티
+    
+    var cameraFlashSwitchedStatus: Int = 0 // FlashMode 구분을 위한 저장 프로퍼티
+    
+    var screenRatioSwitchedStatus: Int = 0 // 화면 비율 구분을 위한 저장 프로퍼티
+    
+    
+    // 카메라 뷰에 담길 촬영 포토 사이즈를 위한 strcut
+    struct CameraViewPhotoSize {
+        var width: CGFloat
+        var height: CGFloat
+    }
+    
+    // 카메라 뷰에 담길 촬영 포토 사이즈를 위한 프로퍼티
+    var cameraViewPhotoSize: CameraViewPhotoSize?
+    
     
     // 참고할 문서.
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
@@ -49,8 +71,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     var settingsForMonitoring: AVCapturePhotoSettings? // 단일 사진 캡처 요청에 필요한 모든 기능과 설정을 설명하는 변경 가능한 객체입니다.
     
-    var cameraFlashSwitchedStatus: Int = 0 // FlashMode 구분을 위한 저장 프로퍼티
-    
     var authorizationStatus: AVAuthorizationStatus? // Camera 접근 권한을 위한 저장 프로퍼티
     
     var context: CIContext? // openGL ES3 api를 사용하여 CGImage를 생성하기 위함. iOS7, 3gs, 아이팟터치 3세대 이후 지원하며 3D 라이브러리 중 하나이다. (OpenGL ES (임베디드 단말을 위한 OpenGL)는 크로노스 그룹이 정의한 3차원 컴퓨터 그래픽스 API인 OpenGL의 서브셋으로, 휴대전화, PDA 등과 같은 임베디드 단말을 위한 API이다.)
@@ -58,25 +78,46 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isStatusBarHidden = true // status bar hide
+       
+        
+        //Init Setting
         cameraFlashSwitchedStatus = FlashModeConstant.off.rawValue // Init
         cameraPosition = .back // default는 back camera
+        screenRatioSwitchedStatus = 0 // 1:1 Ratio
+        
+        if let cameraPosition = cameraPosition {
+          
+            // 초기 셋팅, back camera and 1:1 ratio 
+            // cameraPosition = .back
+            // screenRatioSwitchedStatus = 0 //square
+            getSizeByScreenRatio(with: cameraPosition, at: screenRatioSwitchedStatus)
+            
+        }
+        
+        
+        filterIndex = 0
+        if let filterIndex = filterIndex {
+            filterName = PhotoEditorTypes.filterNameArray[filterIndex]
+        }
+        
+        
         
         captureSession = AVCaptureSession()
         photoOutput = AVCapturePhotoOutput()
         videoDataOutput = AVCaptureVideoDataOutput()
         //        previewLayer = AVCaptureVideoPreviewLayer()
         
+        
+        
+        
+        
         // openGL ES3 로 이미지를 렌더링할 context 생성
         // About OpenGL ES - https://developer.apple.com/library/prerelease/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793
         // About Core Image - https://developer.apple.com/library/prerelease/content/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_intro/ci_intro.html#//apple_ref/doc/uid/TP30001185
-        
+
         let openGLContext = EAGLContext(api: .openGLES3)
         context = CIContext(eaglContext: openGLContext!)
-                
-        filterIndex = 0
-        if let filterIndex = filterIndex {
-            filterName = PhotoEditorTypes.filterNameArray[filterIndex]
-        }
+
     }
     
     
@@ -88,7 +129,27 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         
         // toolbar hide
         navigationController?.isToolbarHidden = true
-       
+        
+        // navigationbar hide
+        navigationController?.navigationBar.isHidden = true
+        
+        
+        // cameraToolbar, settingToolbar transparent
+        cameraToolbar.setBackgroundImage(UIImage(),
+                                         forToolbarPosition: .any,
+                                         barMetrics: .default)
+        cameraToolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
+        
+        
+        settingToolbar.setBackgroundImage(UIImage(),
+                                          forToolbarPosition: .any,
+                                          barMetrics: .default)
+        settingToolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
+
+        
+        
+        
+        
         // 카메라 하드웨어 사용가능 여부 판단.
         let availableCameraHardware:Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
         shutterOfCameraBarButtonItem.isEnabled = availableCameraHardware
@@ -151,25 +212,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     // MARK:- IBAction
     
-    @IBAction func switchCameraFlash(_ sender: Any) {
-        // 0: off, 1: on, 2: auto
-        cameraFlashSwitchedStatus += 1
-        cameraFlashSwitchedStatus %= 3
-        
-        switch cameraFlashSwitchedStatus {
-        case FlashModeConstant.off.rawValue:
-            flashOfCameraBarButtonItem.image = UIImage(named: "flash_off")
-        case FlashModeConstant.on.rawValue:
-            flashOfCameraBarButtonItem.image = UIImage(named: "flash_on")
-        case FlashModeConstant.auto.rawValue:
-            flashOfCameraBarButtonItem.image = UIImage(named: "flash_auto")
-        default:
-            break;
-        }
-        
-    }
-
-    
     @IBAction func changeCameraEffectWithSwipeGesture(_ sender: Any) {
         
         if let swipeGesture = sender as? UISwipeGestureRecognizer{
@@ -209,6 +251,81 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     // 카메라 모달 뷰 내리기
     @IBAction func cancelTakePhoto(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    
+    // 카메라 비율 변경
+    @IBAction func switchScreenRatio(_ sender: Any) {
+
+      
+        
+        // 0: 1:1, 1: 3:4, 2: 9:16
+        screenRatioSwitchedStatus += 1
+        screenRatioSwitchedStatus %= ScreenType.numberOfRatioType()
+        if let cameraPosition = cameraPosition {
+            
+            switch screenRatioSwitchedStatus {
+            case  ScreenType.Ratio.square.rawValue :
+                screenRatioBarButtonItem.image = UIImage(named: "screen_ratio_1_1")
+                
+            case ScreenType.Ratio.retangle.rawValue :
+                screenRatioBarButtonItem.image = UIImage(named: "screen_ratio_1_33")
+                
+            case ScreenType.Ratio.full.rawValue :
+                screenRatioBarButtonItem.image = UIImage(named: "screen_ratio_1_77")
+                
+            default:
+                break;
+            }
+
+            // 화면 비율이 스위칭 될 때 screen Size를 새로 구해오기 위함
+            getSizeByScreenRatio(with: cameraPosition, at: screenRatioSwitchedStatus)
+            
+        }
+    }
+    
+    
+    func getSizeByScreenRatio(with cameraPosition: AVCaptureDevicePosition, at screenRatioStatus: Int){
+        
+        var photoWidth: CGFloat?
+        var photoHeight: CGFloat?
+        
+        var rectOfpreviewImage: CGRect?
+        
+        photoWidth = ScreenType.photoWidthByDeviceInput(type: cameraPosition.rawValue)
+        photoHeight = ScreenType.photoHeightByAspectScreenRatio(cameraPosition.rawValue, ratioType: screenRatioStatus)
+        
+        rectOfpreviewImage = ScreenType.getCGRectPreiewImageView(target: UIScreen.main.bounds, yMargin: settingToolbar.frame.height, ratioType: screenRatioStatus)
+        
+        
+        if let photoWidth = photoWidth, let photoHeight = photoHeight, let rectOfpreviewImage = rectOfpreviewImage {
+            cameraViewPhotoSize = CameraViewPhotoSize(width: photoWidth, height: photoHeight)
+            DispatchQueue.main.async {
+                self.previewImageView.frame = rectOfpreviewImage
+            }
+            
+            
+        }
+    }
+    
+    
+    
+    @IBAction func switchCameraFlash(_ sender: Any) {
+        // 0: off, 1: on, 2: auto
+        cameraFlashSwitchedStatus += 1
+        cameraFlashSwitchedStatus %= 3
+        
+        switch cameraFlashSwitchedStatus {
+        case FlashModeConstant.off.rawValue:
+            flashOfCameraBarButtonItem.image = UIImage(named: "flash_off")
+        case FlashModeConstant.on.rawValue:
+            flashOfCameraBarButtonItem.image = UIImage(named: "flash_on")
+        case FlashModeConstant.auto.rawValue:
+            flashOfCameraBarButtonItem.image = UIImage(named: "flash_auto")
+        default:
+            break;
+        }
+        
     }
     
     
@@ -266,7 +383,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         if let session = captureSession {
             // Indicate that some changes will be made to the session
             
-            
             session.beginConfiguration()
             
             
@@ -309,7 +425,16 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             
             //Commit all the configuration changes at once
             session.commitConfiguration()
-            
+         
+            if let cameraPosition = cameraPosition {
+                
+                print("switchCameraPostion")
+
+                // 카메라 스위칭 될 때 screen Size를 새로 구해오기 위함
+                getSizeByScreenRatio(with: cameraPosition, at: screenRatioSwitchedStatus)
+                
+                
+            }
         }
     }
     
@@ -447,10 +572,15 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             print("context guard error")
             return
         }
-        originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from: ciImageFromCaptureOutput.extent)!)
-              
-//        originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from:  CGRect(x: 0, y: 0, width: 1080, height: 1440))!)
-       
+
+        guard let cameraViewPhotoSize = cameraViewPhotoSize else {
+            print("cameraViewPhotoSize guard error")
+
+            return
+        }
+        
+        originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from: CGRect(x: 0.0, y: 0.0, width: cameraViewPhotoSize.width, height: cameraViewPhotoSize.height))!)
+        
         
         
         if let filterName = filterName {
@@ -467,9 +597,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                     if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
                         
                         DispatchQueue.main.async {
-//                            self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
-                            self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
-
+                            
+                            self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: CGRect(x: 0, y: 0, width: cameraViewPhotoSize.width, height: cameraViewPhotoSize.height))!)
+                            
                         }
                     }
                 }
