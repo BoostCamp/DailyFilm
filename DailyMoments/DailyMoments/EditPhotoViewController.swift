@@ -103,8 +103,6 @@ class EditPhotoViewController: UIViewController {
             case 1:
                 print("rotate image")
                 
-            case 2:
-                print("crop image")
             default:
                 return
             }

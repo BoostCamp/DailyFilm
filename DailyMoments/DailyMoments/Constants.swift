@@ -31,12 +31,16 @@ struct DiaryPhotoTableViewConstants{
     
 }
 
+struct photoRatio {
+    static let width: [Int] = [1080, 720]
+    static let height: [Int] = [1440, 960]
+}
 
 
 let cameraFilterCollectionViewCellIdentifier: String = "FilterCell"
 
 struct PhotoEditorTypes{
-    
+
     static let titles: [String?] = ["Filter"]
     
     static let replacingOccurrencesWord : String = "CIPhotoEffect"

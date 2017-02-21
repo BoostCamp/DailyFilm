@@ -72,7 +72,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         
         let openGLContext = EAGLContext(api: .openGLES3)
         context = CIContext(eaglContext: openGLContext!)
-        
+                
         filterIndex = 0
         if let filterIndex = filterIndex {
             filterName = PhotoEditorTypes.filterNameArray[filterIndex]
@@ -88,7 +88,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         
         // toolbar hide
         navigationController?.isToolbarHidden = true
-        
+       
+        // 카메라 하드웨어 사용가능 여부 판단.
         let availableCameraHardware:Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
         shutterOfCameraBarButtonItem.isEnabled = availableCameraHardware
         authorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
@@ -167,25 +168,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         }
         
     }
-    
-    func fadeViewInThenOut(view : UIView, delay: TimeInterval) {
-        
-        let animationDuration = 0.25
-        
-        // Fade in the view
-        UIView.animate(withDuration: animationDuration, animations: { () -> Void in
-            view.alpha = 1
-        }) { (Bool) -> Void in
-            
-            // After the animation completes, fade out the view after a delay
-            
-            UIView.animate(withDuration: animationDuration, delay: delay, options: .curveEaseInOut, animations: { () -> Void in
-                view.alpha = 0
-                
-            },
-                           completion: nil)
-        }
-    }
+
     
     @IBAction func changeCameraEffectWithSwipeGesture(_ sender: Any) {
         
@@ -260,7 +243,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                         
                         photoCaptureSetting.isAutoStillImageStabilizationEnabled = true
                         
-                        // 활성 장치 및 형식에서 지원하는 최고 해상도로 스틸 이미지를 캡처할지 여부를 지정.
+                        // 활성 장치 및 형식에서 지원하는 최고 해상도로 스틸 이미지를 캡처할지 여부를 지정. default는 false
                         photoCaptureSetting.isHighResolutionPhotoEnabled = false
                         
                         capturePhotoOutput.capturePhoto(with: photoCaptureSetting, delegate: self)
@@ -465,6 +448,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             return
         }
         originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from: ciImageFromCaptureOutput.extent)!)
+              
+//        originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from:  CGRect(x: 0, y: 0, width: 1080, height: 1440))!)
+       
         
         
         if let filterName = filterName {
@@ -481,8 +467,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                     if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
                         
                         DispatchQueue.main.async {
+//                            self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
                             self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
-                            
+
                         }
                     }
                 }
@@ -538,9 +525,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
             
-            
-            print("previewImageView orienation: \(previewImageView.image?.imageOrientation.rawValue)")
-            print("originalPhotoImage orienation: \(originalPhotoImage?.imageOrientation.rawValue)")
             editPhotoViewController.takenPhotoImage = previewImageView.image
             editPhotoViewController.originalPhotoImage = originalPhotoImage
             editPhotoViewController.selectedFilterIndex = filterIndex

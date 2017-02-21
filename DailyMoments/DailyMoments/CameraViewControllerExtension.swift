@@ -68,11 +68,13 @@ extension CameraViewController {
                     
                     
                     previewImageView.addSubview(self.focusBox)
+                    fadeViewInThenOut(view: self.focusBox, delay: PhotoEditorTypes.filterNameLabelAnimationDelay)
                 } catch{
                     fatalError()
                 }
             }
             // 전면 카메라에서는 FocusPointOfInterest 를 지원하지 않는다.
+            
         }
     }
     
@@ -119,8 +121,29 @@ extension CameraViewController {
         rectangleBounds.origin.y = coordinates.location(in: previewImageView).y - (rectangleBounds.size.height / 2)
         
         self.focusBox = UIView(frame: rectangleBounds)
-        self.focusBox.layer.borderColor = UIColor.init(red: 255, green: 255, blue: 0, alpha: 0.5).cgColor
+        self.focusBox.layer.borderColor = UIColor.init(red: 255, green: 255, blue: 0, alpha: 1).cgColor
         self.focusBox.layer.borderWidth = 0.5
         
     }
+    
+    func fadeViewInThenOut(view : UIView, delay: TimeInterval) {
+        
+        let animationDuration = 0.25
+        
+        // Fade in the view
+        UIView.animate(withDuration: animationDuration, animations: { () -> Void in
+            view.alpha = 1
+        }) { (Bool) -> Void in
+            
+            // After the animation completes, fade out the view after a delay
+            
+            UIView.animate(withDuration: animationDuration, delay: delay, options: .curveEaseInOut, animations: { () -> Void in
+                view.alpha = 0
+                
+            },
+                           completion: nil)
+        }
+    }
+    
+    
 }
