@@ -21,7 +21,7 @@ class DiaryHomeTableViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         print("viewDidLoad")
-        
+
         FMDatabaseManager.shareManager().openDatabase(databaseName: DatabaseConstant.databaseName)
         
         userIndex = FMDatabaseManager.shareManager().selectUserIndexFromUserId(query: Statement.Select.userIndexOfUser, value: UserProfileConstants.id)
@@ -39,7 +39,10 @@ class DiaryHomeTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         print("viewWillAppear in DiaryHomeViewController")
         
-        UIApplication.shared.isStatusBarHidden = false // status bar show
+        // status bar show
+        UIApplication.shared.isStatusBarHidden = false
+        
+        tabBarController?.tabBar.isHidden = false
         
         PHPhotoLibrary.authorizationStatus()
         
@@ -151,7 +154,12 @@ extension DiaryHomeTableViewController {
             
             cell.profileImageView.image = UIImage(named: "person")
 
-            cell.userIdLabel.text = String(describing: post.userIndex)
+            
+            
+            let userNickname:String? = FMDatabaseManager.shareManager().selectUserNickname(query: Statement.Select.nicknameOfUser, value: post.userIndex)
+            if let userNickname = userNickname {
+                cell.userNicknameLabel.text = userNickname
+            }
             
             if let address = post.address, let imageFilePath = post.imageFilePath, let content = post.content, let createdDate = post.createdDate {
                 
@@ -174,8 +182,8 @@ extension DiaryHomeTableViewController {
                 }
              
                 //                    cell.delegate = self
-                cell.contentsLabel.text = content
-                cell.createDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
+                cell.contentLabel.text = content
+                cell.createdDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
                 
             }
         }

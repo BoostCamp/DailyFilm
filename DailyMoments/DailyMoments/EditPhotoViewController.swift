@@ -105,14 +105,22 @@ class EditPhotoViewController: UIViewController {
                 
             case 1:
                 print("rotate image")
+                dump(photographedImage.transform)
+                print("frame width: ",  photographedImage.frame.width)
+                print("frame height: ",  photographedImage.frame.height)
+             
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.photographedImage.transform = self.photographedImage.transform.rotated(by: CGFloat(M_PI_2))
+                })
+                dump(photographedImage.transform)
+                print("frame width: ",  photographedImage.frame.width)
+                print("frame height: ",  photographedImage.frame.height)
                 
             default:
                 return
             }
             
         }
-        
-        
     }
     
     
@@ -125,6 +133,7 @@ class EditPhotoViewController: UIViewController {
             if let addTextViewController:AddContentViewController = segue.destination as? AddContentViewController {
                 self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
                 addTextViewController.edidtedPhotoImage = photographedImage.image
+                
             }
         }
     }

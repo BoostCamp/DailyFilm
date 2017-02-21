@@ -13,10 +13,15 @@ extension Date {
     //dateFormatter에 맞게 String 타입으로 반환
     func toString() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy. MM. dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy년 M월 d일 H시 m분"
         return dateFormatter.string(from: self)
     }
     
+    func getDateString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M월 d일 H시"
+        return dateFormatter.string(from: self)
+    }
     
     func makeName() -> String {
         let dateFormatter = DateFormatter()

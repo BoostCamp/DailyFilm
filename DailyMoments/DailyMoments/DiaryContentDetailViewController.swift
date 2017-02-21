@@ -13,48 +13,24 @@ class DiaryContentDetailViewController: UIViewController {
     
     var post: Post?
 
-    @IBOutlet weak var createDateLabel: UILabel!
+    @IBOutlet weak var createdDateLabel: UILabel!
     @IBOutlet weak var nicknameLabel: UILabel!
-    @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var contentTextView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        
-
+        tabBarController?.tabBar.isHidden = true
         
         if let post:Post = self.post {
             
             var text: String = ""
-
-            
-            if let imageFilePath = post.imageFilePath {
-                text += imageFilePath
-                
-                
-                // Create a DocumentDirectoryPath
-                let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-                
-                // URL of DocumentDirectoryPath
-                let documentDirectoryPathURL = URL(fileURLWithPath: documentDirectoryPath)
-                
-                // file URL of DocumentDirectoryPath
-                let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
-                
-                photoImageView.image = UIImage(contentsOfFile: editedImageURL.path)
-                
-            }
-            
-            
+ 
             
             let userNickname:String? = FMDatabaseManager.shareManager().selectUserNickname(query: Statement.Select.nicknameOfUser, value: post.userIndex)
             if let userNickname = userNickname {
@@ -63,7 +39,7 @@ class DiaryContentDetailViewController: UIViewController {
             
             if let createdDate = post.createdDate {
                 
-                createDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
+                createdDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
             }
            
             
@@ -86,8 +62,6 @@ class DiaryContentDetailViewController: UIViewController {
             if let address = post.address {
                 text += address
             }
-            
-//            contentTextView.text = text
             
         }
     }

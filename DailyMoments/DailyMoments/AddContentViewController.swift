@@ -12,19 +12,54 @@ import CoreLocation
 class AddContentViewController: UIViewController {
     
     
+    @IBOutlet weak var createdDate: UILabel! // 촬영된 시간
+    @IBOutlet weak var addressLabel: UILabel! // 촬영된 주소
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
-    @IBOutlet weak var contentTextField: UITextField!
+    @IBOutlet weak var contentTextView: UITextView!
     
     var edidtedPhotoImage: UIImage? // 필터가 적용된 Image
     var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
+    
+    
+    var nowDate: Date?
+    var timeIntervalOfCreatedDate: TimeInterval?
+    var intValueOfCreatedDate: TimeInterval?  //1487227355.6198459 ->  1487227355.0
+    var imageFileName: String? // 저장될 파일 이름
     
     let manager = CLLocationManager()
     var currentLocation: CLLocation?
     var currentPlacemark: CLPlacemark?
     var address: String?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
+        // Date 생성
+        
+        let date: Date = Date()
+        //Calendar Component에 맞게 Date 변환
+        nowDate = date.getDateComponents()
+        if let nowDate = nowDate {
+            
+            // 현재 시간 기준으로 timeIntervalSince1970 추출
+            timeIntervalOfCreatedDate = nowDate.timeIntervalSince1970
+            
+            //1487227355.6198459 ->  1487227355.0
+            intValueOfCreatedDate = Double(Int(timeIntervalOfCreatedDate!))
+            
+            //파일 네임 set
+            imageFileName = nowDate.makeName()
+            createdDate.text = nowDate.toString()
+            
+        }
+        
+        
+        
+        
+        
         
         if (CLLocationManager.locationServicesEnabled()) {
             manager.delegate = self
@@ -48,7 +83,7 @@ class AddContentViewController: UIViewController {
         // rightBarButton인 Done버튼 tint색을 애플의 파란색으로 변경
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appleBlue()
         
-        contentTextField.delegate = self
+        contentTextView.delegate = self
     }
     
     // MARK:- View Controller Lifecycle
@@ -100,28 +135,11 @@ class AddContentViewController: UIViewController {
     
     func savePostInfo(_ userIndex: Int32, completion: ((_ success:Bool) -> Void)?){
         
+      
         
         
-        // Date 생성
+        let content: String? = self.contentTextView.text
         
-        let date: Date = Date()
-        //Calendar Component에 맞게 Date 변환
-        let now: Date = date.getDateComponents()
-        
-        // 현재 시간 기준으로 timeIntervalSince1970 추출
-        let createdDate: TimeInterval? = now.timeIntervalSince1970
-        dump(createdDate)
-        
-        //1487227355.6198459 ->  1487227355.0
-        let createdDateInt: TimeInterval? = Double(Int(createdDate!))
-
-        let imageFileName = now.makeName()
-        
-        if self.contentTextField.text == "" {
-            self.contentTextField.text = address! + "에서 " + Date.init(timeIntervalSince1970: createdDateInt!).toString() + "에 찍은 사진입니다."
-            
-        }
-        let content: String? = self.contentTextField.text
         let isFavorite: Int32? = 0
         
         var latitude: Float?
@@ -143,7 +161,7 @@ class AddContentViewController: UIViewController {
         
         
         // 필터 적용된 이미지(UIImage?)의 옵셔널 바인딩
-        if let editedImage = self.edidtedPhotoImage {
+        if let editedImage = self.edidtedPhotoImage, let imageFileName = imageFileName {
             let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFileName)
             
             do {
@@ -154,7 +172,7 @@ class AddContentViewController: UIViewController {
             }
         }
         
-        if let content = content, let isFavorite = isFavorite, let createdDate = createdDateInt, let address = address, let latitude = latitude, let longitude = longitude {
+        if let imageFileName = imageFileName, let content = content, let isFavorite = isFavorite, let createdDate = intValueOfCreatedDate, let address = address, let latitude = latitude, let longitude = longitude {
             let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, address: address, latitude: latitude, longitude: longitude)
             
             let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.address as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
@@ -209,19 +227,30 @@ class AddContentViewController: UIViewController {
             
             switch buttonType.tag {
             case ContentType.location.rawValue :
-                print("촬영 위치")
                 
                 if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+                    
+                    /*
                     if let currentLocation = currentLocation {
                         reverseGeocodingRequestForSpecifiedLocation(location: currentLocation)
                     }
+                    */
+                    if let address = address {
+                        contentTextView.insertText(address)
+                    }
+                    
+                    
                 } else if CLLocationManager.authorizationStatus() == .denied {
                     showNotice(alertCase: .location)
                 }
                 
                 
             case ContentType.time.rawValue :
-                print("게시 시간")
+                
+                if let nowDate = nowDate {
+                    contentTextView.insertText(nowDate.getDateString())
+                }
+                
             
             case ContentType.favorite.rawValue :
                 print("위시리스트 설정 여부")
@@ -236,9 +265,10 @@ class AddContentViewController: UIViewController {
 }
 
 
-// MARK:- UITextFieldDelegate & keyboard show/hide
+// UITextViewDelegate & keyboard show/hide
 
-extension AddContentViewController: UITextFieldDelegate {
+extension AddContentViewController: UITextViewDelegate {
+    
     
     enum ContentType: Int {
         case location = 0
@@ -247,43 +277,40 @@ extension AddContentViewController: UITextFieldDelegate {
     }
     
     
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        print("textFieldShouldBeginEditing")
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        print("textViewShouldBeginEditing")
+        addContentTypeButtonOnKeyboard()
+
+        return true
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        print("textViewDidBeginEditing")
+        
+//        if contentTextView.inputAccessoryView == nil {
+//            print("textViewDidBeginEditing addContentTypeButtonOnKeyboard")
+//            addContentTypeButtonOnKeyboard()
+//        }
+    }
+    
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        print("textViewShouldEndEditing")
         
         return true
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("textFieldDidBeginEditing")
-        if contentTextField.inputAccessoryView == nil {
-            addContentTypeButtonOnKeyboard()
-        }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        print("textViewDidEndEditing")
+    
     }
     
-    func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        print("textFieldShouldClear")
-        
-        return true
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        print("textViewDidChangeSelection")
+
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("textFieldShouldReturn")
-        
-        // Enter was pressed
-        dismissKeyboard()
-        
-        
-        return true
-    }
-    
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        print("textFieldShouldEndEditing")
-        
-        return true
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print("textFieldDidEndEditing")
+    func textViewDidChange(_ textView: UITextView) {
+        print("textViewDidChange")
     }
     
     
@@ -291,17 +318,20 @@ extension AddContentViewController: UITextFieldDelegate {
     
     
     func keyboardWillShow(_ notification:Notification){
-        // 아래 TextField에서 입력 시에, 키보드 높이만큼 view 의 offset을 move
-        if contentTextField.isFirstResponder {
+
+        // keyboard가 show될 때
+        
+        if contentTextView.isFirstResponder {
             
         }
     }
     
     func keyboardWillHide(_ notification:Notification){
-        // keyboard가 hide될 때, view 의 offset을 복귀
-        // 0으로 해도 결과는 같으나, 아래 TextField 입력 할때 오프셋을 변경했으니 조건 추가.
-        if contentTextField.isFirstResponder{
-            view.frame.origin.y = 0
+        
+        // keyboard가 hide될 때
+        
+        if contentTextView.isFirstResponder{
+
         }
     }
     
@@ -336,6 +366,7 @@ extension AddContentViewController: UITextFieldDelegate {
         let locationImage: UIImage? = UIImage(named: "location")
         let timeImage: UIImage? = UIImage(named: "time")
         let favoriteImage: UIImage? = UIImage(named: "favorite")
+        let keyboardHideImage: UIImage? = UIImage(named: "keyboard_hide")
         
         let contentTypeToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: screenWidthSize, height: 44))
         contentTypeToolbar.barStyle = UIBarStyle.default
@@ -351,21 +382,26 @@ extension AddContentViewController: UITextFieldDelegate {
         let favoriteBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: favoriteImage, style: .plain, target: self, action: #selector(addContent(_:)))
         favoriteBarButtonAtAccesoryView.tag = ContentType.favorite.rawValue
         
+        let keyboardHideBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: keyboardHideImage, style: .plain, target: self, action: #selector(dismissKeyboard))
+        
+        
         var items = [UIBarButtonItem]()
-        items.append(flexSpace)
         items.append(locationBarButtonAtAccesoryView)
         items.append(flexSpace)
         items.append(timeBarButtonAtAccesoryView)
         items.append(flexSpace)
         items.append(favoriteBarButtonAtAccesoryView)
         items.append(flexSpace)
+        items.append(keyboardHideBarButtonAtAccesoryView)
         
         contentTypeToolbar.items = items
         contentTypeToolbar.sizeToFit()
         
-        contentTextField.inputAccessoryView = contentTypeToolbar
+        contentTextView.inputAccessoryView = contentTypeToolbar
     }
+  
 }
+
 
 //, AVCaptureMetadataOutputObjectsDelegate, DTDeviceDelegate
 extension AddContentViewController: CLLocationManagerDelegate {
@@ -419,7 +455,7 @@ extension AddContentViewController: CLLocationManagerDelegate {
         if let country = placemark.country, let administrativeArea = placemark.administrativeArea, let locality = placemark.locality, let subLocality = placemark.subLocality {
             
             address = "\(country) \(administrativeArea) \(locality) \(subLocality)"
-            
+            addressLabel.text = "\(country) \(administrativeArea) \(locality) \(subLocality)"
         }
         
     }
