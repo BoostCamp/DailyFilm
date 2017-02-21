@@ -175,7 +175,7 @@ class AddContentViewController: UIViewController {
         if let imageFileName = imageFileName, let content = content, let isFavorite = isFavorite, let createdDate = intValueOfCreatedDate, let address = address, let latitude = latitude, let longitude = longitude {
             let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, address: address, latitude: latitude, longitude: longitude)
             
-            let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.address as Any, post.createdDate as Any, post.latitude as Any, post.longitude as Any])
+            let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.address as Any, post.latitude as Any, post.longitude as Any])
             
             completion?(successFlag)
             

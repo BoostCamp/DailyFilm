@@ -431,7 +431,7 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="EzJ-dZ-gSb">
                                             <rect key="frame" x="8" y="8" width="171" height="50"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WUJ-Qw-fMj">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WUJ-Qw-fMj">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="Esc-qv-DHl"/>
@@ -561,21 +561,28 @@
                                 </constraints>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="zKO-BM-YIB">
-                                <rect key="frame" x="8" y="118" width="359" height="497"/>
+                                <rect key="frame" x="8" y="118" width="359" height="322.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="l5v-zU-TgG">
+                                <rect key="frame" x="8" y="448.5" width="359" height="166.5"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wl9-T1-VZw" firstAttribute="top" secondItem="zKO-BM-YIB" secondAttribute="bottom" constant="8" id="0uO-LY-xb3"/>
                             <constraint firstAttribute="trailing" secondItem="L5y-9e-QsA" secondAttribute="trailing" constant="8" id="4Mi-ea-Tzt"/>
                             <constraint firstItem="SUe-Sf-CIn" firstAttribute="leading" secondItem="PY9-KF-SGd" secondAttribute="leading" constant="8" id="7Pg-2d-2uj"/>
                             <constraint firstItem="L5y-9e-QsA" firstAttribute="leading" secondItem="PY9-KF-SGd" secondAttribute="leading" constant="8" id="7XP-pf-FzY"/>
                             <constraint firstItem="zKO-BM-YIB" firstAttribute="top" secondItem="L5y-9e-QsA" secondAttribute="bottom" constant="8" id="CxW-wl-60U"/>
+                            <constraint firstAttribute="trailing" secondItem="l5v-zU-TgG" secondAttribute="trailing" constant="8" id="Dcu-Kp-nVs"/>
+                            <constraint firstItem="wl9-T1-VZw" firstAttribute="top" secondItem="l5v-zU-TgG" secondAttribute="bottom" constant="8" id="KQP-NR-XHB"/>
+                            <constraint firstItem="l5v-zU-TgG" firstAttribute="height" secondItem="PY9-KF-SGd" secondAttribute="height" multiplier="0.25" id="S9V-YA-0R0"/>
+                            <constraint firstItem="l5v-zU-TgG" firstAttribute="top" secondItem="zKO-BM-YIB" secondAttribute="bottom" constant="8" id="Syz-WW-xB3"/>
+                            <constraint firstItem="l5v-zU-TgG" firstAttribute="leading" secondItem="PY9-KF-SGd" secondAttribute="leading" constant="8" id="W7d-PX-xTD"/>
                             <constraint firstItem="SUe-Sf-CIn" firstAttribute="top" secondItem="LcI-7h-3l1" secondAttribute="bottom" constant="20" id="c8n-e5-btc"/>
                             <constraint firstAttribute="trailing" secondItem="zKO-BM-YIB" secondAttribute="trailing" constant="8" id="ciB-8K-GOH"/>
                             <constraint firstItem="zKO-BM-YIB" firstAttribute="leading" secondItem="PY9-KF-SGd" secondAttribute="leading" constant="8" id="gp2-5Z-G8W"/>
@@ -596,6 +603,7 @@
                         <outlet property="contentTextView" destination="zKO-BM-YIB" id="N2T-FF-YSe"/>
                         <outlet property="createdDateLabel" destination="7qa-69-7UC" id="LeF-Rk-MZb"/>
                         <outlet property="nicknameLabel" destination="jf9-gZ-izO" id="ATC-qh-PQj"/>
+                        <outlet property="photoLocationMapView" destination="l5v-zU-TgG" id="6CA-6i-bKy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ISW-OV-773" userLabel="First Responder" sceneMemberID="firstResponder"/>
