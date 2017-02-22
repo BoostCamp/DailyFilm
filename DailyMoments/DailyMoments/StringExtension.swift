@@ -28,7 +28,7 @@ extension String {
     func convertStringToDate() -> Date? {
         print(self)
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy. MM. dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy년 M월 d일 H:mm:ss"
         return dateFormatter.date(from: self)
     }
     

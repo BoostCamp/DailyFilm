@@ -330,6 +330,50 @@ class FMDatabaseManager: NSObject {
         return count
     }
     
+    
+    func duplicatedCheckOfUserProfile(query statement: String, value userId: String...) -> Bool {
+        
+        var duplicated: Bool = false
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String) {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+            
+            if((fmdb?.open()) != nil) {
+                
+                let results:FMResultSet? =  fmdb?.executeQuery(statement, withArgumentsIn: userId)
+                
+                if results != nil {
+                    if (results?.next())! {
+                        let count = Int((results?.int(forColumn: "Count"))!)
+                        if count == 1 {
+                            duplicated = true
+                        }
+                    }
+                    fmdb?.close()
+                }
+                
+            } else {
+                print("DATABASE OPEN ERROR")
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+        }
+        
+        return duplicated
+    }
+    
+    
     func selectUserNickname(query statement: String, value userIndex: Int32...) -> String? {
         
         var userNickname: String?
@@ -369,6 +413,88 @@ class FMDatabaseManager: NSObject {
         
         return userNickname
     }
+    
+    func selectImageFilePath(query statement: String, value valuesOfColumns: [Int32]) -> String{
+        
+        dump(valuesOfColumns)
+        var imageFilePath: String = ""
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String) {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+            
+            if((fmdb?.open()) != nil) {
+                
+                let results:FMResultSet? =  fmdb?.executeQuery(statement, withArgumentsIn: valuesOfColumns)
+                
+                if results != nil {
+                    
+                    if (results?.next())! {
+                        let getImageFilePath: String = (results?.string(forColumn: "image_file_path"))!
+                        
+                        imageFilePath = getImageFilePath
+                        
+                    }
+                    fmdb?.close()
+                } else {
+                    print("results nil")
+
+                }
+                
+            } else {
+                print("DATABASE OPEN ERROR")
+                dump(fmdb?.lastErrorMessage())
+                
+            }
+        }
+        return imageFilePath
+    }
+    
+    
+    
+    func deletePost(query statement: String, valuesOfColumns: [Any] ) -> Bool {
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String)  {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                return false
+            }
+            
+            if((fmdb?.open()) != nil) {
+                
+                if let result = fmdb?.executeUpdate(statement, withArgumentsIn: valuesOfColumns) {
+                    fmdb?.close()
+                    return result
+                }
+                
+            } else {
+                print("DATABASE OPEN ERROR")
+                dump(fmdb?.lastErrorMessage())
+                
+                return false
+            }
+        }
+        return false
+    }
+    
 
     
 }

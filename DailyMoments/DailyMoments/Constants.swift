@@ -176,6 +176,10 @@ struct Statement {
         
     }
     
+    struct Delete {
+        static let post = "DELETE FROM POST WHERE post_index = ? and user_index = ?;"
+    }
+    
     struct Select {
         
         static let userProfile = "SELECT user_index, user_id, user_password, user_nickname, created_date FROM USER_PROFILE;"
@@ -188,7 +192,11 @@ struct Statement {
         
         static let postCountOfUser = "SELECT COUNT(*) as Count FROM POST WHERE user_index = ?;"
         
+        static let duplicatedCheckOfUserProfile = "SELECT COUNT(*) as Count FROM USER_PROFILE WHERE user_id = ?;"
+        
         static let nicknameOfUser = "SELECT user_nickname FROM USER_PROFILE WHERE user_index = ?;"
+        
+        static let imageFilePath = "SELECT image_file_path FROM POST WHERE post_index = ? and user_index = ?;"
     }
 }
 

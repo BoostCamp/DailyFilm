@@ -13,7 +13,7 @@ extension Date {
     //dateFormatter에 맞게 String 타입으로 반환
     func toString() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy년 M월 d일 H시 m분"
+        dateFormatter.dateFormat = "yyyy년 M월 d일 H:mm:ss"
         return dateFormatter.string(from: self)
     }
     

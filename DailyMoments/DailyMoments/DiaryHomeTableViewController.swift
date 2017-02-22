@@ -16,19 +16,24 @@ class DiaryHomeTableViewController: UITableViewController {
     var userIndex: Int32? // userIndex
     var createdDate: TimeInterval? // 생성 시간
     var postCount: Int? //post 개수
+    var selectedIndex: IndexPath? // 선택한 셀 인덱스를 저장할 변수
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         print("viewDidLoad")
-
+        
         FMDatabaseManager.shareManager().openDatabase(databaseName: DatabaseConstant.databaseName)
         
+        // userIndex를 return
         userIndex = FMDatabaseManager.shareManager().selectUserIndexFromUserId(query: Statement.Select.userIndexOfUser, value: UserProfileConstants.id)
         
         guard let userIndex = userIndex else {
             fatalError()
         }
+        
+        // user가 올린 포스트의 개수만 return
         postCount = FMDatabaseManager.shareManager().selectSpecificUserPost(query: Statement.Select.postCountOfUser, value: userIndex)
     }
     
@@ -38,7 +43,6 @@ class DiaryHomeTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("viewWillAppear in DiaryHomeViewController")
-        
         // status bar show
         UIApplication.shared.isStatusBarHidden = false
         
@@ -76,18 +80,54 @@ class DiaryHomeTableViewController: UITableViewController {
         
         let userProfile: UserProfile = UserProfile(userIndex: 0, userId: UserProfileConstants.id, userPassword: UserProfileConstants.password, userNickname: UserProfileConstants.nickname, createdDate: timeIntervalOfNow )
         
-        let successFlag = FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
-        
+        let isUserIdDuplicated = FMDatabaseManager.shareManager().duplicatedCheckOfUserProfile(query: Statement.Select.duplicatedCheckOfUserProfile, value: userProfile.userId!)
+
+        // 중복되지 않았으면(false) USER_PROFILE 테이블에 추가
+        if isUserIdDuplicated == false {
+            
+            let successFlag = FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
+            
+            
+        }
         let userProfiles: [UserProfile] = FMDatabaseManager.shareManager().selectUserProfile(query: Statement.Select.userProfile, value: "nso502354@gamil.com")
         
         userIndex = userProfiles[0].userIndex
         if let userIndex = userIndex {
+            
             posts = FMDatabaseManager.shareManager().selectPosts(query: Statement.Select.post, value : userIndex)
-            postCount = posts?.count
+            
+            if postCount == posts?.count {
+                // insert, delete가 아닌 경우
+                print("// insert, delete가 아닌 경우")
+                selectedIndex = nil
+                tableView.reloadData()
+                
+            } else if postCount != posts?.count {
+                
+                if let selectedIndex = selectedIndex {
+                    print("// delete post - POST Table에 delete 되었고, 선택한 셀 index가 있을 때")
+                    // delete post - POST Table에 delete 되었고, 선택한 셀 index가 있을 때
+                    postCount = posts?.count
+                    tableView.beginUpdates()
+                    tableView.deleteRows(at: [selectedIndex], with: .none)
+                    tableView.endUpdates()
+                    
+                    
+                } else {
+                    print("// insert post - POST Table에 insert 되었고, 선택한 셀 index가 nil일때")
+                    // insert post - POST Table에 insert 되었고, 선택한 셀 index가 nil일때
+                    postCount = posts?.count
+                    tableView.reloadData()
+                    /*
+                    tableView.beginUpdates()
+                    tableView.insertRows(at: [IndexPath.init(row: 0, section: 0)], with: .automatic)
+                    tableView.endUpdates()
+                    */
+                }
+            } else {
+                print("nothing...")
+            }
         }
-        
-        tableView.reloadData()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -104,7 +144,6 @@ class DiaryHomeTableViewController: UITableViewController {
         super.viewDidDisappear(animated)
         print("viewDidDisappear in DiaryHomeViewController")
     }
-    
     
     
     // MARK: - Navigation
@@ -124,6 +163,8 @@ class DiaryHomeTableViewController: UITableViewController {
                 self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
                 
                 diaryContentDetailViewController.post = posts?[index.row]
+                self.selectedIndex = index
+                diaryContentDetailViewController.selectedIndexPath = index
                 
             }
         }
@@ -131,6 +172,7 @@ class DiaryHomeTableViewController: UITableViewController {
 }
 
 
+// MARK: - TableView delegate extension
 extension DiaryHomeTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -141,7 +183,7 @@ extension DiaryHomeTableViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 1
     }
@@ -153,8 +195,6 @@ extension DiaryHomeTableViewController {
         if let post = posts?[indexPath.row]  {
             
             cell.profileImageView.image = UIImage(named: "person")
-
-            
             
             let userNickname:String? = FMDatabaseManager.shareManager().selectUserNickname(query: Statement.Select.nicknameOfUser, value: post.userIndex)
             if let userNickname = userNickname {
@@ -180,8 +220,10 @@ extension DiaryHomeTableViewController {
                     
                     cell.photoImageView?.image = image.cropToSquareImage()
                 }
-             
-                //                    cell.delegate = self
+                
+                // set DiaryHomeTableViewControllerDelegate protocol
+                
+                
                 cell.contentLabel.text = content
                 cell.createdDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
                 
@@ -191,97 +233,16 @@ extension DiaryHomeTableViewController {
         return cell
     }
     
-    //    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    //
-    //        var cellHeight: CGFloat = 0
-    //        let screenBounds = UIScreen.main.bounds
-    //
-    //        if indexPath.row == 0 {
-    //            cellHeight = screenBounds.width
-    //        } else if indexPath.row == 1 {
-    //            cellHeight = screenBounds.width / 4
-    //        }
-    //
-    //        return cellHeight
-    //    }
-    
-    
-    //    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    //
-    //        let screenHeight = UIScreen.main.bounds.height
-    //        let screenWidth = UIScreen.main.bounds.width
-    //        let headerHieght =  screenHeight / 10
-    //        let profileImageSize = screenWidth / 12
-    //        let intervalSize = (headerHieght - profileImageSize) / 2
-    //        guard let post = posts?[section] else {
-    //            return UIView()
-    //
-    //        }
-    //
-    //        let view = UIView()
-    //
-    //
-    //        let profileImageView: UIImageView = UIImageView(image: UIImage(named: "person"))
-    //        profileImageView.frame = CGRect(x: intervalSize, y: intervalSize, width: profileImageSize, height: profileImageSize)
-    //        profileImageView.contentMode = .scaleAspectFill
-    //        view.addSubview(profileImageView)
-    //
-    //
-    //
-    //        let stackView: UIStackView = UIStackView()
-    //        stackView.axis = .vertical
-    //        stackView.distribution = .fillProportionally
-    //        stackView.frame = CGRect(x: profileImageSize + (intervalSize * 2), y: (intervalSize / 2) , width: screenWidth - profileImageSize, height: headerHieght - intervalSize)
-    //
-    //        let userIdLabel: UILabel = UILabel()
-    //
-    //        userIdLabel.sizeToFit()
-    //        userIdLabel.text = String(describing: post.userIndex)
-    //        userIdLabel.font = UIFont(name: userIdLabel.font.fontName, size: 14)
-    //
-    //        let addressLabel: UILabel = UILabel()
-    //        addressLabel.sizeToFit()
-    //
-    //        if let address = post.address {
-    //            addressLabel.text = address
-    //            addressLabel.textColor = UIColor.darkGray
-    //            addressLabel.font = UIFont(name: addressLabel.font.fontName, size: 12)
-    //        }
-    //
-    //
-    //        stackView.addArrangedSubview(userIdLabel)
-    //        stackView.addArrangedSubview(addressLabel)
-    //
-    //        view.addSubview(stackView)
-    //
-    //        return view
-    //    }
-    
-    //    override func  tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    //        let screenHeightSize = UIScreen.main.bounds.height
-    //
-    //        return screenHeightSize / 10
-    //    }
-    
-    //    func showDetailContent(sender: DiaryContentTableViewCell){
-    //        let cell:DiaryContentTableViewCell = sender as DiaryContentTableViewCell
-    //        let date = cell.createdDate.text?.convertStringToDate()
-    //        createdDate = date?.timeIntervalSince1970
-    //
-    //        performSegue(withIdentifier: DiaryPhotoTableViewConstants.showDiaryContentDetailViewControllerSegueIdentifier, sender: self)
-    //    }
-    
-    
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-
+        
         return UITableViewAutomaticDimension
         
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-
+        
         return UITableViewAutomaticDimension
-
+        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
