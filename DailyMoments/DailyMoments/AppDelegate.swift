@@ -20,15 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set Default UINavigationBar appearance
         
         let navigationBarAppearance = UINavigationBar.appearance()
-        navigationBarAppearance.barTintColor = UIColor.white
-        navigationBarAppearance.tintColor = UIColor.black
-        
+        navigationBarAppearance.barTintColor = UIColor.easyColor(red: 245, green: 245, blue: 245, alpha: 0.5)
+        navigationBarAppearance.tintColor = UIColor.darkGray
+        navigationBarAppearance.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.darkGray]
         
         // Set Default UITabBar appearance
         
         let tabBar = UITabBar.appearance()
-        tabBar.barTintColor = UIColor.white
-        tabBar.tintColor = UIColor.black
+        tabBar.barTintColor = UIColor.easyColor(red: 245, green: 245, blue: 245, alpha: 0.5)
+        tabBar.tintColor = UIColor.darkGray
         tabBar.shadowImage = UIImage()
     
         

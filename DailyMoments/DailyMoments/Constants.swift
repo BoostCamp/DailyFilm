@@ -83,7 +83,7 @@ struct ScreenType {
         case Ratio.square.rawValue:
             return CGRect(x: 0, y: (yMargin * 2), width: rect.width, height: rect.width)
         case Ratio.retangle.rawValue:
-            return CGRect(x: 0, y: yMargin, width: rect.width, height: (rect.width * 4) / 3)
+            return CGRect(x: 0, y: 0, width: rect.width, height: (rect.width * 4) / 3)
         case Ratio.full.rawValue:
             return CGRect(x: 0, y: 0, width: rect.width, height: (rect.width * 16) / 9)
         default:

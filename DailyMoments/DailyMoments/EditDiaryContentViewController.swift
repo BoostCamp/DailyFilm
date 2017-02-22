@@ -31,6 +31,8 @@ class EditDiaryContentViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        navigationController?.isNavigationBarHidden = false
+        
         if let post = post {
             if let content = post.content {
                 contentTextView.text = content
