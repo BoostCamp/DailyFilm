@@ -11,11 +11,15 @@ import MapKit
 
 
 
-class DiaryContentDetailViewController: UIViewController {
+class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, DataSentDelegate {
     
     
     var post: Post?
     var selectedIndexPath: IndexPath? // 홈화면에서 선택된 인덱스패스
+    let showEditDiaryContentViewControllerSegueIdentifier = "showEditDiaryContentViewControllerSegue"
+    
+
+    
     
     @IBOutlet weak var createdDateLabel: UILabel! // 촬영 일시
     @IBOutlet weak var nicknameLabel: UILabel! // 유저 닉네임
@@ -29,11 +33,10 @@ class DiaryContentDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        contentTextView.delegate = self
     }
     
     // MARK: - ViewController Lifecycle override method
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -41,9 +44,6 @@ class DiaryContentDetailViewController: UIViewController {
         
         // TabBar hidden
         tabBarController?.tabBar.isHidden = true
-//        
-//        // toolbar show
-//        navigationController?.isToolbarHidden = false
         
         if let post:Post = self.post {
             
@@ -67,7 +67,6 @@ class DiaryContentDetailViewController: UIViewController {
         }
     }
     
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         print("viewDidAppear in DiaryContentDetailViewController")
@@ -87,21 +86,44 @@ class DiaryContentDetailViewController: UIViewController {
     }
  
     
+    // MARK: - Navigate
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == showEditDiaryContentViewControllerSegueIdentifier {
+            if let editDiaryContentViewController:EditDiaryContentViewController = segue.destination as? EditDiaryContentViewController, let post = post {
+
+                editDiaryContentViewController.post = post
+                editDiaryContentViewController.delegate = self
+
+            }
+        }
+        
+    }
+    
+    
+    
+    // MARK: - UITextView delegate method
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        return false
+    }
     
     // MARK: - general Method
     
     // MARK: delete post
+
+    func setUpdateContentOfPost(data: String){
+        self.contentTextView.text = data
+
+    }
     
     @IBAction func deletePost(_ sender: Any) {
      
-        dump(selectedIndexPath)
-        dump(post)
         guard let post = post else {
             print("delete post guard error")
             return
         }
-        
-        
         
         //ActionSheet형식으로 보여줄 UIAlertController 생성
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)

@@ -496,6 +496,40 @@ class FMDatabaseManager: NSObject {
     }
     
 
+    func updatePostContent(query statement: String, valuesOfColumns: [Any] ) -> Bool {
+        
+        let fileManager = FileManager.default
+        
+        // document directory 에 database filepath 생성
+        let databasePath = DatabaseConstant.databaseName.makeDocumentsDirectoryPath()
+        
+        if fileManager.fileExists(atPath: databasePath as String)  {
+            
+            fmdb = FMDatabase(path: databasePath as String)
+            
+            if fmdb == nil {
+                dump(fmdb?.lastErrorMessage())
+                return false
+            }
+            
+            if((fmdb?.open()) != nil) {
+                
+                if let result = fmdb?.executeUpdate(statement, withArgumentsIn: valuesOfColumns) {
+                    fmdb?.close()
+                    print("result: ", result)
+                    return result
+                }
+                
+            } else {
+                print("DATABASE OPEN ERROR")
+                dump(fmdb?.lastErrorMessage())
+                
+                return false
+            }
+        }
+        return false
+    }
+
     
 }
 

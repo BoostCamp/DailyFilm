@@ -198,5 +198,9 @@ struct Statement {
         
         static let imageFilePath = "SELECT image_file_path FROM POST WHERE post_index = ? and user_index = ?;"
     }
+    
+    struct Update {
+        static let contentOfPost = "UPDATE POST SET content = ? WHERE post_index = ? and user_index = ?;"
+    }
 }
 

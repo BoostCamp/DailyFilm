@@ -20,6 +20,7 @@
 		3D7448BD1E4B896B0003F6AB /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */; };
 		3D80A7871E53EDF400B9720E /* DiaryPhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D80A7861E53EDF400B9720E /* DiaryPhotoTableViewCell.swift */; };
 		3D9A5CBB1E55CE7B00805298 /* DiaryContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9A5CBA1E55CE7B00805298 /* DiaryContentTableViewCell.swift */; };
+		3DA70F571E5DBB6700127ACB /* EditDiaryContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA70F561E5DBB6700127ACB /* EditDiaryContentViewController.swift */; };
 		3DA82C141E51952500061CE2 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA82C0A1E51952500061CE2 /* FMDatabase.m */; };
 		3DA82C151E51952500061CE2 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA82C0C1E51952500061CE2 /* FMDatabaseAdditions.m */; };
 		3DA82C161E51952500061CE2 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA82C0E1E51952500061CE2 /* FMDatabasePool.m */; };
@@ -67,6 +68,7 @@
 		3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		3D80A7861E53EDF400B9720E /* DiaryPhotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiaryPhotoTableViewCell.swift; sourceTree = "<group>"; };
 		3D9A5CBA1E55CE7B00805298 /* DiaryContentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiaryContentTableViewCell.swift; sourceTree = "<group>"; };
+		3DA70F561E5DBB6700127ACB /* EditDiaryContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditDiaryContentViewController.swift; sourceTree = "<group>"; };
 		3DA82C081E51952500061CE2 /* DailyMoments-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DailyMoments-Bridging-Header.h"; sourceTree = "<group>"; };
 		3DA82C091E51952500061CE2 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		3DA82C0A1E51952500061CE2 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */,
 				3DB460A01E54814A00646710 /* CameraViewControllerExtension.swift */,
 				3D49B4F21E55657C000A6A7E /* DiaryContentDetailViewController.swift */,
+				3DA70F561E5DBB6700127ACB /* EditDiaryContentViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -357,6 +360,7 @@
 				3DB460A11E54814A00646710 /* CameraViewControllerExtension.swift in Sources */,
 				3DBEBBBD1E530A7E004A06E1 /* Post.swift in Sources */,
 				3D1952DC1E487467006A05BC /* CameraViewController.swift in Sources */,
+				3DA70F571E5DBB6700127ACB /* EditDiaryContentViewController.swift in Sources */,
 				3DA82C141E51952500061CE2 /* FMDatabase.m in Sources */,
 				3DD1E54C1E4C644A008FB12F /* DiaryHomeTableViewController.swift in Sources */,
 				3D7448BD1E4B896B0003F6AB /* ImageExtension.swift in Sources */,

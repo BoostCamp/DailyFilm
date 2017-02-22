@@ -394,7 +394,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -422,10 +422,10 @@
                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="DiaryPhotoCell" rowHeight="505" id="Cdq-Eu-VdH" userLabel="DiaryPhotoCell" customClass="DiaryPhotoTableViewCell" customModule="DailyMoments" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="55.5" width="375" height="505"/>
+                                <rect key="frame" x="0.0" y="56" width="375" height="505"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="Cdq-Eu-VdH" id="RjS-q2-jOt">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="504.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="504"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="EzJ-dZ-gSb">
@@ -466,13 +466,13 @@
                                                 <constraint firstAttribute="width" secondItem="c8B-7o-ccj" secondAttribute="height" multiplier="1:1" id="cgH-zN-Djg"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Content" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UsF-4a-CaT" userLabel="Content">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Content" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UsF-4a-CaT" userLabel="Content">
                                             <rect key="frame" x="8" y="449" width="359" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Created Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Njk-ul-l8T" userLabel="Created Date">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Created Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Njk-ul-l8T" userLabel="Created Date">
                                             <rect key="frame" x="8" y="475.5" width="359" height="13.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -609,7 +609,11 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="8Cx-3h-dfQ">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="h3G-4P-MgA"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="h3G-4P-MgA">
+                            <connections>
+                                <segue destination="fXL-6s-fRW" kind="presentation" identifier="showEditDiaryContentViewControllerSegue" id="n5Q-pD-HDy"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -623,6 +627,63 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ISW-OV-773" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="781.60000000000002" y="-527.58620689655174"/>
+        </scene>
+        <!--Edit Diary Content View Controller-->
+        <scene sceneID="S8m-31-QLz">
+            <objects>
+                <viewController id="fXL-6s-fRW" customClass="EditDiaryContentViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wt6-5S-989"/>
+                        <viewControllerLayoutGuide type="bottom" id="shJ-PU-UkY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ob2-zS-OM9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ajq-H4-E7e">
+                                <rect key="frame" x="16" y="36" width="343" height="571"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="arG-7P-mHw">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <barButtonItem systemItem="cancel" id="drR-YU-SsM">
+                                        <connections>
+                                            <action selector="tappedEditContentCancel:" destination="fXL-6s-fRW" id="3cd-XK-Svi"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="6pT-pY-nNw"/>
+                                    <barButtonItem systemItem="save" id="5BT-vU-4Mh">
+                                        <connections>
+                                            <action selector="tappedEditedContentSave:" destination="fXL-6s-fRW" id="vQu-9C-qQM"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ajq-H4-E7e" firstAttribute="top" secondItem="wt6-5S-989" secondAttribute="bottom" constant="16" id="7Lc-Tc-daK"/>
+                            <constraint firstItem="arG-7P-mHw" firstAttribute="leading" secondItem="ob2-zS-OM9" secondAttribute="leading" id="9hT-kR-Xe3"/>
+                            <constraint firstItem="arG-7P-mHw" firstAttribute="top" secondItem="Ajq-H4-E7e" secondAttribute="bottom" constant="16" id="BHD-mc-jxX"/>
+                            <constraint firstItem="shJ-PU-UkY" firstAttribute="top" secondItem="arG-7P-mHw" secondAttribute="bottom" id="KbN-Gq-qtX"/>
+                            <constraint firstAttribute="trailing" secondItem="Ajq-H4-E7e" secondAttribute="trailing" constant="16" id="OBL-3E-Gex"/>
+                            <constraint firstAttribute="trailing" secondItem="arG-7P-mHw" secondAttribute="trailing" id="qiL-IH-uzj"/>
+                            <constraint firstItem="Ajq-H4-E7e" firstAttribute="leading" secondItem="ob2-zS-OM9" secondAttribute="leading" constant="16" id="wz1-sc-u6G"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="contentTextView" destination="Ajq-H4-E7e" id="OIY-WJ-hO3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xFZ-QG-eTx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1677.5999999999999" y="-528.48575712143929"/>
         </scene>
         <!--Add-->
         <scene sceneID="oFW-SY-v67">
