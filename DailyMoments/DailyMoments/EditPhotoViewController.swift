@@ -223,12 +223,12 @@ extension EditPhotoViewController {
             navigationController?.isNavigationBarHidden = true
             navigationController?.isToolbarHidden = true
             imagefilterCollectionView.isHidden = true
-            photographedImage.backgroundColor = .black
+            self.view.backgroundColor = .black
         } else {
             navigationController?.isNavigationBarHidden = false
             navigationController?.isToolbarHidden = false
             imagefilterCollectionView.isHidden = false
-            photographedImage.backgroundColor = .clear
+            self.view.backgroundColor = .white
         }
     }
 }
