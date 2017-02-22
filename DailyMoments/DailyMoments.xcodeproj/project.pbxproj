@@ -38,6 +38,8 @@
 		3DD55EC31E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */; };
 		3DD7E2411E4B305100AD288F /* CameraFillterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */; };
 		3DEAAE281E51691B000D593D /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAAE271E51691B000D593D /* DateExtension.swift */; };
+		3DF3028B1E5D8B6100A2478E /* NaverSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF3028A1E5D8B6100A2478E /* NaverSpeech.framework */; };
+		3DF3028C1E5D8B6100A2478E /* NaverSpeech.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DF3028A1E5D8B6100A2478E /* NaverSpeech.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,20 @@
 			remoteInfo = DailyMoments;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3DF3028D1E5D8B6100A2478E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3DF3028C1E5D8B6100A2478E /* NaverSpeech.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3D0AD2CC1E50B4E6006D1C2E /* AddContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddContentViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +109,7 @@
 		3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITapGestureRecognizerExtension.swift; sourceTree = "<group>"; };
 		3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFillterCollectionViewCell.swift; sourceTree = "<group>"; };
 		3DEAAE271E51691B000D593D /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		3DF3028A1E5D8B6100A2478E /* NaverSpeech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NaverSpeech.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DA82C1B1E51962D00061CE2 /* libsqlite3.tbd in Frameworks */,
+				3DF3028B1E5D8B6100A2478E /* NaverSpeech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +135,7 @@
 		3D1952CD1E487467006A05BC = {
 			isa = PBXGroup;
 			children = (
+				3DF3028A1E5D8B6100A2478E /* NaverSpeech.framework */,
 				3D1952D81E487467006A05BC /* DailyMoments */,
 				3D1952ED1E487467006A05BC /* DailyMomentsTests */,
 				3D1952D71E487467006A05BC /* Products */,
@@ -260,6 +279,7 @@
 				3D1952D21E487467006A05BC /* Sources */,
 				3D1952D31E487467006A05BC /* Frameworks */,
 				3D1952D41E487467006A05BC /* Resources */,
+				3DF3028D1E5D8B6100A2478E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -522,9 +542,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 887CC3EW57;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = DailyMoments/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.nam.DailyMoments;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nam.DailyFilm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DailyMoments/DailyMoments-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -539,9 +563,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 887CC3EW57;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = DailyMoments/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.nam.DailyMoments;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nam.DailyFilm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DailyMoments/DailyMoments-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

@@ -8,8 +8,20 @@
 
 import UIKit
 import CoreLocation
+import NaverSpeech
+import AVFoundation
 
 class AddContentViewController: UIViewController {
+    
+    let ClientID = "72dvBR8KvWJNWmHKGpNe"
+
+    // MARK: - property
+    @IBOutlet weak var languagePickerButton: UIButton!
+    @IBOutlet weak var recognitionButton: UIButton!
+    
+    fileprivate let speechRecognizer: NSKRecognizer
+    
+
     
     
     @IBOutlet weak var createdDate: UILabel! // 촬영된 시간
@@ -30,6 +42,24 @@ class AddContentViewController: UIViewController {
     var currentLocation: CLLocation?
     var currentPlacemark: CLPlacemark?
     var address: String?
+    
+    
+    
+    // MARK: - init
+    required init?(coder aDecoder: NSCoder) {
+        /*
+         *  NSKRecognizer를 초기화 하는데 필요한 NSKRecognizerConfiguration을 생성합니다.
+         *  configuration의 EPD(End Point Detection)type의 default값은 auto 이므로 여기에서 따로 값을 setting하지 않아도 됩니다.
+         */
+        let configuration = NSKRecognizerConfiguration(clientID: ClientID)
+        configuration?.canQuestionDetected = false //의문문으로 물을지
+        configuration?.epdType = .manual // autoMode, manual, Hybrid 중에서 버튼을 누르고 있는 중에 인식되는 모드로 설정
+
+        self.speechRecognizer = NSKRecognizer(configuration: configuration)
+        super.init(coder: aDecoder)
+        
+        self.speechRecognizer.delegate = self
+    }
     
     
     override func viewDidLoad() {
@@ -56,11 +86,6 @@ class AddContentViewController: UIViewController {
             
         }
         
-        
-        
-        
-        
-        
         if (CLLocationManager.locationServicesEnabled()) {
             manager.delegate = self
             manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -84,6 +109,8 @@ class AddContentViewController: UIViewController {
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appleBlue()
         
         contentTextView.delegate = self
+        self.setupRecognitionButton()
+
     }
     
     // MARK:- View Controller Lifecycle
@@ -134,9 +161,6 @@ class AddContentViewController: UIViewController {
     
     
     func savePostInfo(_ userIndex: Int32, completion: ((_ success:Bool) -> Void)?){
-        
-      
-        
         
         let content: String? = self.contentTextView.text
         
@@ -262,7 +286,102 @@ class AddContentViewController: UIViewController {
         }
     }
     
+    
+    func recognitionButtonPressed(_ sender: UILongPressGestureRecognizer) {
+        
+        if sender.state == .began {
+            try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryRecord)
+            self.speechRecognizer.start(with: .korean)
+        } else if sender.state == .ended {
+            self.speechRecognizer.stop()
+        }
+    }
+    
+    
+    
+    
+    
 }
+
+
+extension AddContentViewController: NSKRecognizerDelegate {
+    
+    
+    // onReady (Inactive -> Ready)
+    public func recognizerDidEnterReady(_ aRecognizer: NSKRecognizer!) {
+        print("Event occurred: Ready")
+        
+        self.contentTextView.text = "Recognizing......"
+        self.setRecognitionButtonTitle(withText: "Stop", color: .red)
+        
+        print()
+        
+        self.recognitionButton.isEnabled = true
+    }
+    
+    // onEndPointDetected
+    public func recognizerDidDetectEndPoint(_ aRecognizer: NSKRecognizer!) {
+        print("Event occurred: End point detected")
+    }
+    
+    
+    // InActive / onError
+    public func recognizerDidEnterInactive(_ aRecognizer: NSKRecognizer!) {
+        print("Event occurred: Inactive")
+        
+        print("record")
+        self.recognitionButton.isEnabled = true
+        try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategorySoloAmbient)
+    }
+    
+    // onRecord
+    public func recognizer(_ aRecognizer: NSKRecognizer!, didRecordSpeechData aSpeechData: Data!) {
+        print("Record speech data, data size: \(aSpeechData.count)")
+        
+    }
+    
+    // onRecord / on Partial
+    public func recognizer(_ aRecognizer: NSKRecognizer!, didReceivePartialResult aResult: String!) {
+        print("Partial result: \(aResult)")
+        self.contentTextView.text = aResult
+        self.setRecognitionButtonTitle(withText: "Record", color: .blue)
+
+    }
+    
+    // onError
+    public func recognizer(_ aRecognizer: NSKRecognizer!, didReceiveError aError: Error!) {
+        print("Error: \(aError)")
+        
+        self.recognitionButton.isEnabled = true
+        self.contentTextView.text = "Error: " + aError.localizedDescription
+    }
+    
+    // onResult (EndPointDetected -> Result)
+    public func recognizer(_ aRecognizer: NSKRecognizer!, didReceive aResult: NSKRecognizedResult!) {
+        print("Final result: \(aResult)")
+        
+        if let result = aResult.results.first as? String {
+            self.contentTextView.text = "Result: " + result
+        }
+    }
+    
+    
+    func setRecognitionButtonTitle(withText text: String, color: UIColor) {
+        self.recognitionButton.setTitle(text, for: .normal)
+        self.recognitionButton.setTitleColor(color, for: .normal)
+    }
+    
+    
+    func setupRecognitionButton() {
+        let longpressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(recognitionButtonPressed(_:)))
+        longpressRecognizer.minimumPressDuration = 1
+        self.recognitionButton.addGestureRecognizer(longpressRecognizer)
+    }
+}
+
+
+
+
 
 
 // UITextViewDelegate & keyboard show/hide

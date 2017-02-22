@@ -152,7 +152,7 @@
                         <subviews>
                             <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YoP-j4-kri">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a2X-BT-T7U">
@@ -294,30 +294,39 @@
                                 </constraints>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="aDe-Cj-kM2">
-                                <rect key="frame" x="16" y="180" width="343" height="427"/>
+                                <rect key="frame" x="16" y="180" width="343" height="313"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VQp-dy-Ygz">
+                                <rect key="frame" x="116" y="543" width="143" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="pBA-ss-HCA"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="aDe-Cj-kM2" secondAttribute="trailing" constant="16" id="353-hm-JhZ"/>
-                            <constraint firstItem="laL-Up-S81" firstAttribute="top" secondItem="aDe-Cj-kM2" secondAttribute="bottom" constant="16" id="8PY-ig-ebX"/>
                             <constraint firstAttribute="trailing" secondItem="PIv-4Z-4Ti" secondAttribute="trailing" constant="16" id="Dma-gc-kJo"/>
+                            <constraint firstItem="VQp-dy-Ygz" firstAttribute="leading" secondItem="HgQ-8V-0uq" secondAttribute="leadingMargin" constant="100" id="F78-AY-HWn"/>
                             <constraint firstItem="5O1-Ha-5eS" firstAttribute="width" secondItem="HgQ-8V-0uq" secondAttribute="width" multiplier="0.2" id="Jcx-t4-REg"/>
                             <constraint firstItem="PIv-4Z-4Ti" firstAttribute="top" secondItem="6vH-7N-6G7" secondAttribute="bottom" constant="16" id="P7U-SJ-Z0g"/>
                             <constraint firstItem="5O1-Ha-5eS" firstAttribute="top" secondItem="6vH-7N-6G7" secondAttribute="bottom" constant="16" id="QUC-qP-iiF"/>
                             <constraint firstItem="PIv-4Z-4Ti" firstAttribute="width" secondItem="HgQ-8V-0uq" secondAttribute="width" multiplier="0.66" id="R5f-81-PGv"/>
                             <constraint firstItem="PIv-4Z-4Ti" firstAttribute="height" secondItem="5O1-Ha-5eS" secondAttribute="height" id="UdV-po-0kU"/>
                             <constraint firstItem="Y28-cs-TYn" firstAttribute="top" secondItem="5O1-Ha-5eS" secondAttribute="bottom" constant="16" id="YDl-4r-GDc"/>
+                            <constraint firstItem="laL-Up-S81" firstAttribute="top" secondItem="VQp-dy-Ygz" secondAttribute="bottom" constant="50" id="a7s-I3-wz2"/>
                             <constraint firstItem="5O1-Ha-5eS" firstAttribute="leading" secondItem="HgQ-8V-0uq" secondAttribute="leading" constant="16" id="f6j-O8-YEq"/>
                             <constraint firstItem="Y28-cs-TYn" firstAttribute="top" secondItem="PIv-4Z-4Ti" secondAttribute="bottom" constant="16" id="fZn-U9-Fc6"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="VQp-dy-Ygz" secondAttribute="trailing" constant="100" id="neZ-es-EOy"/>
                             <constraint firstItem="aDe-Cj-kM2" firstAttribute="leading" secondItem="HgQ-8V-0uq" secondAttribute="leading" constant="16" id="nsb-e3-Grj"/>
                             <constraint firstAttribute="trailing" secondItem="Y28-cs-TYn" secondAttribute="trailing" constant="16" id="pT2-Wt-R8C"/>
                             <constraint firstItem="aDe-Cj-kM2" firstAttribute="top" secondItem="Y28-cs-TYn" secondAttribute="bottom" constant="8" id="vTF-jE-3an"/>
                             <constraint firstItem="Y28-cs-TYn" firstAttribute="leading" secondItem="HgQ-8V-0uq" secondAttribute="leading" constant="16" id="vUM-dp-qVX"/>
+                            <constraint firstItem="VQp-dy-Ygz" firstAttribute="top" secondItem="aDe-Cj-kM2" secondAttribute="bottom" constant="50" id="zd3-aM-ntw"/>
                         </constraints>
                     </view>
                     <toolbarItems>
@@ -355,6 +364,7 @@
                         <outlet property="contentTextView" destination="aDe-Cj-kM2" id="9QC-xo-fxS"/>
                         <outlet property="createdDate" destination="Afr-PX-g1F" id="8o4-IK-9kg"/>
                         <outlet property="previewOfPhotoToPostImageView" destination="5O1-Ha-5eS" id="M1u-yR-v2a"/>
+                        <outlet property="recognitionButton" destination="VQp-dy-Ygz" id="bVZ-5M-ftf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cE5-Zd-bNM" userLabel="First Responder" sceneMemberID="firstResponder"/>
