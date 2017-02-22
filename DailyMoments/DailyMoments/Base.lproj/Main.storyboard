@@ -73,7 +73,11 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Juu-HZ-nmT"/>
-                                    <barButtonItem image="camera_album" id="6sg-CX-W64" userLabel="Flash switch Bar Button Item"/>
+                                    <barButtonItem image="camera_album" id="6sg-CX-W64" userLabel="Camera Album Bar Button Item">
+                                        <connections>
+                                            <action selector="pickAnImageFromPhotoLibrary:" destination="8QR-Tj-sM5" id="OH5-gH-Ane"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rI1-Si-gpF"/>
                                     <barButtonItem image="camera_shutter" id="63Y-3W-Yys" userLabel="Camera Shutter Bar Button Item">
                                         <connections>

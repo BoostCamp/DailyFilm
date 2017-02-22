@@ -58,6 +58,8 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
             
             if let content = post.content {
                 contentTextView.text = content
+            } else {
+                contentTextView.text = "작성된 내용이 없습니다. Edit 버튼을 눌러 새로 작성해주세요."
             }
             
             if let latitude = post.latitude, let longitude = post.longitude {

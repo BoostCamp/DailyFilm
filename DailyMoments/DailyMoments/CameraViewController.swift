@@ -323,6 +323,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             
             session.beginConfiguration()
             
+            let availableCameraHardware:Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
+            
+            // 카메라 하드웨어 사용 불가하면 return 
+            if availableCameraHardware == false {
+                return
+            }
             
             // Remove existing input
             let currentCameraInput:AVCaptureInput = session.inputs.first as! AVCaptureInput
@@ -377,6 +383,21 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     }
     
     
+    func removeCurrentCaptureInput(){
+        
+        let availableCameraHardware:Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
+        
+        if let session = captureSession, availableCameraHardware == true {
+            
+            session.beginConfiguration()
+            // Remove existing input
+            let currentCameraInput:AVCaptureInput = session.inputs.first as! AVCaptureInput
+            session.removeInput(currentCameraInput)
+            session.commitConfiguration()
+        }
+    }
+    
+    
     
     // Find a camera with the specified AVCaptureDevicePosition, returning nil if one is not found
     func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
@@ -394,9 +415,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     }
 
     
-    
     // MARK:- Navigate
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == CameraViewController.showEditPhotoViewControllerSegueIdentifier, let editPhotoViewController = segue.destination as? EditPhotoViewController{
@@ -408,6 +427,61 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             editPhotoViewController.selectedFilterIndex = filterIndex
             editPhotoViewController.takenResizedPhotoImage = generatePreviewPhoto(source: originalPhotoImage)
             
+        }
+    }
+
+    
+    // MARK:- UIImagePickerController : 포토라이브러리에서 사진 pick
+    
+    @IBAction func pickAnImageFromPhotoLibrary(_ sender: Any) {
+    
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self // Set delegate
+        imagePickerController.sourceType = .photoLibrary
+       
+        
+        self.present(imagePickerController, animated: true) { 
+            self.removeCurrentCaptureInput()
+        }
+
+    }
+}
+
+// MARK:- UIImagePickerController  Extension
+
+extension CameraViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    //UIImagePickerView에서 Cancel 버튼을 눌렀을 때 호출.
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true, completion: nil)
+        print("imagePickerControllerDidCancel called")
+        setUpCamera()
+    }
+    
+    // UIImagePickerView에서 사진을 선택했을 때 호출
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        var isPickedImage: Bool = false
+        
+        if let pickedImageFromImagePickerController = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            
+            isPickedImage = true
+            previewImageView.image = pickedImageFromImagePickerController
+            originalPhotoImage = pickedImageFromImagePickerController
+            filterIndex = 0
+            
+            self.dismiss(animated: false, completion: ( () -> Void)? {
+                _ in self.pickImageCompleted(result: isPickedImage)
+                })
+        }
+    }
+    
+    // Disable/Enable the Share button
+    func pickImageCompleted(result isPickedImage : Bool){
+        
+        if isPickedImage {
+            performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
+        } else {
+            setUpCamera()
         }
     }
 }
