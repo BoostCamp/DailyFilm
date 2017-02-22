@@ -8,8 +8,11 @@
 
 import UIKit
 import AVFoundation
+import Photos
 
 extension CameraViewController {
+    
+    static let showEditPhotoViewControllerSegueIdentifier = "showEditPhotoViewControllerSegue"
     
     enum FlashModeConstant: Int {
         case off = 0
@@ -17,27 +20,296 @@ extension CameraViewController {
         case auto
     }
     
+  
+    // MARK:- Setup and configure UI
     
-    // MARK:- Flash Mode
     
-    func getCurrentFlashMode(_ mode : Int) -> AVCaptureFlashMode{
+    func disableCameraOptionButton(){
         
-        var valueOfAVCaptureFlashMode: AVCaptureFlashMode = .off
-        
-        switch mode {
-        case FlashModeConstant.off.rawValue:
-            valueOfAVCaptureFlashMode = .off
-        case FlashModeConstant.auto.rawValue:
-            valueOfAVCaptureFlashMode = .auto
-        case FlashModeConstant.on.rawValue:
-            valueOfAVCaptureFlashMode = .on
-        default:
-            break;
-        }
-        return valueOfAVCaptureFlashMode
+        switchOfCameraBarButtonItem.isEnabled = false
+        flashOfCameraBarButtonItem.isEnabled = false
     }
     
-    // MARK:- Change the device’s activeFormat property.
+    func setUpCamera(){
+        
+        
+        switchOfCameraBarButtonItem.isEnabled = true
+        flashOfCameraBarButtonItem.isEnabled = true
+        
+        
+        /*
+         
+         iOS 10.0+
+         
+         AVCaptureDeviceDiscoverySession(deviceTypes:mediaType:position)
+         → Creates a discovery session for finding devices with the specified criteria.
+         
+         A query for finding and monitoring available capture devices.
+         
+         Overview
+         
+         Use this class to find all available capture devices matching a specific device type (such as microphone or wide-angle camera), supported media types for capture (such as audio, video, or both), and position (front- or back-facing).
+         
+         After creating a device discovery session, you can inspect its devices array to choose a device for capture, or observe that property to be notified when devices become available or unavailable.
+         
+         */
+        
+        let deviceSession = AVCaptureDeviceDiscoverySession(deviceTypes: [.builtInDualCamera, .builtInTelephotoCamera, .builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
+        
+        if let session = captureSession {
+            for discoveredDevice in (deviceSession?.devices)! {
+                
+                // cameraPosition: 카메라가 back, front인지를 저장하는 프로퍼티
+                if discoveredDevice.position == cameraPosition {
+                    captureDevice = discoveredDevice // Device를 Set
+                    
+                    if cameraPosition == .back {
+                        session.sessionPreset = AVCaptureSessionPreset1920x1080
+                    } else if cameraPosition == .front {
+                        session.sessionPreset = AVCaptureSessionPreset1280x720
+                    }
+                    
+                    do {
+                        let input = try AVCaptureDeviceInput(device: discoveredDevice)
+                        
+                        if session.canAddInput(input){
+                            session.addInput(input)
+                            
+                            if session.canAddOutput(photoOutput), session.canAddOutput(videoDataOutput){
+                                
+                                session.addOutput(photoOutput)
+                                
+                                guard let videoOutput = videoDataOutput else {
+                                    print("video output error")
+                                    return
+                                }
+                                
+                                videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue.main)
+                                session.addOutput(videoOutput)
+                                
+                                session.startRunning()
+                                
+                            }
+                            
+                        }
+                    } catch let avCaptureError {
+                        print(avCaptureError)
+                    }
+                }
+            } // End of find device
+        }
+        
+    }
+    
+        
+    // MARK:- DidoutPutSampleBuffer and didFinishProcessingPhotoSampleBuffer
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+        
+        // 전면 카메라일 때 좌우반전 되지 않게 변경 (video Mirror disabled)
+        if cameraPosition == .front {
+            connection.automaticallyAdjustsVideoMirroring = false
+            connection.isVideoMirrored = true
+        }
+        connection.videoOrientation = .portrait
+        
+        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        let ciImageFromCaptureOutput = CIImage(cvPixelBuffer: pixelBuffer!)
+        
+        guard let context = context else {
+            print("context guard error")
+            return
+        }
+        
+        guard let cameraViewPhotoSize = cameraViewPhotoSize else {
+            print("cameraViewPhotoSize guard error")
+            
+            return
+        }
+        
+        originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from: CGRect(x: 0.0, y: 0.0, width: cameraViewPhotoSize.width, height: cameraViewPhotoSize.height))!)
+        
+        
+        
+        if let filterName = filterName {
+            
+            if filterName == PhotoEditorTypes.normalStatusFromFilterNameArray(){
+                DispatchQueue.main.async {
+                    self.previewImageView.image = self.originalPhotoImage
+                    
+                }
+            } else {
+                if let filter = CIFilter(name: filterName) {
+                    filter.setDefaults()
+                    filter.setValue(ciImageFromCaptureOutput, forKey: kCIInputImageKey)
+                    if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
+                        
+                        DispatchQueue.main.async {
+                            
+                            self.previewImageView.image = UIImage(cgImage: context.createCGImage(output, from: CGRect(x: 0, y: 0, width: cameraViewPhotoSize.width, height: cameraViewPhotoSize.height))!)
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+        
+        //                print(sampleBuffer)
+        
+    }
+    
+    
+    
+    // AVCapturePhotoCaptureDelegate method for Image Saving
+    func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+        
+        if let image = previewImageView.image {
+            
+            switch PHPhotoLibrary.authorizationStatus() {
+            case .authorized:
+                
+                //설정 - 사진 승인 상태이기에 앨범에 저장 후에 이동
+                UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveCompleted), nil)
+                
+            case .denied, .notDetermined:
+                
+                //설정 - 사진 미승인 상태이기에 앨범에 저장 하지 않고 다음 화면으로 이동
+                performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
+                
+            default:
+                return
+            }
+        }
+        
+    }
+    
+    // UIImageWriteToSavedPhotosAlbum 메소드 수행 후에 completionSelector
+    //    func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
+    
+    func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeMutableRawPointer) {
+        if(error != nil) {
+            return
+        }
+        
+        performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
+        
+    }
+    
+    
+    
+        
+    // MARK:- Permission Check
+    
+    func checkCameraPermission() {
+        // 카메라 하드웨어 사용가능 여부 판단.
+        let availableCameraHardware:Bool = UIImagePickerController.isSourceTypeAvailable(.camera)
+        shutterOfCameraBarButtonItem.isEnabled = availableCameraHardware
+        authorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+        
+        if let authorizationStatusOfCamera = authorizationStatus, availableCameraHardware {
+            switch authorizationStatusOfCamera {
+                
+            case .authorized:
+                print(authorizationStatusOfCamera)
+                setUpCamera() // 카메라 setup
+                
+            case .denied:
+                showNotice(alertCase: .camera) // 접근 권한이 없으므로 사용자에게 설정 - DailyMoments - 카메라 허가 요청 UIAlertController 호출
+                
+                disableCameraOptionButton() // 플래쉬, 스위칭 버튼 disabled
+                
+            case .notDetermined:
+                AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler : { (granted: Bool) in
+                    
+                    if granted {
+                        
+                        // GCD
+                        DispatchQueue.main.async {
+                            self.setUpCamera() // 카메라 setup
+                        }
+                        
+                    } else {
+                        print(granted)
+                        
+                        // GCD
+                        DispatchQueue.main.async {
+                            self.disableCameraOptionButton() // 플래쉬, 스위칭 버튼 disabled
+                        }
+                    }
+                })
+                
+            case .restricted:
+                print(authorizationStatusOfCamera)
+            }
+        }
+    }
+    
+    func showNotice(alertCase : SettingType){
+        
+        let alertController = UIAlertController(title: AlertContentConstant.titles[alertCase.rawValue], message: AlertContentConstant.messages[alertCase.rawValue], preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: AlertContentConstant.setting, style: .default, handler: { (action:UIAlertAction) -> Void in
+            let settingsUrl = URL(string: UIApplicationOpenSettingsURLString)
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(settingsUrl!, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(settingsUrl!)
+            }
+        }))
+        alertController.addAction(UIAlertAction(title: AlertContentConstant.cancel, style: .cancel, handler: nil))
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    
+    // MARK:- Screen Ratio
+    
+    // AVCaptureDevice 종류와 선택한 스크린 사이즈 비율에 맞게 PreviewImageView Frame 변경
+    func getSizeByScreenRatio(with cameraPosition: AVCaptureDevicePosition, at screenRatioStatus: Int){
+        
+        var photoWidth: CGFloat?
+        var photoHeight: CGFloat?
+        
+        var rectOfpreviewImage: CGRect?
+        
+        photoWidth = ScreenType.photoWidthByDeviceInput(type: cameraPosition.rawValue)
+        photoHeight = ScreenType.photoHeightByAspectScreenRatio(cameraPosition.rawValue, ratioType: screenRatioStatus)
+        
+        rectOfpreviewImage = ScreenType.getCGRectPreiewImageView(target: UIScreen.main.bounds, yMargin: settingToolbar.frame.height, ratioType: screenRatioStatus)
+        
+        
+        if let photoWidth = photoWidth, let photoHeight = photoHeight, let rectOfpreviewImage = rectOfpreviewImage {
+            cameraViewPhotoSize = CameraViewPhotoSize(width: photoWidth, height: photoHeight)
+            DispatchQueue.main.async {
+                self.previewImageView.frame = rectOfpreviewImage
+            }
+            
+            
+        }
+    }
+    
+    // MARK:- generate preview Photo
+    
+    // 작은 크기로 보여줄 UIImage를 생성하는 메소드. crop Image -> resize Image
+    func generatePreviewPhoto(source image: UIImage?) -> UIImage? {
+        
+        if let image = image  {
+            let widthOfscreenSize:CGFloat = UIScreen.main.bounds.width
+            let valueToDivideTheScreen:CGFloat = CGFloat.init(cellUnitValue)
+            let widthOfImage = widthOfscreenSize / valueToDivideTheScreen
+            
+            let croppedImage: UIImage = image.cropToSquareImage()
+            
+            return croppedImage.resizeImage(targetSize: CGSize(width: widthOfImage, height: widthOfImage))
+        }
+        return UIImage()
+    }
+    
+    
+    
+    
+    // MARK:- FocusMode, draw and move focus Box.
     
     // 초점 맞추기
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -126,6 +398,9 @@ extension CameraViewController {
         
     }
     
+    
+    
+    // MARK: - Filter Name Label FadeOut Animation
     func fadeViewInThenOut(view : UIView, delay: TimeInterval) {
         
         let animationDuration = 0.25
