@@ -413,7 +413,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         
         return nil
     }
-
+    
     
     // MARK:- Navigate
     
@@ -428,63 +428,20 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             editPhotoViewController.takenResizedPhotoImage = generatePreviewPhoto(source: originalPhotoImage)
             
         }
+        else if segue.identifier == CameraViewController.showPhotoAlbumCollectionViewSegueIdentifier {
+            
+            self.removeCurrentCaptureInput()
+
+        }
     }
 
     
-    // MARK:- UIImagePickerController : 포토라이브러리에서 사진 pick
+    // MARK:- 포토라이브러리에서 사진 pick
     
     @IBAction func pickAnImageFromPhotoLibrary(_ sender: Any) {
-    
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self // Set delegate
-        imagePickerController.sourceType = .photoLibrary
-       
         
-        self.present(imagePickerController, animated: true) { 
-            self.removeCurrentCaptureInput()
-        }
+        self.performSegue(withIdentifier: CameraViewController.showPhotoAlbumCollectionViewSegueIdentifier, sender: self)
 
     }
 }
-
-// MARK:- UIImagePickerController  Extension
-
-extension CameraViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    //UIImagePickerView에서 Cancel 버튼을 눌렀을 때 호출.
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.dismiss(animated: true, completion: nil)
-        print("imagePickerControllerDidCancel called")
-        setUpCamera()
-    }
-    
-    // UIImagePickerView에서 사진을 선택했을 때 호출
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        var isPickedImage: Bool = false
-        
-        if let pickedImageFromImagePickerController = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            
-            isPickedImage = true
-            previewImageView.image = pickedImageFromImagePickerController
-            originalPhotoImage = pickedImageFromImagePickerController
-            filterIndex = 0
-            
-            self.dismiss(animated: false, completion: ( () -> Void)? {
-                _ in self.pickImageCompleted(result: isPickedImage)
-                })
-        }
-    }
-    
-    // Disable/Enable the Share button
-    func pickImageCompleted(result isPickedImage : Bool){
-        
-        if isPickedImage {
-            performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
-        } else {
-            setUpCamera()
-        }
-    }
-}
-
-
 

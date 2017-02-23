@@ -14,6 +14,8 @@ extension CameraViewController {
     
     static let showEditPhotoViewControllerSegueIdentifier = "showEditPhotoViewControllerSegue"
     
+    static let showPhotoAlbumCollectionViewSegueIdentifier = "showPhotoAlbumCollectionViewControllerSegue"
+
     enum FlashModeConstant: Int {
         case off = 0
         case on

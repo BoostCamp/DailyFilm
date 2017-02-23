@@ -75,7 +75,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Juu-HZ-nmT"/>
                                     <barButtonItem image="camera_album" id="6sg-CX-W64" userLabel="Camera Album Bar Button Item">
                                         <connections>
-                                            <action selector="pickAnImageFromPhotoLibrary:" destination="8QR-Tj-sM5" id="OH5-gH-Ane"/>
+                                            <action selector="pickAnImageFromPhotoLibrary:" destination="8QR-Tj-sM5" id="lCS-IN-dqa"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="rI1-Si-gpF"/>
@@ -129,6 +129,7 @@
                         <outlet property="shutterOfCameraBarButtonItem" destination="63Y-3W-Yys" id="6J3-bT-LRW"/>
                         <outlet property="switchOfCameraBarButtonItem" destination="3hB-xW-6XV" id="eJx-j2-upq"/>
                         <segue destination="dcS-RD-4Y0" kind="show" identifier="showEditPhotoViewControllerSegue" id="iJl-Lk-bhK"/>
+                        <segue destination="M1Y-MH-zwc" kind="presentation" identifier="showPhotoAlbumCollectionViewControllerSegue" id="ZR2-gR-QnO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C4O-ZK-Eug" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -143,7 +144,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="109.59999999999999" y="304.4977511244378"/>
+            <point key="canvasLocation" x="1988" y="304.4977511244378"/>
         </scene>
         <!--Edit Photo View Controller-->
         <scene sceneID="Wca-to-8gF">
@@ -255,7 +256,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dbR-bw-o3s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1192.8" y="304.4977511244378"/>
+            <point key="canvasLocation" x="3071.1999999999998" y="304.4977511244378"/>
         </scene>
         <!--Add Content View Controller-->
         <scene sceneID="qec-Yd-PZp">
@@ -376,7 +377,91 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cE5-Zd-bNM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2341.5999999999999" y="303.59820089955025"/>
+            <point key="canvasLocation" x="4220" y="303.59820089955025"/>
+        </scene>
+        <!--Photo Album Collection View Controller-->
+        <scene sceneID="vRv-a5-1wC">
+            <objects>
+                <viewController id="M1Y-MH-zwc" customClass="PhotoAlbumCollectionViewController" customModule="DailyMoments" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="YZ3-te-LdJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="SQi-EZ-yoO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="DfU-di-Tux">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="b2Y-ds-Ftb">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Kgw-ok-7bb">
+                                    <size key="itemSize" width="90" height="84"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCell" id="5bM-Sk-q5q" customClass="PhotoAlbumItemCollectionViewCell" customModule="DailyMoments" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W1j-Jk-T70">
+                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="W1j-Jk-T70" firstAttribute="leading" secondItem="5bM-Sk-q5q" secondAttribute="leading" id="57f-b6-sDi"/>
+                                            <constraint firstItem="W1j-Jk-T70" firstAttribute="centerX" secondItem="5bM-Sk-q5q" secondAttribute="centerX" id="EJ6-wi-REZ"/>
+                                            <constraint firstAttribute="bottom" secondItem="W1j-Jk-T70" secondAttribute="bottom" id="OmO-X5-XhU"/>
+                                            <constraint firstItem="W1j-Jk-T70" firstAttribute="top" secondItem="5bM-Sk-q5q" secondAttribute="top" id="pKa-T9-A19"/>
+                                            <constraint firstItem="W1j-Jk-T70" firstAttribute="centerY" secondItem="5bM-Sk-q5q" secondAttribute="centerY" id="rdu-pj-hD7"/>
+                                            <constraint firstAttribute="trailing" secondItem="W1j-Jk-T70" secondAttribute="trailing" id="ref-m2-bwD"/>
+                                        </constraints>
+                                        <size key="customSize" width="100" height="100"/>
+                                        <connections>
+                                            <outlet property="photoImageView" destination="W1j-Jk-T70" id="LTY-6Z-yks"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uyZ-IU-4Gz">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <items>
+                                    <navigationItem title="카메라롤" id="zfR-oQ-6jb">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="piL-BG-uyC">
+                                            <connections>
+                                                <action selector="cancelPickImageFromPhotoAlbum:" destination="M1Y-MH-zwc" id="bEW-xy-rCs"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="완료" id="VTv-9w-mVl"/>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="b2Y-ds-Ftb" firstAttribute="top" secondItem="uyZ-IU-4Gz" secondAttribute="bottom" id="6T5-QY-kJ8"/>
+                            <constraint firstItem="b2Y-ds-Ftb" firstAttribute="leading" secondItem="DfU-di-Tux" secondAttribute="leading" id="GMb-kT-EIU"/>
+                            <constraint firstAttribute="trailing" secondItem="uyZ-IU-4Gz" secondAttribute="trailing" id="MyD-4q-ciD"/>
+                            <constraint firstItem="SQi-EZ-yoO" firstAttribute="top" secondItem="b2Y-ds-Ftb" secondAttribute="bottom" id="jyV-LE-YAt"/>
+                            <constraint firstAttribute="trailing" secondItem="b2Y-ds-Ftb" secondAttribute="trailing" id="qpz-Jn-lUa"/>
+                            <constraint firstItem="uyZ-IU-4Gz" firstAttribute="leading" secondItem="DfU-di-Tux" secondAttribute="leading" id="tV0-ai-mjG"/>
+                            <constraint firstItem="uyZ-IU-4Gz" firstAttribute="top" secondItem="YZ3-te-LdJ" secondAttribute="bottom" id="vB0-FI-NxT"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="collectionViewFlowLayout" destination="Kgw-ok-7bb" id="IAX-do-bEl"/>
+                        <outlet property="photoAlbumCollectionView" destination="b2Y-ds-Ftb" id="11n-sz-4Xy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="996-fL-6hA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1987.5" y="1149.5"/>
         </scene>
         <!--Home Tab Bar Controller-->
         <scene sceneID="X8N-wE-xRA">
@@ -391,28 +476,61 @@
                         <segue destination="geC-Mz-CsH" kind="show" identifier="showCameraView" id="u0J-Vl-lx5"/>
                         <segue destination="997-d8-CuU" kind="relationship" relationship="viewControllers" id="lpl-wI-PfW"/>
                         <segue destination="geC-Mz-CsH" kind="relationship" relationship="viewControllers" id="Tkb-AI-rUo"/>
-                        <segue destination="kkj-uk-tIp" kind="relationship" relationship="viewControllers" id="TFC-d3-x4I"/>
+                        <segue destination="wc5-3V-zTL" kind="relationship" relationship="viewControllers" id="TFC-d3-x4I"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gqy-lZ-Yy7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2492" y="306"/>
+            <point key="canvasLocation" x="-613.60000000000002" y="305.39730134932535"/>
         </scene>
-        <!--More-->
+        <!--설정-->
         <scene sceneID="ehH-0x-WWu">
             <objects>
-                <tableViewController id="kkj-uk-tIp" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="mVi-Iq-BNM">
+                <tableViewController id="kkj-uk-tIp" customClass="SettingsTableViewController" customModule="DailyMoments" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="mVi-Iq-BNM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="6Ue-Zi-wto">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="RightDetailCell" textLabel="DNw-BX-3ys" detailTextLabel="hK9-ph-x3d" style="IBUITableViewCellStyleValue1" id="6Ue-Zi-wto">
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DNw-BX-3ys">
+                                            <rect key="frame" x="15" y="12" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hK9-ph-x3d">
+                                            <rect key="frame" x="296" y="12" width="44" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SwitchCell" textLabel="HPA-0O-y8e" style="IBUITableViewCellStyleDefault" id="rjm-26-XTb" customClass="SwitchCell" customModule="DailyMoments" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rjm-26-XTb" id="4cM-cM-AsJ">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HPA-0O-y8e">
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -421,11 +539,11 @@
                             <outlet property="delegate" destination="kkj-uk-tIp" id="ovF-I9-ixD"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="More" image="more" id="avu-y7-TUE"/>
+                    <navigationItem key="navigationItem" title="설정" id="Xli-ul-6CN"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lVg-y4-kCe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1076" y="1272"/>
+            <point key="canvasLocation" x="-136.80000000000001" y="1271.5142428785607"/>
         </scene>
         <!--일기장-->
         <scene sceneID="nX1-rR-q79">
@@ -442,7 +560,7 @@
                                 <rect key="frame" x="0.0" y="55.5" width="375" height="513"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="Cdq-Eu-VdH" id="RjS-q2-jOt">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="512"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="512.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="EzJ-dZ-gSb">
@@ -726,7 +844,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iWh-2n-xdv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1076" y="305"/>
+            <point key="canvasLocation" x="802.39999999999998" y="304.4977511244378"/>
         </scene>
         <!--Home-->
         <scene sceneID="V94-J0-dLP">
@@ -746,6 +864,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bhe-6r-hza" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1076" y="-526.6866566716642"/>
+        </scene>
+        <!--More-->
+        <scene sceneID="Uov-fi-Z0W">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wc5-3V-zTL" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="More" image="more" id="avu-y7-TUE"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cHj-Gb-aOS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="kkj-uk-tIp" kind="relationship" relationship="rootViewController" id="ulz-l7-SLY"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="q9o-c9-9D7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1076" y="1271.5142428785607"/>
         </scene>
     </scenes>
     <resources>

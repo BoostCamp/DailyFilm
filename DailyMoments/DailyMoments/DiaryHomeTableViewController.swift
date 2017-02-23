@@ -214,15 +214,14 @@ extension DiaryHomeTableViewController {
                 // file URL of DocumentDirectoryPath
                 let editedImageURL = documentDirectoryPathURL.appendingPathComponent(imageFilePath)
                 
-                let fixedOrientationimage: UIImage? = UIImage(contentsOfFile: editedImageURL.path)
+                let getImageFromDocuments: UIImage? = UIImage(contentsOfFile: editedImageURL.path)
                 
-                if let image = fixedOrientationimage {
-                    
-                    cell.photoImageView?.image = image.cropToSquareImage()
+                if let image = getImageFromDocuments {
+
+                    DispatchQueue.main.async {
+                        cell.photoImageView?.image = image.cropToSquareImage()
+                    }
                 }
-                
-                // set DiaryHomeTableViewControllerDelegate protocol
-                
                 
                 cell.contentLabel.text = content
                 cell.createdDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()

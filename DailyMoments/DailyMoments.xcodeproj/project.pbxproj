@@ -15,6 +15,8 @@
 		3D1952E11E487467006A05BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D1952E01E487467006A05BC /* Assets.xcassets */; };
 		3D1952E41E487467006A05BC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1952E21E487467006A05BC /* LaunchScreen.storyboard */; };
 		3D1952EF1E487467006A05BC /* DailyMomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1952EE1E487467006A05BC /* DailyMomentsTests.swift */; };
+		3D34EF041E5E1A4F0035EC9A /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D34EF031E5E1A4F0035EC9A /* SettingsTableViewController.swift */; };
+		3D34EF061E5E1CCD0035EC9A /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D34EF051E5E1CCD0035EC9A /* SwitchCell.swift */; };
 		3D38AE771E4AFFE60056CF5E /* EditPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */; };
 		3D49B4F31E55657C000A6A7E /* DiaryContentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D49B4F21E55657C000A6A7E /* DiaryContentDetailViewController.swift */; };
 		3D7448BD1E4B896B0003F6AB /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */; };
@@ -35,6 +37,8 @@
 		3DCB99941E49B28900B6EB21 /* HomeTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */; };
 		3DD1E5461E4C2AA5008FB12F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD1E5451E4C2AA5008FB12F /* Constants.swift */; };
 		3DD1E54C1E4C644A008FB12F /* DiaryHomeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD1E54B1E4C644A008FB12F /* DiaryHomeTableViewController.swift */; };
+		3DD2C9FC1E5E8FB60044A1D6 /* PhotoAlbumCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD2C9FB1E5E8FB60044A1D6 /* PhotoAlbumCollectionViewController.swift */; };
+		3DD2CA001E5E9CED0044A1D6 /* PhotoAlbumItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD2C9FF1E5E9CED0044A1D6 /* PhotoAlbumItemCollectionViewCell.swift */; };
 		3DD55EC31E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */; };
 		3DD7E2411E4B305100AD288F /* CameraFillterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */; };
 		3DEAAE281E51691B000D593D /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAAE271E51691B000D593D /* DateExtension.swift */; };
@@ -79,6 +83,8 @@
 		3D1952EA1E487467006A05BC /* DailyMomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMomentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1952EE1E487467006A05BC /* DailyMomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMomentsTests.swift; sourceTree = "<group>"; };
 		3D1952F01E487467006A05BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D34EF031E5E1A4F0035EC9A /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		3D34EF051E5E1CCD0035EC9A /* SwitchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
 		3D38AE761E4AFFE60056CF5E /* EditPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPhotoViewController.swift; sourceTree = "<group>"; };
 		3D49B4F21E55657C000A6A7E /* DiaryContentDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiaryContentDetailViewController.swift; sourceTree = "<group>"; };
 		3D7448BC1E4B896B0003F6AB /* ImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
@@ -106,6 +112,8 @@
 		3DCB99931E49B28900B6EB21 /* HomeTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTabBarController.swift; sourceTree = "<group>"; };
 		3DD1E5451E4C2AA5008FB12F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3DD1E54B1E4C644A008FB12F /* DiaryHomeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiaryHomeTableViewController.swift; sourceTree = "<group>"; };
+		3DD2C9FB1E5E8FB60044A1D6 /* PhotoAlbumCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewController.swift; sourceTree = "<group>"; };
+		3DD2C9FF1E5E9CED0044A1D6 /* PhotoAlbumItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		3DD55EC21E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITapGestureRecognizerExtension.swift; sourceTree = "<group>"; };
 		3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraFillterCollectionViewCell.swift; sourceTree = "<group>"; };
 		3DEAAE271E51691B000D593D /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
@@ -206,6 +214,8 @@
 				3DB460A01E54814A00646710 /* CameraViewControllerExtension.swift */,
 				3D49B4F21E55657C000A6A7E /* DiaryContentDetailViewController.swift */,
 				3DA70F561E5DBB6700127ACB /* EditDiaryContentViewController.swift */,
+				3D34EF031E5E1A4F0035EC9A /* SettingsTableViewController.swift */,
+				3DD2C9FB1E5E8FB60044A1D6 /* PhotoAlbumCollectionViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -218,6 +228,8 @@
 				3DD7E2401E4B305100AD288F /* CameraFillterCollectionViewCell.swift */,
 				3D80A7861E53EDF400B9720E /* DiaryPhotoTableViewCell.swift */,
 				3D9A5CBA1E55CE7B00805298 /* DiaryContentTableViewCell.swift */,
+				3D34EF051E5E1CCD0035EC9A /* SwitchCell.swift */,
+				3DD2C9FF1E5E9CED0044A1D6 /* PhotoAlbumItemCollectionViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -380,6 +392,7 @@
 				3DB460A11E54814A00646710 /* CameraViewControllerExtension.swift in Sources */,
 				3DBEBBBD1E530A7E004A06E1 /* Post.swift in Sources */,
 				3D1952DC1E487467006A05BC /* CameraViewController.swift in Sources */,
+				3DD2CA001E5E9CED0044A1D6 /* PhotoAlbumItemCollectionViewCell.swift in Sources */,
 				3DA70F571E5DBB6700127ACB /* EditDiaryContentViewController.swift in Sources */,
 				3DA82C141E51952500061CE2 /* FMDatabase.m in Sources */,
 				3DD1E54C1E4C644A008FB12F /* DiaryHomeTableViewController.swift in Sources */,
@@ -387,11 +400,14 @@
 				3DA82C181E51952500061CE2 /* FMResultSet.m in Sources */,
 				3DEAAE281E51691B000D593D /* DateExtension.swift in Sources */,
 				3D1952DA1E487467006A05BC /* AppDelegate.swift in Sources */,
+				3DD2C9FC1E5E8FB60044A1D6 /* PhotoAlbumCollectionViewController.swift in Sources */,
 				3DD55EC31E4C6E8F00FFF38E /* UITapGestureRecognizerExtension.swift in Sources */,
 				3DCB99941E49B28900B6EB21 /* HomeTabBarController.swift in Sources */,
 				3D9A5CBB1E55CE7B00805298 /* DiaryContentTableViewCell.swift in Sources */,
 				3DD1E5461E4C2AA5008FB12F /* Constants.swift in Sources */,
+				3D34EF041E5E1A4F0035EC9A /* SettingsTableViewController.swift in Sources */,
 				3D49B4F31E55657C000A6A7E /* DiaryContentDetailViewController.swift in Sources */,
+				3D34EF061E5E1CCD0035EC9A /* SwitchCell.swift in Sources */,
 				3DBEBBB91E52D80A004A06E1 /* StringExtension.swift in Sources */,
 				3D38AE771E4AFFE60056CF5E /* EditPhotoViewController.swift in Sources */,
 				3D80A7871E53EDF400B9720E /* DiaryPhotoTableViewCell.swift in Sources */,
