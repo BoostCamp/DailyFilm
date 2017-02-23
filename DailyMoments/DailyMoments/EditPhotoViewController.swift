@@ -56,22 +56,17 @@ class EditPhotoViewController: UIViewController {
         
         // navigationBar show
         navigationController?.navigationBar.isHidden = false
-
+        
         // 콜렉션 뷰의 첫번째 Cell을 선택함.
         if let selectedFilterIndex = selectedFilterIndex {
-          
-//            DispatchQueue.main.async {
             
-                // 선택된 필터 인덱스에 해당하는 필터 셀 선택
-                self.imagefilterCollectionView.selectItem(at: IndexPath.init(item: selectedFilterIndex, section: 0), animated: true, scrollPosition: .bottom)
-                
-                // 선택된 필터 인덱스에 해당하는 필터 셀 위치로 scroll
-                self.imagefilterCollectionView.scrollToItem(at: IndexPath.init(item: selectedFilterIndex, section: 0), at: .centeredHorizontally, animated: true)
-//            }
+            
+            // 선택된 필터 인덱스에 해당하는 필터 셀 선택
+            self.imagefilterCollectionView.selectItem(at: IndexPath.init(item: selectedFilterIndex, section: 0), animated: true, scrollPosition: .bottom)
+            
+            // 선택된 필터 인덱스에 해당하는 필터 셀 위치로 scroll
+            self.imagefilterCollectionView.scrollToItem(at: IndexPath.init(item: selectedFilterIndex, section: 0), at: .centeredHorizontally, animated: true)
         }
-        
-
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {

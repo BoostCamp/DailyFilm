@@ -18,8 +18,6 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
     var selectedIndexPath: IndexPath? // 홈화면에서 선택된 인덱스패스
     let showEditDiaryContentViewControllerSegueIdentifier = "showEditDiaryContentViewControllerSegue"
     
-
-    
     
     @IBOutlet weak var createdDateLabel: UILabel! // 촬영 일시
     @IBOutlet weak var nicknameLabel: UILabel! // 유저 닉네임
@@ -113,13 +111,15 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
     
     // MARK: - general Method
     
-    // MARK: delete post
-
+    // MARK:- update post (custom delegate)
     func setUpdateContentOfPost(data: String){
         self.contentTextView.text = data
-
+        
     }
     
+    
+    // MARK: delete post
+
     @IBAction func deletePost(_ sender: Any) {
      
         guard let post = post else {

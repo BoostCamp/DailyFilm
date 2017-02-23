@@ -36,6 +36,11 @@ enum DeviceInputType: Int {
     case front
 }
 
+// 카메라 뷰에서 포토앨범, 카메라 모드인지 구분하기 위한 enum
+enum AddPhotoMode {
+    case photoLibrary
+    case camera
+}
 
 struct ScreenType {
     static let width: [CGFloat] = [0.0, 1080.0, 720.0]

@@ -15,14 +15,14 @@ extension CameraViewController {
     static let showEditPhotoViewControllerSegueIdentifier = "showEditPhotoViewControllerSegue"
     
     static let showPhotoAlbumCollectionViewSegueIdentifier = "showPhotoAlbumCollectionViewControllerSegue"
-
+    
     enum FlashModeConstant: Int {
         case off = 0
         case on
         case auto
     }
     
-  
+    
     // MARK:- Setup and configure UI
     
     
@@ -32,8 +32,32 @@ extension CameraViewController {
         flashOfCameraBarButtonItem.isEnabled = false
     }
     
+    // 포토 앨범을 통해서 사진을 선택할 때 기존 UI를 가려주는 메소드
+    func changeUIWhenPickImageFromPhotoAblum(){
+
+        flashOfCameraBarButtonItem.image = UIImage(named: "photo_edit")
+        
+        screenRatioBarButtonItem.tintColor = UIColor.clear
+        photoAlbumBarButton.tintColor = UIColor.clear
+        shutterOfCameraBarButtonItem.tintColor = UIColor.clear
+        switchOfCameraBarButtonItem.tintColor = UIColor.clear
+        
+        screenRatioBarButtonItem.isEnabled = false
+        photoAlbumBarButton.isEnabled = false
+        shutterOfCameraBarButtonItem.isEnabled = false
+        switchOfCameraBarButtonItem.isEnabled = false
+
+    }
+    
     func setUpCamera(){
         
+        // 포토 라이브러리에서 이미지를 가져온 경우 return
+        if photoMode == AddPhotoMode.photoLibrary {
+            
+            changeUIWhenPickImageFromPhotoAblum()
+            
+            return
+        }
         
         switchOfCameraBarButtonItem.isEnabled = true
         flashOfCameraBarButtonItem.isEnabled = true
@@ -103,7 +127,7 @@ extension CameraViewController {
         
     }
     
-        
+    
     // MARK:- DidoutPutSampleBuffer and didFinishProcessingPhotoSampleBuffer
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         
@@ -201,7 +225,7 @@ extension CameraViewController {
     
     
     
-        
+    
     // MARK:- Permission Check
     
     func checkCameraPermission() {
@@ -263,13 +287,12 @@ extension CameraViewController {
         
         present(alertController, animated: true, completion: nil)
     }
-
+    
     
     // MARK:- Screen Ratio
     
     // AVCaptureDevice 종류와 선택한 스크린 사이즈 비율에 맞게 PreviewImageView Frame 변경
     func getSizeByScreenRatio(with cameraPosition: AVCaptureDevicePosition, at screenRatioStatus: Int){
-        
         var photoWidth: CGFloat?
         var photoHeight: CGFloat?
         
@@ -315,7 +338,13 @@ extension CameraViewController {
     
     // 초점 맞추기
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        dump(touches)
+        
+        // 포토 라이브러리에서 이미지를 가져온 경우 return
+        if photoMode == .photoLibrary {
+            return
+        }
+        
+        
         if let coordinates = touches.first, let device = captureDevice {
             
             // 전면 카메라는 FocusPointOfInterest를 지원하지 않습니다.
@@ -358,9 +387,9 @@ extension CameraViewController {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
     }
-   
+    
     
     // 초점 박스를 이동하는 메소드
     func changeFocusBoxCenter(for location: CGPoint )
@@ -405,6 +434,10 @@ extension CameraViewController {
     // MARK: - Filter Name Label FadeOut Animation
     func fadeViewInThenOut(view : UIView, delay: TimeInterval) {
         
+        // 포토 라이브러리에서 이미지를 가져온 경우 return
+        if photoMode == .photoLibrary {
+            return
+        }
         let animationDuration = 0.25
         
         // Fade in the view

@@ -103,6 +103,8 @@
                             <constraint firstAttribute="trailing" secondItem="PLf-YU-bP2" secondAttribute="trailing" id="HjM-Op-Tkq"/>
                             <constraint firstItem="PLf-YU-bP2" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="Ngu-ff-Hy1"/>
                             <constraint firstItem="E4J-OQ-F0M" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="PWG-mV-ylG"/>
+                            <constraint firstItem="PLf-YU-bP2" firstAttribute="centerX" secondItem="IFP-dn-PAV" secondAttribute="centerX" id="QLo-PK-u1k"/>
+                            <constraint firstItem="PLf-YU-bP2" firstAttribute="centerY" secondItem="IFP-dn-PAV" secondAttribute="centerY" id="QcG-JM-VLq"/>
                             <constraint firstItem="PLf-YU-bP2" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="RXG-rQ-n1s"/>
                             <constraint firstItem="sZU-1g-7yg" firstAttribute="leading" secondItem="IFP-dn-PAV" secondAttribute="leading" id="VXU-gZ-D4A"/>
                             <constraint firstItem="E4J-OQ-F0M" firstAttribute="top" secondItem="Jg1-DE-TYN" secondAttribute="bottom" id="YxF-TO-trb"/>
@@ -123,6 +125,7 @@
                         <outlet property="cameraToolbar" destination="8Pe-Zn-1qU" id="6FI-0w-UEs"/>
                         <outlet property="filterNameLabel" destination="sZU-1g-7yg" id="0fd-D6-Orb"/>
                         <outlet property="flashOfCameraBarButtonItem" destination="hyc-AB-GZm" id="C4d-Tq-Ee7"/>
+                        <outlet property="photoAlbumBarButton" destination="6sg-CX-W64" id="pHk-NS-yOT"/>
                         <outlet property="previewImageView" destination="PLf-YU-bP2" id="FWZ-xv-Rgz"/>
                         <outlet property="screenRatioBarButtonItem" destination="QGr-iB-EHE" id="Uj2-8q-dYZ"/>
                         <outlet property="settingToolbar" destination="E4J-OQ-F0M" id="Oq8-uk-JNX"/>
@@ -437,18 +440,22 @@
                                                 <action selector="cancelPickImageFromPhotoAlbum:" destination="M1Y-MH-zwc" id="bEW-xy-rCs"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="완료" id="VTv-9w-mVl"/>
+                                        <barButtonItem key="rightBarButtonItem" title="선택" id="VTv-9w-mVl">
+                                            <connections>
+                                                <action selector="completePickImageFromPhotoAlbum:" destination="M1Y-MH-zwc" id="9de-7G-sbu"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="b2Y-ds-Ftb" firstAttribute="top" secondItem="uyZ-IU-4Gz" secondAttribute="bottom" id="6T5-QY-kJ8"/>
-                            <constraint firstItem="b2Y-ds-Ftb" firstAttribute="leading" secondItem="DfU-di-Tux" secondAttribute="leading" id="GMb-kT-EIU"/>
+                            <constraint firstItem="SQi-EZ-yoO" firstAttribute="top" secondItem="b2Y-ds-Ftb" secondAttribute="bottom" id="0gP-lc-Y6F"/>
                             <constraint firstAttribute="trailing" secondItem="uyZ-IU-4Gz" secondAttribute="trailing" id="MyD-4q-ciD"/>
-                            <constraint firstItem="SQi-EZ-yoO" firstAttribute="top" secondItem="b2Y-ds-Ftb" secondAttribute="bottom" id="jyV-LE-YAt"/>
-                            <constraint firstAttribute="trailing" secondItem="b2Y-ds-Ftb" secondAttribute="trailing" id="qpz-Jn-lUa"/>
+                            <constraint firstItem="b2Y-ds-Ftb" firstAttribute="leading" secondItem="DfU-di-Tux" secondAttribute="leading" id="VcS-WH-NS4"/>
+                            <constraint firstItem="b2Y-ds-Ftb" firstAttribute="top" secondItem="uyZ-IU-4Gz" secondAttribute="bottom" id="gwa-8Z-BwC"/>
+                            <constraint firstAttribute="trailing" secondItem="b2Y-ds-Ftb" secondAttribute="trailing" id="jqq-Qv-1Ll"/>
                             <constraint firstItem="uyZ-IU-4Gz" firstAttribute="leading" secondItem="DfU-di-Tux" secondAttribute="leading" id="tV0-ai-mjG"/>
                             <constraint firstItem="uyZ-IU-4Gz" firstAttribute="top" secondItem="YZ3-te-LdJ" secondAttribute="bottom" id="vB0-FI-NxT"/>
                         </constraints>
@@ -457,11 +464,12 @@
                     <connections>
                         <outlet property="collectionViewFlowLayout" destination="Kgw-ok-7bb" id="IAX-do-bEl"/>
                         <outlet property="photoAlbumCollectionView" destination="b2Y-ds-Ftb" id="11n-sz-4Xy"/>
+                        <outlet property="pickPhotoImageBarButton" destination="VTv-9w-mVl" id="0EW-2j-vTk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="996-fL-6hA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1987.5" y="1149.5"/>
+            <point key="canvasLocation" x="1986.4000000000001" y="1149.1754122938532"/>
         </scene>
         <!--Home Tab Bar Controller-->
         <scene sceneID="X8N-wE-xRA">
@@ -481,7 +489,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gqy-lZ-Yy7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-613.60000000000002" y="305.39730134932535"/>
+            <point key="canvasLocation" x="-1958" y="304"/>
         </scene>
         <!--설정-->
         <scene sceneID="ehH-0x-WWu">
@@ -493,7 +501,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="RightDetailCell" textLabel="DNw-BX-3ys" detailTextLabel="hK9-ph-x3d" style="IBUITableViewCellStyleValue1" id="6Ue-Zi-wto">
-                                <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="56" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
                                     <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
@@ -517,7 +525,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SwitchCell" textLabel="HPA-0O-y8e" style="IBUITableViewCellStyleDefault" id="rjm-26-XTb" customClass="SwitchCell" customModule="DailyMoments" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="100" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rjm-26-XTb" id="4cM-cM-AsJ">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -901,6 +909,6 @@
         <image name="time" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="u0J-Vl-lx5"/>
+        <segue reference="Tkb-AI-rUo"/>
     </inferredMetricsTieBreakers>
 </document>

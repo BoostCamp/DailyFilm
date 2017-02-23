@@ -9,23 +9,44 @@
 import UIKit
 import Photos
 
+// UIImage와 pick, cancel 상태를 보내주는 델리게이트 프로토콜
+protocol pickedImageSentDelegate {
+    func setPickedImageFromPhotoAlbum(pickedImage: UIImage?, photoMode: AddPhotoMode)
+}
+
 private let reuseIdentifier = "ImageCell"
 
 class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-
-    @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
+    
+    @IBOutlet weak var pickPhotoImageBarButton: UIBarButtonItem!
     
     @IBOutlet weak var photoAlbumCollectionView: UICollectionView!
+    
+    @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
+    
+    var delegate: pickedImageSentDelegate? = nil
+    
+    var sizeOfImage:CGSize? // PrevieImageView의 CGSzie
+    
     var assetsFetchResults: PHFetchResult<PHAsset>?
     var imageManger: PHCachingImageManager?
     var authorizationStatus: PHAuthorizationStatus?
     
+    var currentSelectedIndex: Int? // Fetch Results의 인덱스, assets.
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // delegate, datasource set
         self.photoAlbumCollectionView.delegate = self
         self.photoAlbumCollectionView.dataSource = self
         
+        
+        //Init value
+        pickPhotoImageBarButton.isEnabled = false
+
+
+        // FloswLayout() 설정
         setFlowLayout()
         
         PHPhotoLibrary.authorizationStatus()
@@ -37,10 +58,12 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
             case .authorized:
                 self.imageManger = PHCachingImageManager()
                 let options = PHFetchOptions()
-                options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-                self.assetsFetchResults = PHAsset.fetchAssets(with: options)
+                options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                
+                self.assetsFetchResults = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: options)
                 
                 self.photoAlbumCollectionView?.reloadData()
+           
             case .denied:
                 print(authorizationStatusOfPhoto)
             case .notDetermined:
@@ -52,16 +75,55 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
                 print(authorizationStatusOfPhoto)
             }
         }
-
+    }
+    
+    
+    
+    // MARK:- View Controller Lifecycle
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
     }
     
-    @IBAction func cancelPickImageFromPhotoAlbum(_ sender: Any) {
-    
-        dismiss(animated: true, completion: nil)
-    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+    
+    @IBAction func cancelPickImageFromPhotoAlbum(_ sender: Any) {
+        self.delegate?.setPickedImageFromPhotoAlbum(pickedImage: nil, photoMode: .camera)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func completePickImageFromPhotoAlbum(_ sender: Any) {
+        
+        guard let currentSelectedIndex = currentSelectedIndex, let sizeOfImage = sizeOfImage else {
+            print("currentSelectedIndex error")
+            return
+        }
+        
+        let scale = UIScreen.main.scale
+        let size = CGSize(width: sizeOfImage.width * scale, height: sizeOfImage.height * scale)
+
+        let assets: PHAsset = self.assetsFetchResults![currentSelectedIndex]
+        PHImageManager.default().requestImage(for: assets, targetSize: size, contentMode: PHImageContentMode.aspectFit, options: nil, resultHandler: { (result : UIImage?, info) in
+            
+            self.delegate?.setPickedImageFromPhotoAlbum(pickedImage: result, photoMode: .photoLibrary)
+            self.dismiss(animated: true, completion: nil)
+
+        })
+        
+    }
+    
+    @IBOutlet weak var completePickImageFromPhotoAlbum: UIBarButtonItem!
     
     func setFlowLayout() {
         let space:CGFloat = 3.0
@@ -74,84 +136,43 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
         collectionViewFlowLayout.minimumLineSpacing = space
         // cell(item) 사이즈를 제어합니다.
         collectionViewFlowLayout.itemSize = CGSize(width: dimension, height: dimension)
-
+        
     }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     // MARK: UICollectionViewDataSource
     
-     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        
-        return 1
-    }
-
-
-     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return (self.assetsFetchResults?.count)!
     }
-
-     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        // Configure the cell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoAlbumItemCollectionViewCell
         
-
+        // cell frame CGSize만큼 asset 을 설정하여 photoImageView에 set
         let asset: PHAsset = self.assetsFetchResults![indexPath.item]
         self.imageManger?.requestImage(for: asset, targetSize: cell.frame.size, contentMode: PHImageContentMode.aspectFit, options: nil, resultHandler: {
             (result : UIImage?, info) in
             
             cell.photoImageView.image = result
-
+            
             
         })
-        // Configure the cell
-    
+        
         return cell
     }
-
+    
     
     
     
     // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        currentSelectedIndex = indexPath.item
+        pickPhotoImageBarButton.isEnabled = true
     }
-    */
-
 }

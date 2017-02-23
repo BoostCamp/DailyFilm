@@ -11,7 +11,7 @@ import AVFoundation
 import Dispatch
 
 
-class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
+class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, pickedImageSentDelegate {
     
     
     @IBOutlet weak var filterNameLabel: UILabel!
@@ -20,8 +20,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     @IBOutlet weak var cameraToolbar: UIToolbar! // 사진앨범, 셔터, 전후면 카메라스위치 버튼이 있는 툴바
     
     @IBOutlet weak var screenRatioBarButtonItem: UIBarButtonItem! // 스크린 화면 비율을 위한 버튼 (1:1, 3:4, 9:16)
+    
     @IBOutlet weak var flashOfCameraBarButtonItem: UIBarButtonItem! // 카메라 플래쉬 버튼
+    
+    @IBOutlet weak var photoAlbumBarButton: UIBarButtonItem! // 포토앨범으로 가는 버튼
+    
     @IBOutlet weak var shutterOfCameraBarButtonItem: UIBarButtonItem! // 카메라 셔터(촬영) 버튼
+    
     @IBOutlet weak var switchOfCameraBarButtonItem: UIBarButtonItem! // 전면/후면카메라 스위치 버튼
     
     @IBOutlet weak var previewImageView: UIImageView! // 렌즈(input)에서 얻어지는 샘플 데이터를 디스플레이 화면에서 보여주기 위한 view
@@ -40,6 +45,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     var screenRatioSwitchedStatus: Int = 0 // 화면 비율 구분을 위한 저장 프로퍼티
     
+    var photoMode: AddPhotoMode? // 카메라, 사진앨범 모드인지 구분하는 저장 프로퍼티
     
     // 카메라 뷰에 담길 촬영 포토 사이즈를 위한 strcut
     struct CameraViewPhotoSize {
@@ -73,9 +79,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isStatusBarHidden = true // status bar hide
-       
+
         
         //Init Setting
+        
+        photoMode = .camera
         cameraFlashSwitchedStatus = FlashModeConstant.off.rawValue // Init
         cameraPosition = .back // default는 back camera
         screenRatioSwitchedStatus = 0 // 1:1 Ratio
@@ -217,17 +225,24 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
 
             // 화면 비율이 스위칭 될 때 screen Size를 새로 구해오기 위함
             getSizeByScreenRatio(with: cameraPosition, at: screenRatioSwitchedStatus)
-            
         }
     }
     
     // MARK:- Flash Mode
 
     @IBAction func switchCameraFlash(_ sender: Any) {
+   
+        
+        // 사진 앨범에서 이미지를 가져온 왔을 때, 플래쉬 버튼을 누르면 다음 화면 이동
+        if photoMode == .photoLibrary {
+            performSegue(withIdentifier: CameraViewController.showEditPhotoViewControllerSegueIdentifier, sender: self)
+        }
+        
+        
         // 0: off, 1: on, 2: auto
         cameraFlashSwitchedStatus += 1
         cameraFlashSwitchedStatus %= 3
-        
+   
         switch cameraFlashSwitchedStatus {
         case FlashModeConstant.off.rawValue:
             flashOfCameraBarButtonItem.image = UIImage(named: "flash_off")
@@ -372,8 +387,6 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
          
             if let cameraPosition = cameraPosition {
                 
-                print("switchCameraPostion")
-
                 // 카메라 스위칭 될 때 screen Size를 새로 구해오기 위함
                 getSizeByScreenRatio(with: cameraPosition, at: screenRatioSwitchedStatus)
                 
@@ -415,6 +428,30 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     }
     
     
+    
+    
+    // MARK:- update post (custom delegate)
+    
+    
+    func setPickedImageFromPhotoAlbum(pickedImage: UIImage?, photoMode: AddPhotoMode){
+       
+        self.photoMode = photoMode
+
+        switch photoMode {
+
+        case .camera:
+            setUpCamera()
+            
+        case .photoLibrary:
+            if let pickedImage = pickedImage {
+                self.previewImageView.image = pickedImage
+                originalPhotoImage = pickedImage
+                
+            }
+        }
+    }
+    
+    
     // MARK:- Navigate
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -428,9 +465,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             editPhotoViewController.takenResizedPhotoImage = generatePreviewPhoto(source: originalPhotoImage)
             
         }
-        else if segue.identifier == CameraViewController.showPhotoAlbumCollectionViewSegueIdentifier {
+        else if segue.identifier == CameraViewController.showPhotoAlbumCollectionViewSegueIdentifier, let photoAlbumCollectionViewController = segue.destination as? PhotoAlbumCollectionViewController {
             
-            self.removeCurrentCaptureInput()
+            photoAlbumCollectionViewController.sizeOfImage = previewImageView.frame.size
+            photoAlbumCollectionViewController.delegate = self
+            
 
         }
     }
@@ -439,7 +478,9 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     // MARK:- 포토라이브러리에서 사진 pick
     
     @IBAction func pickAnImageFromPhotoLibrary(_ sender: Any) {
+        removeCurrentCaptureInput()
         
+        photoMode = .photoLibrary
         self.performSegue(withIdentifier: CameraViewController.showPhotoAlbumCollectionViewSegueIdentifier, sender: self)
 
     }
