@@ -197,10 +197,10 @@ class EditPhotoViewController: UIViewController {
                 print("rotate image")
                 
                 UIView.animate(withDuration: 0.5, animations: {
+                    self.transform = self.photographedImage.transform.rotated(by: CGFloat(-M_PI_2))
 
                     self.photographedImage.transform = self.photographedImage.transform.rotated(by: CGFloat(M_PI_2))
 
-                    self.transform = self.photographedImage.transform.rotated(by: CGFloat(M_PI_2))
                     self.editedCIImage = self.editedCIImage?.applying(self.transform!)
                     
                 })
