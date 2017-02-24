@@ -16,8 +16,6 @@ class AddContentViewController: UIViewController {
     let ClientID = "72dvBR8KvWJNWmHKGpNe"
 
     // MARK: - property
-    @IBOutlet weak var languagePickerButton: UIButton!
-    @IBOutlet weak var recognitionButton: UIButton!
     
     fileprivate let speechRecognizer: NSKRecognizer
     
@@ -27,6 +25,7 @@ class AddContentViewController: UIViewController {
     @IBOutlet weak var createdDate: UILabel! // 촬영된 시간
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
     @IBOutlet weak var contentTextView: UITextView!
+    @IBOutlet weak var speechRecognitionBarButton: UIBarButtonItem!
     
     var edidtedPhotoImage: UIImage? // 필터가 적용된 Image
     var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
@@ -51,7 +50,7 @@ class AddContentViewController: UIViewController {
          */
         let configuration = NSKRecognizerConfiguration(clientID: ClientID)
         configuration?.canQuestionDetected = false //의문문으로 물을지
-        configuration?.epdType = .manual // autoMode, manual, Hybrid 중에서 버튼을 누르고 있는 중에 인식되는 모드로 설정
+//        configuration?.epdType = .manual // autoMode, manual, Hybrid 중에서 버튼을 누르고 있는 중에 인식되는 모드로 설정
 
         self.speechRecognizer = NSKRecognizer(configuration: configuration)
         super.init(coder: aDecoder)
@@ -62,8 +61,6 @@ class AddContentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         // Date 생성
         
@@ -113,7 +110,7 @@ class AddContentViewController: UIViewController {
         contentTextView.delegate = self
         contentTextView.text = "내용을 입력하세요."
         contentTextView.textColor = UIColor.lightGray
-        self.setupRecognitionButton()
+//        self.setupRecognitionButton()
 
     }
     
@@ -278,8 +275,16 @@ class AddContentViewController: UIViewController {
                 }
                 
             
-            case ContentType.favorite.rawValue :
-                print("위시리스트 설정 여부")
+            case ContentType.speechRecognition.rawValue :
+                if self.speechRecognizer.isRunning {
+                    self.speechRecognizer.stop()
+                } else {
+                    try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryRecord)
+                    self.speechRecognizer.start(with: .korean)
+//                    self.recognitionButton.isEnabled = false
+                    speechRecognitionBarButton.tintColor = UIColor.red
+
+                }
             default:
                 return
             }
@@ -313,12 +318,12 @@ extension AddContentViewController: NSKRecognizerDelegate {
     public func recognizerDidEnterReady(_ aRecognizer: NSKRecognizer!) {
         print("Event occurred: Ready")
         
-        self.contentTextView.text = "Recognizing......"
-        self.setRecognitionButtonTitle(withText: "Stop", color: .red)
+//        self.contentTextView.text = "Recognizing......"
+//        self.setRecognitionButtonTitle(withText: "Stop", color: .red)
+//        self.recognitionButton.isEnabled = true
         
-        print()
-        
-        self.recognitionButton.isEnabled = true
+        speechRecognitionBarButton.tintColor = UIColor.red
+        self.speechRecognitionBarButton.isEnabled = true
     }
     
     // onEndPointDetected
@@ -331,8 +336,8 @@ extension AddContentViewController: NSKRecognizerDelegate {
     public func recognizerDidEnterInactive(_ aRecognizer: NSKRecognizer!) {
         print("Event occurred: Inactive")
         
-        print("record")
-        self.recognitionButton.isEnabled = true
+//        self.recognitionButton.isEnabled = true
+        self.speechRecognitionBarButton.isEnabled = true
         try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategorySoloAmbient)
     }
     
@@ -345,8 +350,8 @@ extension AddContentViewController: NSKRecognizerDelegate {
     // onRecord / on Partial
     public func recognizer(_ aRecognizer: NSKRecognizer!, didReceivePartialResult aResult: String!) {
         print("Partial result: \(aResult)")
-        self.contentTextView.text = aResult
-        self.setRecognitionButtonTitle(withText: "Record", color: .blue)
+//        self.contentTextView.text = aResult
+//        self.setRecognitionButtonTitle(withText: "Record", color: .blue)
 
     }
     
@@ -354,8 +359,9 @@ extension AddContentViewController: NSKRecognizerDelegate {
     public func recognizer(_ aRecognizer: NSKRecognizer!, didReceiveError aError: Error!) {
         print("Error: \(aError)")
         
-        self.recognitionButton.isEnabled = true
-        self.contentTextView.text = "Error: " + aError.localizedDescription
+//        self.recognitionButton.isEnabled = true
+        self.speechRecognitionBarButton.isEnabled = true
+//        self.contentTextView.text = "Error: " + aError.localizedDescription
     }
     
     // onResult (EndPointDetected -> Result)
@@ -363,11 +369,13 @@ extension AddContentViewController: NSKRecognizerDelegate {
         print("Final result: \(aResult)")
         
         if let result = aResult.results.first as? String {
-            self.contentTextView.text = "Result: " + result
+            self.contentTextView.insertText(result)
+            speechRecognitionBarButton.tintColor = UIColor.darkGray
+
         }
     }
     
-    
+    /*
     func setRecognitionButtonTitle(withText text: String, color: UIColor) {
         self.recognitionButton.setTitle(text, for: .normal)
         self.recognitionButton.setTitleColor(color, for: .normal)
@@ -379,6 +387,7 @@ extension AddContentViewController: NSKRecognizerDelegate {
         longpressRecognizer.minimumPressDuration = 1
         self.recognitionButton.addGestureRecognizer(longpressRecognizer)
     }
+     */
 }
 
 
@@ -435,7 +444,7 @@ extension AddContentViewController: UITextViewDelegate {
     enum ContentType: Int {
         case location = 0
         case time
-        case favorite
+        case speechRecognition
     }
     
     
@@ -530,7 +539,7 @@ extension AddContentViewController: UITextViewDelegate {
         
         let locationImage: UIImage? = UIImage(named: "location")
         let timeImage: UIImage? = UIImage(named: "time")
-        let favoriteImage: UIImage? = UIImage(named: "favorite")
+        let microphoneImage: UIImage? = UIImage(named: "microphone")
         let keyboardHideImage: UIImage? = UIImage(named: "keyboard_hide")
         
         let contentTypeToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: screenWidthSize, height: 44))
@@ -544,20 +553,24 @@ extension AddContentViewController: UITextViewDelegate {
         let timeBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: timeImage, style: .plain, target: self, action: #selector(addContent(_:)))
         timeBarButtonAtAccesoryView.tag = ContentType.time.rawValue
         
-        let favoriteBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: favoriteImage, style: .plain, target: self, action: #selector(addContent(_:)))
-        favoriteBarButtonAtAccesoryView.tag = ContentType.favorite.rawValue
+        let speechRecognitionBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: microphoneImage, style: .plain, target: self, action: #selector(addContent(_:)))
+        speechRecognitionBarButtonAtAccesoryView.tag = ContentType.speechRecognition.rawValue
         
         let keyboardHideBarButtonAtAccesoryView: UIBarButtonItem = UIBarButtonItem(image: keyboardHideImage, style: .plain, target: self, action: #selector(dismissKeyboard))
         
         
         var items = [UIBarButtonItem]()
+        items.append(flexSpace)
+
         items.append(locationBarButtonAtAccesoryView)
         items.append(flexSpace)
         items.append(timeBarButtonAtAccesoryView)
         items.append(flexSpace)
-        items.append(favoriteBarButtonAtAccesoryView)
-        items.append(flexSpace)
+//        items.append(speechRecognitionBarButtonAtAccesoryView)
+//        items.append(flexSpace)
         items.append(keyboardHideBarButtonAtAccesoryView)
+        items.append(flexSpace)
+
         
         contentTypeToolbar.items = items
         contentTypeToolbar.sizeToFit()
@@ -566,6 +579,8 @@ extension AddContentViewController: UITextViewDelegate {
         titleTextField.inputAccessoryView = contentTypeToolbar
     }
   
+   
+    
 }
 
 
