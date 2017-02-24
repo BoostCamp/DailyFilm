@@ -20,8 +20,8 @@ class DiaryPhotoTableViewCell: UITableViewCell {
     var delegate: DiaryHomeTableViewControllerDelegate?
     
     @IBOutlet weak var photoImageView: UIImageView!
-    @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var userNicknameLabel: UILabel!
+
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var createdDateLabel: UILabel!

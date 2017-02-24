@@ -174,8 +174,8 @@ struct Statement {
             "post_index integer NOT NULL PRIMARY KEY AUTOINCREMENT, \n" +
             "user_index integer NOT NULL, \n" +
             "image_file_path TEXT NOT NULL, \n" +
+            "title TEXT NOT NULL, \n" +
             "content TEXT NOT NULL, \n" +
-            "is_favorite integer, \n" +
             "created_date timestamp DEFAULT CURRENT_TIMESTAMP, \n" +
             "address TEXT DAFUALT NULL, \n" +
             "latitude FLOAT DEFAULT NULL, \n" +
@@ -192,7 +192,7 @@ struct Statement {
         "values(?, ?, ?, ?);"
         
         static let post = "INSERT INTO POST( \n" +
-            "user_index, image_file_path, content, is_favorite, created_date, address, latitude, longitude) \n" +
+            "user_index, image_file_path, title, content, created_date, address, latitude, longitude) \n" +
         "values(?, ?, ?, ?, ?, ?, ?, ?);"
         
     }
@@ -205,9 +205,9 @@ struct Statement {
         
         static let userProfile = "SELECT user_index, user_id, user_password, user_nickname, created_date FROM USER_PROFILE;"
         
-        static let post = "SELECT post_index, user_index, image_file_path, content, is_favorite, created_date, address, latitude, longitude FROM POST WHERE user_index = ? order by post_index desc;"
+        static let post = "SELECT post_index, user_index, image_file_path, title, content, created_date, address, latitude, longitude FROM POST WHERE user_index = ? order by post_index desc;"
         
-        static let postById = "SELECT image_file_path, content, is_favorite, address, latitude, longitude FROM POST WHERE user_index = ? and created_date = ?;"
+        static let postById = "SELECT image_file_path, title, content, address, latitude, longitude FROM POST WHERE user_index = ? and created_date = ?;"
         
         static let userIndexOfUser = "SELECT user_index FROM USER_PROFILE WHERE user_id = ?;"
         
@@ -221,7 +221,7 @@ struct Statement {
     }
     
     struct Update {
-        static let contentOfPost = "UPDATE POST SET content = ? WHERE post_index = ? and user_index = ?;"
+        static let contentOfPost = "UPDATE POST SET title = ?, content = ? WHERE post_index = ? and user_index = ?;"
     }
 }
 

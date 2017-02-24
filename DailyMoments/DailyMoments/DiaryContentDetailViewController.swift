@@ -20,7 +20,7 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
     
     
     @IBOutlet weak var createdDateLabel: UILabel! // 촬영 일시
-    @IBOutlet weak var nicknameLabel: UILabel! // 유저 닉네임
+    @IBOutlet weak var titleLabel: UILabel! // 유저 닉네임
     @IBOutlet weak var contentTextView: UITextView! // 작성된 글이 보여질 곳
     @IBOutlet weak var photoLocationMapView: MKMapView! // 사진의 위치를 지도로 보여주기 위함
 
@@ -45,11 +45,9 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
         
         if let post:Post = self.post {
             
-            userNickname = FMDatabaseManager.shareManager().selectUserNickname(query: Statement.Select.nicknameOfUser, value: post.userIndex)
-            if let userNickname = userNickname {
-                nicknameLabel.text = userNickname
+            if let title = post.title {
+                titleLabel.text = title
             }
-            
             if let createdDate = post.createdDate {
                 createdDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
             }
@@ -113,8 +111,9 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
     // MARK: - general Method
     
     // MARK:- update post (custom delegate)
-    func setUpdateContentOfPost(data: String){
-        self.contentTextView.text = data
+    func setUpdateContentOfPost(title: String, content: String){
+        self.titleLabel.text = title
+        self.contentTextView.text = content
         
     }
     

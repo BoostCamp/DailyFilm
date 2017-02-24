@@ -10,7 +10,7 @@ import UIKit
 
 // 컨텐츠의 수정 사항을 저장하고 수정 내용을 보내주기 위한 프로토콜
 protocol DataSentDelegate {
-    func setUpdateContentOfPost(data: String)
+    func setUpdateContentOfPost(title: String, content: String)
 }
 
 
@@ -19,6 +19,7 @@ class EditDiaryContentViewController: UIViewController {
     
     var post: Post?
     
+    @IBOutlet weak var titleTextView: UITextView!
     @IBOutlet weak var contentTextView: UITextView!
     
     var delegate: DataSentDelegate? = nil
@@ -34,27 +35,29 @@ class EditDiaryContentViewController: UIViewController {
         navigationController?.isNavigationBarHidden = false
         
         if let post = post {
-            if let content = post.content {
+            if let  title = post.title, let content = post.content {
+                titleTextView.text = title
                 contentTextView.text = content
             }
         }
         
-        contentTextView.delegate = self
         
+        contentTextView.delegate = self
+        titleTextView.delegate = self
     }
     
     
     
     @IBAction func tappedEditedContentSave(_ sender: Any) {
         
-        if let newContent = contentTextView.text {
-            updateContentOfPost(for: newContent, completion: { (success:Bool) in
+        if let newTitle = titleTextView.text, let newContent = contentTextView.text {
+            updateContentOfPost(title: newTitle, content: newContent, completion: { (success:Bool) in
                 
                 if success {
                     self.dismissKeyboard()
                     
                     self.dismiss(animated: true, completion: { 
-                        self.delegate?.setUpdateContentOfPost(data: newContent)
+                        self.delegate?.setUpdateContentOfPost(title: newTitle, content: newContent)
                     })
                     
 
@@ -67,8 +70,8 @@ class EditDiaryContentViewController: UIViewController {
         }
     }
     
-    func updateContentOfPost(for newContent: String, completion: ((_ success:Bool) -> Void)?) {
-        let successFlag = FMDatabaseManager.shareManager().updatePostContent(query: Statement.Update.contentOfPost, valuesOfColumns: [newContent as Any, post?.postIndex as Any, post?.userIndex as Any])
+    func updateContentOfPost(title newTitle: String, content newContent: String, completion: ((_ success:Bool) -> Void)?) {
+        let successFlag = FMDatabaseManager.shareManager().updatePostContent(query: Statement.Update.contentOfPost, valuesOfColumns: [newTitle as Any, newContent as Any, post?.postIndex as Any, post?.userIndex as Any])
         
         // 성공 여부에 따른 completion Handler
         completion?(successFlag)
@@ -202,6 +205,7 @@ extension EditDiaryContentViewController: UITextViewDelegate {
         contentTypeToolbar.items = items
         contentTypeToolbar.sizeToFit()
         
+        titleTextView.inputAccessoryView = contentTypeToolbar
         contentTextView.inputAccessoryView = contentTypeToolbar
     }
     

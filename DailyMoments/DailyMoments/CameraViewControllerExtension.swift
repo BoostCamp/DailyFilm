@@ -48,12 +48,13 @@ extension CameraViewController {
     func changeUIWhenPickImageFromPhotoAblum(){
 
         flashOfCameraBarButtonItem.image = UIImage(named: "photo_edit")
-        
+        addFunEmoticonBarButton.tintColor = UIColor.clear
         screenRatioBarButtonItem.tintColor = UIColor.clear
         photoAlbumBarButton.tintColor = UIColor.clear
         shutterOfCameraBarButtonItem.tintColor = UIColor.clear
         switchOfCameraBarButtonItem.tintColor = UIColor.clear
         
+        addFunEmoticonBarButton.isEnabled = false
         screenRatioBarButtonItem.isEnabled = false
         photoAlbumBarButton.isEnabled = false
         shutterOfCameraBarButtonItem.isEnabled = false

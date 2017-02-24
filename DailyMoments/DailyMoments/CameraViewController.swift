@@ -485,7 +485,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         case .photoLibrary:
             if let pickedImage = pickedImage {
                 self.previewImageView.image = pickedImage
-                originalPhotoImage = pickedImage
+               
+//                cameraRelatedCoreImageResource?.cgImage = context.createCGImage((cameraRelatedCoreImageResource?.ciImage)!, from: CGRect(x: 0.0, y: 0.0, width: cameraViewPhotoSize.width, height: cameraViewPhotoSize.height))!
+
+                cameraRelatedCoreImageResource?.cgImage = pickedImage.cgImage
+                cameraRelatedCoreImageResource?.ciImage = CIImage(cgImage: pickedImage.cgImage!)
+                
+                
                 
             }
         }

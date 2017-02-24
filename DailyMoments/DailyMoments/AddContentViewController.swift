@@ -23,9 +23,8 @@ class AddContentViewController: UIViewController {
     
 
     
-    
+    @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var createdDate: UILabel! // 촬영된 시간
-    @IBOutlet weak var addressLabel: UILabel! // 촬영된 주소
     @IBOutlet weak var previewOfPhotoToPostImageView: UIImageView!
     @IBOutlet weak var contentTextView: UITextView!
     
@@ -107,7 +106,13 @@ class AddContentViewController: UIViewController {
         // rightBarButton인 Done버튼 tint색을 애플의 파란색으로 변경
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appleBlue()
         
+        
+        
+        
+        titleTextField.delegate = self
         contentTextView.delegate = self
+        contentTextView.text = "내용을 입력하세요."
+        contentTextView.textColor = UIColor.lightGray
         self.setupRecognitionButton()
 
     }
@@ -161,8 +166,7 @@ class AddContentViewController: UIViewController {
     func savePostInfo(_ userIndex: Int32, completion: ((_ success:Bool) -> Void)?){
         
         let content: String? = self.contentTextView.text
-        
-        let isFavorite: Int32? = 0
+        let title: String? = self.titleTextField.text
         
         var latitude: Float?
         var longitude: Float?
@@ -194,10 +198,10 @@ class AddContentViewController: UIViewController {
             }
         }
         
-        if let imageFileName = imageFileName, let content = content, let isFavorite = isFavorite, let createdDate = intValueOfCreatedDate, let address = address, let latitude = latitude, let longitude = longitude {
-            let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, content: content, isFavorite: isFavorite, createdDate: createdDate, address: address, latitude: latitude, longitude: longitude)
+        if let imageFileName = imageFileName, let title = title, let content = content, let createdDate = intValueOfCreatedDate, let address = address, let latitude = latitude, let longitude = longitude {
+            let post = Post(postIndex: 0, userIndex: userIndex, imageFilePath: imageFileName, title: title, content: content, createdDate: createdDate, address: address, latitude: latitude, longitude: longitude)
             
-            let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.content as Any, post.isFavorite as Any, post.createdDate as Any, post.address as Any, post.latitude as Any, post.longitude as Any])
+            let successFlag:Bool = FMDatabaseManager.shareManager().insert(query: Statement.Insert.post, valuesOfColumns: [post.userIndex as Any, post.imageFilePath as Any, post.title as Any, post.content as Any, post.createdDate as Any, post.address as Any, post.latitude as Any, post.longitude as Any])
             
             completion?(successFlag)
             
@@ -382,6 +386,47 @@ extension AddContentViewController: NSKRecognizerDelegate {
 
 
 
+extension AddContentViewController: UITextFieldDelegate {
+    
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        print("textFieldShouldBeginEditing")
+        addContentTypeButtonOnKeyboard()
+        return true
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        print("textFieldDidBeginEditing")
+
+    }
+
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        print("textFieldShouldEndEditing")
+
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print("textFieldDidEndEditing")
+
+    }
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        print("textFieldShouldClear")
+
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("textFieldShouldReturn")
+
+        return true
+    }
+
+    
+}
+
+
+
 // UITextViewDelegate & keyboard show/hide
 
 extension AddContentViewController: UITextViewDelegate {
@@ -404,10 +449,10 @@ extension AddContentViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         print("textViewDidBeginEditing")
         
-//        if contentTextView.inputAccessoryView == nil {
-//            print("textViewDidBeginEditing addContentTypeButtonOnKeyboard")
-//            addContentTypeButtonOnKeyboard()
-//        }
+        if contentTextView.textColor == UIColor.lightGray {
+            contentTextView.text = nil
+            contentTextView.textColor = UIColor.black
+        }
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -418,7 +463,10 @@ extension AddContentViewController: UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         print("textViewDidEndEditing")
-    
+        if contentTextView.text.isEmpty {
+            contentTextView.text = "내용을 입력하세요."
+            contentTextView.textColor = UIColor.lightGray
+        }
     }
     
     func textViewDidChangeSelection(_ textView: UITextView) {
@@ -515,6 +563,7 @@ extension AddContentViewController: UITextViewDelegate {
         contentTypeToolbar.sizeToFit()
         
         contentTextView.inputAccessoryView = contentTypeToolbar
+        titleTextField.inputAccessoryView = contentTypeToolbar
     }
   
 }
@@ -572,7 +621,7 @@ extension AddContentViewController: CLLocationManagerDelegate {
         if let country = placemark.country, let administrativeArea = placemark.administrativeArea, let locality = placemark.locality, let subLocality = placemark.subLocality {
             
             address = "\(country) \(administrativeArea) \(locality) \(subLocality)"
-            addressLabel.text = "\(country) \(administrativeArea) \(locality) \(subLocality)"
+          
         }
         
     }

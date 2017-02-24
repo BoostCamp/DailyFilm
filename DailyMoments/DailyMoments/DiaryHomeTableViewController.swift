@@ -193,14 +193,7 @@ extension DiaryHomeTableViewController {
         
         if let post = posts?[indexPath.row]  {
             
-            cell.profileImageView.image = UIImage(named: "person")
-            
-            let userNickname:String? = FMDatabaseManager.shareManager().selectUserNickname(query: Statement.Select.nicknameOfUser, value: post.userIndex)
-            if let userNickname = userNickname {
-                cell.userNicknameLabel.text = userNickname
-            }
-            
-            if let address = post.address, let imageFilePath = post.imageFilePath, let content = post.content, let createdDate = post.createdDate {
+            if let title = post.title, let address = post.address, let imageFilePath = post.imageFilePath, let content = post.content, let createdDate = post.createdDate {
                 
                 cell.addressLabel.text = address
                 
@@ -222,6 +215,7 @@ extension DiaryHomeTableViewController {
                     }
                 }
                 
+                cell.titleLabel.text = title
                 cell.contentLabel.text = content
                 cell.createdDateLabel.text = Date(timeIntervalSince1970: createdDate).toString()
                 

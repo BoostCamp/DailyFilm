@@ -178,14 +178,14 @@ class FMDatabaseManager: NSObject {
                         let postIndex: Int32 = (results?.int(forColumn: "post_index"))!
                         let userIndex: Int32 = (results?.int(forColumn: "user_index"))!
                         let imageFilePath: String = (results?.string(forColumn: "image_file_path"))!
+                        let title: String = (results?.string(forColumn: "title"))!
                         let content: String = (results?.string(forColumn: "content"))!
-                        let isFavorite: Int32 = (results?.int(forColumn: "is_favorite"))!
                         let createdDate: Double = (results?.double(forColumn: "created_date"))!
                         let address: String = (results?.string(forColumn: "address"))!
                         let latitude = (results?.double(forColumn: "latitude"))!
                         let longitude = (results?.double(forColumn: "longitude"))!
                         
-                        let post: Post = Post(postIndex: postIndex, userIndex: userIndex, imageFilePath: imageFilePath, content: content, isFavorite: isFavorite, createdDate: createdDate, address: address, latitude: Float(latitude), longitude: Float(longitude))
+                        let post: Post = Post(postIndex: postIndex, userIndex: userIndex, imageFilePath: imageFilePath, title: title, content: content, createdDate: createdDate, address: address, latitude: Float(latitude), longitude: Float(longitude))
                         
                         posts.append(post)
                         
@@ -230,13 +230,13 @@ class FMDatabaseManager: NSObject {
                     if (results?.next())! {
                         
                         let imageFilePath: String = (results?.string(forColumn: "image_file_path"))!
+                        let title: String = (results?.string(forColumn: "title"))!
                         let content: String = (results?.string(forColumn: "content"))!
-                        let isFavorite: Int32 = (results?.int(forColumn: "is_favorite"))!
                         let address: String = (results?.string(forColumn: "address"))!
                         let latitude = (results?.double(forColumn: "latitude"))!
                         let longitude = (results?.double(forColumn: "longitude"))!
                         
-                        post = Post(postIndex: 0, userIndex: 0, imageFilePath: imageFilePath, content: content, isFavorite: isFavorite, createdDate: 0, address: address, latitude: Float(latitude), longitude: Float(longitude))
+                        post = Post(postIndex: 0, userIndex: 0, imageFilePath: imageFilePath, title: title, content: content, createdDate: 0, address: address, latitude: Float(latitude), longitude: Float(longitude))
                         dump(post)
                     }
                     fmdb?.close()
