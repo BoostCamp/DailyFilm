@@ -9,6 +9,8 @@
 import UIKit
 import AVFoundation
 import Photos
+import CoreImage
+
 
 extension CameraViewController {
     
@@ -20,6 +22,22 @@ extension CameraViewController {
         case off = 0
         case on
         case auto
+    }
+    
+    // camera 관련
+    struct CameraRelatedCoreImageResource{
+        var pixelBuffer: CVImageBuffer? = nil
+        var ciImage: CIImage? = nil
+        var cgImage: CGImage? = nil
+        
+    }
+    
+    // face recognition 관련 
+    struct FaceDetectRelatedResource {
+        var faceDetector: CIDetector? = nil
+        var feature: [CIFeature]? = nil
+        var accuracy: [String : Any]? = nil
+        
     }
     
     
@@ -127,6 +145,7 @@ extension CameraViewController {
         
     }
     
+
     
     // MARK:- DidoutPutSampleBuffer and didFinishProcessingPhotoSampleBuffer
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
@@ -138,8 +157,9 @@ extension CameraViewController {
         }
         connection.videoOrientation = .portrait
         
-        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        let ciImageFromCaptureOutput = CIImage(cvPixelBuffer: pixelBuffer!)
+        cameraRelatedCoreImageResource?.pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        cameraRelatedCoreImageResource?.ciImage = CIImage(cvPixelBuffer: (cameraRelatedCoreImageResource?.pixelBuffer)!)
+        
         
         guard let context = context else {
             print("context guard error")
@@ -151,22 +171,36 @@ extension CameraViewController {
             
             return
         }
+        cameraRelatedCoreImageResource?.cgImage = context.createCGImage((cameraRelatedCoreImageResource?.ciImage)!, from: CGRect(x: 0.0, y: 0.0, width: cameraViewPhotoSize.width, height: cameraViewPhotoSize.height))!
         
-        originalPhotoImage = UIImage(cgImage: context.createCGImage(ciImageFromCaptureOutput, from: CGRect(x: 0.0, y: 0.0, width: cameraViewPhotoSize.width, height: cameraViewPhotoSize.height))!)
         
-        
+        originalPhotoImage = UIImage(cgImage: (cameraRelatedCoreImageResource?.cgImage)!)
         
         if let filterName = filterName {
             
             if filterName == PhotoEditorTypes.normalStatusFromFilterNameArray(){
                 DispatchQueue.main.async {
                     self.previewImageView.image = self.originalPhotoImage
+                  
+                    if self.cameraPosition == .front, self.isAddFunEmoticon == true {
+                        self.faceDetectRelatedResource?.feature = self.faceDetectRelatedResource?.faceDetector?.features(in: (self.cameraRelatedCoreImageResource?.ciImage)!, options: self.imageOptions)
+                        
+                        for face in self.faceDetectRelatedResource?.feature as! [CIFaceFeature] {
+                            
+                            self.funFaceIcon?.frame = CGRect(x: (face.mouthPosition.x - (self.previewImageView.bounds.width / 2)) - (face.bounds.size.width / 2), y: ((self.previewImageView.bounds.height) - face.mouthPosition.y - (face.bounds.size.height / 3)), width: face.bounds.size.width, height: face.bounds.size.height)
+                            
+                        }
+
+                    }
+                    
                     
                 }
+                
             } else {
                 if let filter = CIFilter(name: filterName) {
                     filter.setDefaults()
-                    filter.setValue(ciImageFromCaptureOutput, forKey: kCIInputImageKey)
+                    
+                    filter.setValue(cameraRelatedCoreImageResource?.ciImage, forKey: kCIInputImageKey)
                     if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
                         
                         DispatchQueue.main.async {
@@ -368,7 +402,6 @@ extension CameraViewController {
                         // 초점 박스가 없으면 그려줌
                         makeRectangle(at : coordinates)
                     }
-                    
                     
                     previewImageView.addSubview(self.focusBox)
                     fadeViewInThenOut(view: self.focusBox, delay: PhotoEditorTypes.filterNameLabelAnimationDelay)

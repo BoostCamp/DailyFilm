@@ -31,7 +31,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     @IBOutlet weak var previewImageView: UIImageView! // 렌즈(input)에서 얻어지는 샘플 데이터를 디스플레이 화면에서 보여주기 위한 view
     
+    @IBOutlet weak var addFunEmoticonBarButton: UIBarButtonItem!
+    
     var focusBox: UIView!
+    
+    var funFaceIcon: UIImageView?
+    
+    var isAddFunEmoticon: Bool?
     
     var originalPhotoImage: UIImage?
     
@@ -53,9 +59,14 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         var height: CGFloat
     }
     
+    var cameraRelatedCoreImageResource: CameraRelatedCoreImageResource? // Video Data Output, Sample Data struct
+    
+    var faceDetectRelatedResource: FaceDetectRelatedResource? // Face Recognition struct
+    
+    var imageOptions: [String: AnyObject]?
+    
     // 카메라 뷰에 담길 촬영 포토 사이즈를 위한 프로퍼티
     var cameraViewPhotoSize: CameraViewPhotoSize?
-    
     
     // 참고할 문서.
     // https://developer.apple.com/library/prerelease/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/04_MediaCapture.html
@@ -82,7 +93,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
 
         
         //Init Setting
-        
+        isAddFunEmoticon = false
         photoMode = .camera
         cameraFlashSwitchedStatus = FlashModeConstant.off.rawValue // Init
         cameraPosition = .back // default는 back camera
@@ -112,9 +123,17 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         // About OpenGL ES - https://developer.apple.com/library/prerelease/content/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008793
         // About Core Image - https://developer.apple.com/library/prerelease/content/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_intro/ci_intro.html#//apple_ref/doc/uid/TP30001185
 
+    
         let openGLContext = EAGLContext(api: .openGLES3)
         context = CIContext(eaglContext: openGLContext!)
-
+        
+    
+        cameraRelatedCoreImageResource = CameraRelatedCoreImageResource()
+        faceDetectRelatedResource = FaceDetectRelatedResource()
+        faceDetectRelatedResource?.faceDetector = CIDetector.init(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy : CIDetectorAccuracyHigh])
+        imageOptions =  NSDictionary(object: NSNumber(value: 2) as NSNumber, forKey: CIDetectorImageOrientation as NSString) as? [String : AnyObject]
+        // let kCGImagePropertyOrientation: CFString
+        // 1 Top, right -> front
     }
     
     
@@ -198,6 +217,28 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
         }
     }
     
+    
+    
+    @IBAction func addFunEmoticon(_ sender: Any) {
+        
+       
+        
+        if cameraPosition == .front {
+            isAddFunEmoticon = !isAddFunEmoticon!
+
+            if funFaceIcon == nil {
+                self.funFaceIcon = UIImageView(image: UIImage(named: "line_brown"))
+
+                previewImageView.addSubview(funFaceIcon!)
+
+            } else {
+                funFaceIcon?.removeFromSuperview()
+                funFaceIcon = nil
+            }
+            
+        }
+
+    }
     
  
     // MARK: - 카메라 비율 변경
