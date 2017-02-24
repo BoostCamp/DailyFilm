@@ -105,6 +105,7 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
     
     // MARK: - UITextView delegate method
     
+    // textView 수정안되게 변경
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         return false
     }
@@ -118,7 +119,7 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
     }
     
     
-    // MARK: delete post
+    // MARK:- delete post
 
     @IBAction func deletePost(_ sender: Any) {
      
@@ -165,7 +166,7 @@ class DiaryContentDetailViewController: UIViewController, UITextViewDelegate, Da
             let result = FMDatabaseManager.shareManager().deletePost(query: Statement.Delete.post, valuesOfColumns: [postIndex, userIndex])
             
             if result {
-                navigationController?.popViewController(animated: true)
+                let _ = self.navigationController?.popViewController(animated: true)
             }
         } catch let error {
             print("file delete error: ", error)

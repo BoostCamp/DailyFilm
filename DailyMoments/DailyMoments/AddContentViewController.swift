@@ -32,7 +32,6 @@ class AddContentViewController: UIViewController {
     var edidtedPhotoImage: UIImage? // 필터가 적용된 Image
     var takenResizedPhotoImage: UIImage? // 촬영한 Image를 reszie
     
-    
     var nowDate: Date?
     var timeIntervalOfCreatedDate: TimeInterval?
     var intValueOfCreatedDate: TimeInterval?  //1487227355.6198459 ->  1487227355.0
@@ -119,7 +118,6 @@ class AddContentViewController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.isToolbarHidden = false
-
         // UIKeyboardWillShow, UIKeyboardWillHide이벤트 통지 가입 (NSNotification.Name)
         subscribeToKeyboardNotifications()
         

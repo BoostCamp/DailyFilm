@@ -11,7 +11,7 @@ import AVFoundation
 import Photos
 
 class HomeTabBarController: UITabBarController, UITabBarControllerDelegate {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
@@ -34,15 +34,31 @@ class HomeTabBarController: UITabBarController, UITabBarControllerDelegate {
     }
     
     
-    /*
+  
     // MARK:- Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+  
+        
+        
+        /*
+         
+         
+         if segue.identifier == EditPhotoViewController.showAddContentViewControllerSegueIdentifier {
+         if let addTextViewController:AddContentViewController = segue.destination as? AddContentViewController {
+         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+         addTextViewController.edidtedPhotoImage = editedTakenPhotoImage
+         
+         }
+         }
+
+         
+         */
     }
-    */
+ 
     
 }
 

@@ -24,13 +24,7 @@ extension CameraViewController {
         case auto
     }
     
-    // camera 관련
-    struct CameraRelatedCoreImageResource{
-        var pixelBuffer: CVImageBuffer? = nil
-        var ciImage: CIImage? = nil
-        var cgImage: CGImage? = nil
-        
-    }
+  
     
     // face recognition 관련 
     struct FaceDetectRelatedResource {
@@ -330,7 +324,6 @@ extension CameraViewController {
         var photoWidth: CGFloat?
         var photoHeight: CGFloat?
         
-        var rectOfpreviewImage: CGRect?
         
         photoWidth = ScreenType.photoWidthByDeviceInput(type: cameraPosition.rawValue)
         photoHeight = ScreenType.photoHeightByAspectScreenRatio(cameraPosition.rawValue, ratioType: screenRatioStatus)
@@ -338,35 +331,10 @@ extension CameraViewController {
         rectOfpreviewImage = ScreenType.getCGRectPreiewImageView(target: UIScreen.main.bounds, yMargin: settingToolbar.frame.height, ratioType: screenRatioStatus)
         
         
-        if let photoWidth = photoWidth, let photoHeight = photoHeight, let rectOfpreviewImage = rectOfpreviewImage {
+        if let photoWidth = photoWidth, let photoHeight = photoHeight{
             cameraViewPhotoSize = CameraViewPhotoSize(width: photoWidth, height: photoHeight)
-            DispatchQueue.main.async {
-                self.previewImageView.frame = rectOfpreviewImage
-            }
-            
-            
         }
     }
-    
-    // MARK:- generate preview Photo
-    
-    // 작은 크기로 보여줄 UIImage를 생성하는 메소드. crop Image -> resize Image
-    func generatePreviewPhoto(source image: UIImage?) -> UIImage? {
-        
-        if let image = image  {
-            let widthOfscreenSize:CGFloat = UIScreen.main.bounds.width
-            let valueToDivideTheScreen:CGFloat = CGFloat.init(cellUnitValue)
-            let widthOfImage = widthOfscreenSize / valueToDivideTheScreen
-            
-            let croppedImage: UIImage = image.cropToSquareImage()
-            
-            return croppedImage.resizeImage(targetSize: CGSize(width: widthOfImage, height: widthOfImage))
-        }
-        return UIImage()
-    }
-    
-    
-    
     
     // MARK:- FocusMode, draw and move focus Box.
     

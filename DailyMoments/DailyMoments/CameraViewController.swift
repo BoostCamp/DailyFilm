@@ -51,13 +51,11 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
     
     var screenRatioSwitchedStatus: Int = 0 // 화면 비율 구분을 위한 저장 프로퍼티
     
+    var rectOfpreviewImage: CGRect? // previewImage의 CGRect
+    
     var photoMode: AddPhotoMode? // 카메라, 사진앨범 모드인지 구분하는 저장 프로퍼티
     
-    // 카메라 뷰에 담길 촬영 포토 사이즈를 위한 strcut
-    struct CameraViewPhotoSize {
-        var width: CGFloat
-        var height: CGFloat
-    }
+    
     
     var cameraRelatedCoreImageResource: CameraRelatedCoreImageResource? // Video Data Output, Sample Data struct
     
@@ -266,6 +264,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
 
             // 화면 비율이 스위칭 될 때 screen Size를 새로 구해오기 위함
             getSizeByScreenRatio(with: cameraPosition, at: screenRatioSwitchedStatus)
+           
         }
     }
     
@@ -430,7 +429,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
                 
                 // 카메라 스위칭 될 때 screen Size를 새로 구해오기 위함
                 getSizeByScreenRatio(with: cameraPosition, at: screenRatioSwitchedStatus)
-                
+              
                 
             }
         }
@@ -500,14 +499,12 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVC
             
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
             
-            editPhotoViewController.takenPhotoImage = previewImageView.image
-            editPhotoViewController.originalPhotoImage = originalPhotoImage
+            editPhotoViewController.cameraRelatedCoreImageResource = cameraRelatedCoreImageResource
             editPhotoViewController.selectedFilterIndex = filterIndex
-            editPhotoViewController.takenResizedPhotoImage = generatePreviewPhoto(source: originalPhotoImage)
+            
             
         }
         else if segue.identifier == CameraViewController.showPhotoAlbumCollectionViewSegueIdentifier, let photoAlbumCollectionViewController = segue.destination as? PhotoAlbumCollectionViewController {
-            
             photoAlbumCollectionViewController.sizeOfImage = previewImageView.frame.size
             photoAlbumCollectionViewController.delegate = self
             

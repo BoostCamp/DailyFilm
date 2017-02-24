@@ -169,7 +169,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YoP-j4-kri">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                             </imageView>
@@ -222,34 +222,41 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r14-9X-3hX" userLabel="Edit Effect Toolbar">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="c8d-ou-9l6"/>
+                                    <barButtonItem image="image_filter" id="Dv0-yU-OsC" userLabel="Fliter Bar Button Item">
+                                        <connections>
+                                            <action selector="imageEditAction:" destination="dcS-RD-4Y0" id="FfL-NX-9EH"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Bs1-C8-gpq"/>
+                                    <barButtonItem tag="1" image="image_rotate" id="vfm-kx-DYh" userLabel="Rotate Image Bar Button Item">
+                                        <connections>
+                                            <action selector="imageEditAction:" destination="dcS-RD-4Y0" id="D82-Ot-Pt2"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="sz9-Z4-Icr"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Pn2-rt-EoP" firstAttribute="top" secondItem="a2X-BT-T7U" secondAttribute="bottom" id="8gu-nj-icb"/>
-                            <constraint firstItem="YoP-j4-kri" firstAttribute="leading" secondItem="OAk-FI-Pcv" secondAttribute="leading" id="Kd7-Xu-FjU"/>
+                            <constraint firstItem="r14-9X-3hX" firstAttribute="leading" secondItem="OAk-FI-Pcv" secondAttribute="leading" id="3MZ-ef-wyl"/>
+                            <constraint firstItem="r14-9X-3hX" firstAttribute="top" secondItem="a2X-BT-T7U" secondAttribute="bottom" id="5HQ-d0-WVn"/>
+                            <constraint firstAttribute="trailing" secondItem="YoP-j4-kri" secondAttribute="trailing" id="Jfx-y4-HT2"/>
                             <constraint firstAttribute="trailing" secondItem="a2X-BT-T7U" secondAttribute="trailing" id="Sz5-D0-9f8"/>
-                            <constraint firstAttribute="trailing" secondItem="YoP-j4-kri" secondAttribute="trailing" id="UcY-3H-bsh"/>
                             <constraint firstItem="a2X-BT-T7U" firstAttribute="height" secondItem="OAk-FI-Pcv" secondAttribute="height" multiplier="0.2" id="ajn-7h-RVp"/>
                             <constraint firstItem="a2X-BT-T7U" firstAttribute="leading" secondItem="OAk-FI-Pcv" secondAttribute="leading" id="bfy-pv-zmL"/>
-                            <constraint firstItem="Pn2-rt-EoP" firstAttribute="top" secondItem="YoP-j4-kri" secondAttribute="bottom" id="tR4-7P-Tej"/>
-                            <constraint firstItem="YoP-j4-kri" firstAttribute="top" secondItem="mwK-ge-Oof" secondAttribute="bottom" id="ubG-eh-ask"/>
+                            <constraint firstItem="YoP-j4-kri" firstAttribute="top" secondItem="mwK-ge-Oof" secondAttribute="bottom" id="bgj-K5-wcP"/>
+                            <constraint firstItem="Pn2-rt-EoP" firstAttribute="top" secondItem="r14-9X-3hX" secondAttribute="bottom" id="dQz-yr-Ym4"/>
+                            <constraint firstAttribute="trailing" secondItem="r14-9X-3hX" secondAttribute="trailing" id="do3-7v-5RH"/>
+                            <constraint firstItem="YoP-j4-kri" firstAttribute="leading" secondItem="OAk-FI-Pcv" secondAttribute="leading" id="jH0-89-ipl"/>
+                            <constraint firstAttribute="bottom" secondItem="YoP-j4-kri" secondAttribute="bottom" id="sLA-2y-vbT"/>
                         </constraints>
                     </view>
-                    <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="c8d-ou-9l6"/>
-                        <barButtonItem image="image_filter" id="Dv0-yU-OsC" userLabel="Fliter Bar Button Item">
-                            <connections>
-                                <action selector="imageEditAction:" destination="dcS-RD-4Y0" id="FfL-NX-9EH"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Bs1-C8-gpq"/>
-                        <barButtonItem tag="1" image="image_rotate" id="vfm-kx-DYh" userLabel="Rotate Image Bar Button Item">
-                            <connections>
-                                <action selector="imageEditAction:" destination="dcS-RD-4Y0" id="D82-Ot-Pt2"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="sz9-Z4-Icr"/>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="Pfp-pq-BBY">
                         <barButtonItem key="rightBarButtonItem" title="다음" id="dgp-1x-cPx">
                             <connections>
@@ -258,8 +265,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="editImageEffectToolbar" destination="r14-9X-3hX" id="lgu-NF-Zmh"/>
                         <outlet property="imagefilterCollectionView" destination="a2X-BT-T7U" id="J76-hM-acJ"/>
                         <outlet property="photographedImage" destination="YoP-j4-kri" id="3z1-Uj-3cr"/>
                     </connections>
@@ -508,21 +517,21 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="RightDetailCell" textLabel="DNw-BX-3ys" detailTextLabel="hK9-ph-x3d" style="IBUITableViewCellStyleValue1" id="6Ue-Zi-wto">
-                                <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ue-Zi-wto" id="Jvv-U4-yxG">
-                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DNw-BX-3ys">
-                                            <rect key="frame" x="15" y="11" width="34" height="21"/>
+                                            <rect key="frame" x="15" y="12" width="33.5" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hK9-ph-x3d">
-                                            <rect key="frame" x="296" y="11" width="44" height="21"/>
+                                            <rect key="frame" x="296" y="12" width="44" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
@@ -532,14 +541,14 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SwitchCell" textLabel="HPA-0O-y8e" style="IBUITableViewCellStyleDefault" id="rjm-26-XTb" customClass="SwitchCell" customModule="DailyMoments" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="100" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rjm-26-XTb" id="4cM-cM-AsJ">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HPA-0O-y8e">
-                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
@@ -572,10 +581,10 @@
                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="DiaryPhotoCell" rowHeight="513" id="Cdq-Eu-VdH" userLabel="DiaryPhotoCell" customClass="DiaryPhotoTableViewCell" customModule="DailyMoments" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="56" width="375" height="513"/>
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="513"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="Cdq-Eu-VdH" id="RjS-q2-jOt">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="512"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="512.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="EzJ-dZ-gSb">

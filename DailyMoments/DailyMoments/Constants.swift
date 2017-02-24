@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreGraphics
+import CoreImage
 
 struct UserProfileConstants {
     static let id: String = "nso502354@gmail.com"
@@ -34,6 +35,21 @@ struct DiaryPhotoTableViewConstants{
 enum DeviceInputType: Int {
     case back = 1
     case front
+}
+
+
+// 카메라 뷰에 담길 촬영 포토 사이즈를 위한 strcut
+struct CameraViewPhotoSize {
+    var width: CGFloat
+    var height: CGFloat
+}
+
+// camera 관련
+struct CameraRelatedCoreImageResource{
+    var pixelBuffer: CVImageBuffer? = nil
+    var ciImage: CIImage? = nil
+    var cgImage: CGImage? = nil
+    
 }
 
 // 카메라 뷰에서 포토앨범, 카메라 모드인지 구분하기 위한 enum

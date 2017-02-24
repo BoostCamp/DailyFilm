@@ -86,7 +86,7 @@ class DiaryHomeTableViewController: UITableViewController {
         if isUserIdDuplicated == false {
             
             let successFlag = FMDatabaseManager.shareManager().insert(query: Statement.Insert.userProfile, valuesOfColumns: [userProfile.userId as Any, userProfile.userPassword as Any, userProfile.userNickname as Any, userProfile.createdDate as Any])
-            
+            print("userInsert status: ", successFlag)
             
         }
         let userProfiles: [UserProfile] = FMDatabaseManager.shareManager().selectUserProfile(query: Statement.Select.userProfile, value: "nso502354@gamil.com")
@@ -104,15 +104,14 @@ class DiaryHomeTableViewController: UITableViewController {
                 
             } else if postCount != posts?.count {
                 
-                if let selectedIndex = selectedIndex {
+                if let index = selectedIndex {
                     print("// delete post - POST Table에 delete 되었고, 선택한 셀 index가 있을 때")
                     // delete post - POST Table에 delete 되었고, 선택한 셀 index가 있을 때
                     postCount = posts?.count
                     tableView.beginUpdates()
-                    tableView.deleteRows(at: [selectedIndex], with: .none)
+                    tableView.deleteRows(at: [index], with: .none)
                     tableView.endUpdates()
-                    
-                    
+                    selectedIndex = nil
                 } else {
                     print("// insert post - POST Table에 insert 되었고, 선택한 셀 index가 nil일때")
                     // insert post - POST Table에 insert 되었고, 선택한 셀 index가 nil일때
@@ -165,7 +164,7 @@ class DiaryHomeTableViewController: UITableViewController {
                 diaryContentDetailViewController.post = posts?[index.row]
                 self.selectedIndex = index
                 diaryContentDetailViewController.selectedIndexPath = index
-                
+//                diaryContentDetailViewController.
             }
         }
     }

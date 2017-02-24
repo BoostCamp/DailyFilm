@@ -16,7 +16,7 @@ extension UIImage {
         let size = self.size
         
         let widthRatio  = targetSize.width  / self.size.width
-        let heightRatio = targetSize.height / self.size.height 
+        let heightRatio = targetSize.height / self.size.height
         
         // Figure out what our orientation is, and use that to form the rectangle
         var newSize: CGSize
@@ -44,25 +44,29 @@ extension UIImage {
         return newImage
     }
     
-     // image를 1:1 비율로 crop
-     func cropToSquareImage() -> UIImage{
+    // image를 1:1 비율로 crop
+    func cropToSquareImage() -> UIImage{
         
         var cropRect: CGRect?
         let imageWidth = self.size.width
         let imageHeight = self.size.height
-     
+        
         if imageWidth < imageHeight {
             // Potrait mode
+            print("Potrait")
             cropRect = CGRect(x: 0.0, y: (imageHeight - imageWidth) / 2.0, width: imageWidth, height: imageWidth)
         } else if imageWidth > imageHeight{
             // Landscape mode
+            print("Landscape")
             cropRect = CGRect(x: (imageWidth - imageHeight) / 2.0, y: 0.0, width: imageHeight, height: imageHeight)
         } else {
+            print("self")
+
             return self
         }
         
         // Draw neew image in current graphics context
-
+        
         guard let rect: CGRect = cropRect else {
             return UIImage()
         }
@@ -72,12 +76,10 @@ extension UIImage {
     
     // image에 fliter 적용하는 메소드
     func applyFilter(type filterName: String) -> UIImage{
-       
+        
         var resultImage:UIImage = self
         
         let originalOrientation: UIImageOrientation = self.imageOrientation
-        
-        
         
         guard let image = resultImage.cgImage  else {
             return self
@@ -86,7 +88,7 @@ extension UIImage {
         /*
          
          OpenGL ES는 하드웨어 가속 2D 및 3D 그래픽 렌더링을위한 C 기반 인터페이스를 제공합니다. iOS의 OpenGL ES 프레임 워크 (OpenGLES.framework)는 OpenGL ES 사양의 버전 1.1, 2.0 및 3.0 구현을 제공합니다.
-
+         
          EAGL penGL ES 용 플랫폼 별 API
          the platform-specific APIs for OpenGL ES on iOS devices,
          
@@ -104,9 +106,9 @@ extension UIImage {
             
             if let output = filter.value(forKey: kCIOutputImageKey) as? CIImage {
                 
-/*
-        scale : The scale factor to assume when interpreting the image data. Applying a scale factor of 1.0 results in an image whose size matches the pixel-based dimensions of the image. Applying a different scale factor changes the size of the image as reported by the size property.
-*/
+                /*
+                 scale : The scale factor to assume when interpreting the image data. Applying a scale factor of 1.0 results in an image whose size matches the pixel-based dimensions of the image. Applying a different scale factor changes the size of the image as reported by the size property.
+                 */
                 resultImage = UIImage(cgImage: context.createCGImage(output, from: output.extent)!, scale: 1, orientation: originalOrientation)
             }
             
