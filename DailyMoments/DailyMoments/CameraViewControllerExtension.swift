@@ -180,15 +180,29 @@ extension CameraViewController {
                     if self.cameraPosition == .front, self.isAddFunEmoticon == true {
                         self.faceDetectRelatedResource?.feature = self.faceDetectRelatedResource?.faceDetector?.features(in: (self.cameraRelatedCoreImageResource?.ciImage)!, options: self.imageOptions)
                         
-                        for face in self.faceDetectRelatedResource?.feature as! [CIFaceFeature] {
+//                        for face in self.faceDetectRelatedResource?.feature as! [CIFaceFeature] {
+//                            
+//                            self.funFaceIcon?.frame = CGRect(x: (face.mouthPosition.x - (self.previewImageView.bounds.width / 2)) - (face.bounds.size.width / 2), y: ((self.previewImageView.bounds.height) - face.mouthPosition.y - (face.bounds.size.height / 3)), width: face.bounds.size.width, height: face.bounds.size.height)
+//                            
+//                        }
+                        
+                        let detectedImage = self.cameraRelatedCoreImageResource?.ciImage
+                        
+                        let detectionAccuracy = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+                        let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: detectionAccuracy)
+                        let foundFaces = faceDetector?.features(in: detectedImage!)
+                        
+                        // For converting the Core Image Coordinates to UIView Coordinates
+                        let detectedImageSize = detectedImage?.extent.size
+                        var transform = CGAffineTransform(scaleX: 1, y: -1)
+                        transform = transform.translatedBy(x: 0, y: -(detectedImageSize?.height)!)
+                        
+                        for face in foundFaces as! [CIFaceFeature] {
                             
-                            self.funFaceIcon?.frame = CGRect(x: (face.mouthPosition.x - (self.previewImageView.bounds.width / 2)) - (face.bounds.size.width / 2), y: ((self.previewImageView.bounds.height) - face.mouthPosition.y - (face.bounds.size.height / 3)), width: face.bounds.size.width, height: face.bounds.size.height)
+                            self.funFaceIcon?.frame = CGRect(x: (face.mouthPosition.x - (self.previewImageView.bounds.width / 2)) - (face.bounds.size.width / 2), y: ((self.previewImageView.bounds.height) - face.mouthPosition.y - (face.bounds.size.height / 3)), width: 300, height: 300)
                             
                         }
-
                     }
-                    
-                    
                 }
                 
             } else {

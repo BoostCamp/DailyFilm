@@ -318,6 +318,7 @@ extension AddContentViewController: NSKRecognizerDelegate {
     public func recognizerDidEnterReady(_ aRecognizer: NSKRecognizer!) {
         print("Event occurred: Ready")
         self.contentTextView.text = ""
+        contentTextView.textColor = UIColor.black
 
 //        self.contentTextView.text = "Recognizing......"
 //        self.setRecognitionButtonTitle(withText: "Stop", color: .red)
