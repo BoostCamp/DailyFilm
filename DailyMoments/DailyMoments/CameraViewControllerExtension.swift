@@ -170,7 +170,8 @@ extension CameraViewController {
         
         
         originalPhotoImage = UIImage(cgImage: (cameraRelatedCoreImageResource?.cgImage)!)
-        
+        let faceTransform = CGAffineTransform(scaleX: 1, y: -1)
+
         if let filterName = filterName {
             
             if filterName == PhotoEditorTypes.normalStatusFromFilterNameArray(){
@@ -186,20 +187,13 @@ extension CameraViewController {
 //                            
 //                        }
                         
-                        let detectedImage = self.cameraRelatedCoreImageResource?.ciImage
+                       
                         
-                        let detectionAccuracy = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-                        let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: detectionAccuracy)
-                        let foundFaces = faceDetector?.features(in: detectedImage!)
-                        
-                        // For converting the Core Image Coordinates to UIView Coordinates
-                        let detectedImageSize = detectedImage?.extent.size
-                        var transform = CGAffineTransform(scaleX: 1, y: -1)
-                        transform = transform.translatedBy(x: 0, y: -(detectedImageSize?.height)!)
-                        
-                        for face in foundFaces as! [CIFaceFeature] {
+                        for face in self.faceDetectRelatedResource?.feature as! [CIFaceFeature] {
                             
-                            self.funFaceIcon?.frame = CGRect(x: (face.mouthPosition.x - (self.previewImageView.bounds.width / 2)) - (face.bounds.size.width / 2), y: ((self.previewImageView.bounds.height) - face.mouthPosition.y - (face.bounds.size.height / 3)), width: 300, height: 300)
+//
+//                            print("\(((face.mouthPosition.applying(faceTransform).x) - 300)) \(self.previewImageView.bounds.height + (face.mouthPosition.applying(faceTransform).y) - 150)")
+                            self.funFaceIcon?.frame = CGRect(x: (face.mouthPosition.applying(faceTransform).x) - 300, y:  self.previewImageView.bounds.height + (face.mouthPosition.applying(faceTransform).y) - 150, width: 300, height: 300)
                             
                         }
                     }
