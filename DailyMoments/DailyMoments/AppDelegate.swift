@@ -16,6 +16,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Set Default UINavigationBar appearance
+        
+        let navigationBarAppearance = UINavigationBar.appearance()
+        navigationBarAppearance.barTintColor = UIColor.easyColor(red: 245, green: 245, blue: 245, alpha: 0.5)
+        navigationBarAppearance.tintColor = UIColor.darkGray
+        navigationBarAppearance.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.darkGray]
+        
+        // Set Default UITabBar appearance
+        
+        let tabBar = UITabBar.appearance()
+        tabBar.barTintColor = UIColor.easyColor(red: 245, green: 245, blue: 245, alpha: 0.5)
+        tabBar.tintColor = UIColor.darkGray
+        tabBar.shadowImage = UIImage()
+    
+        
+        // Set Default UIToolbar appearance
+        
+        let toolbar = UIToolbar.appearance()
+        toolbar.barTintColor = UIColor.white
+        toolbar.tintColor = UIColor.darkGray
+        toolbar.setShadowImage(UIImage(), forToolbarPosition: .top)
+        toolbar.clipsToBounds = true
+        
+        
+        
+        
         return true
     }
 
