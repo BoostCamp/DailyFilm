@@ -1,6 +1,16 @@
 # DailyFilm
 
-> 부스트캠프 iOS App Development Course에서 진행한 개인 프롤젝트이며,  2017.02.04 ~ 2017.02.25 걸쳐 개발한 프로젝트입니다. 톤 대회(2015.09.09 ~ 11)에서 2박 3일에 걸쳐 개발한 프로젝트입니다. 빠르고 , 강력하고, 안전한 언어인 Swift3와 AVFoundation, Core Image, Photos, UIKit Framework를 활용해서 커스텀 카메라 애플리케이션을 개발했습니다.
+> 부스트캠프 iOS App Development Course에서 진행한 개인 프롤젝트이며,  2017.02.04 ~ 2017.02.25 걸쳐 개발한 프로젝트입니다. 빠르고, 강력하고, 안전한 언어인 Swift3와 AVFoundation, Core Image, Photos, UIKit Framework를 활용해서 커스텀 카메라 애플리케이션을 개발했습니다.
+
+
+* 개선할 점
+ 1. 코드의 모듈화 및 최적화가 필요합니다. 
+ 2. Apple의 ```Core Image Filter Reference```를 참고하여 커스텀 필터 추가
+ 3. CIImage, 즉 CoreImage와 UIKit의 좌표가 다르기 때문에 얼굴인식에 대한 코드 개선이 필요합니다. 현재는 CIFeature의 CIFeatureTypeFace 중 Mouth만을 사용하고 있습니다. 정확도를 개선하겠습니다.
+ 4. 이미지 회전에 대한 이슈가 있습니다. ```CGAffineTransform```에 대한 분석이 필요합니다.
+ 5. White Balance 모드가 필요합니다.  ```var whiteBalanceMode: AVCaptureWhiteBalanceMode```
+ 6. ISO를 수동으로 조절하여 밝은 곳, 어두운 곳에서도 촬영이 매끄럽게 개선할 예정입니다. ```var exposureMode: AVCaptureExposureMode```
+ 7. 촬영 시간 ```UIDatePicker``` , 촬영 위치를 ```MKLocalSearchRequest``` 활용해서 기능을 개선할 예정입니다.
 
 ### 개요
 * DailyFilm은 카메라로 필터 효과 및 보정을 통해 사진을 촬영하고 사진에 글을 남길 수 있는 카메라 일기장 애플리케이션입니다.
